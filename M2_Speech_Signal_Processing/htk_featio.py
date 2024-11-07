@@ -8,10 +8,10 @@ def write_htk_user_feat(x, name="filename"):
     num_dim = x.shape[0]
     num_frames = x.shape[1]
     hdr = struct.pack(
-        ">iihh",  # the beginning '>' says write big-endian
-        num_frames,  # nSamples
-        default_period,  # samplePeriod
-        4 * num_dim,  # 2 floats per feature
+        ">iihh",        # the beginning '>' says write big-endian
+        num_frames,     # nSamples
+        default_period, # samplePeriod
+        4 * num_dim,    # 2 floats per feature
         9,
     )  # user features
 
