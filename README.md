@@ -10,5 +10,6 @@ pandoc module_X.md -o module_X.pdf
 where 'X' is the module number.
 
 Logs: 
-- 22-10-2024: add module 6 
-- 03-01-2018: nit commit
+- 07-11-2024: added module 1 md
+- 22-10-2024: added module 6 md
+- 03-01-2018: init commit
