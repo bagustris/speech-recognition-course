@@ -27,6 +27,8 @@ Sequential objective functions allow the training labels to drift in time. As th
 
 Whereas the frame-based cross entropy objective function requires a sequence of labels z\lbrack t\rbrack that is the same length as the acoustic feature vector sequence, sequential objective functions specify a sequence of symbols $S = \left\{ s_{0},s_{1},\ldots,\ s_{K - 1} \right\}$ for each utterance. An alignment from the T acoustic features to the K symbols is denoted by $\pi\left\lbrack t \right\rbrack$. The label for time t is found in the entry of $S$ indexed by $\pi[t]$.
 
+![Hard Labels](./m6i1.png)
+
 The objective function can be improved by moving from a frame-based to a segment-based formulation. Whereas frame-based cross entropy assigns labels to frames, sequence-based cross entropy specifies the sequence of labels to assign, but is ambivalent about which frames are assigned to the labels. Essentially, it allows the labels to drift in time. As the model trains, it finds a segmentation that is easy to model, explains the data, and obeys the constraint that the ground-truth sequence of labels should be unchanged. Instead of using the alignment $z\left\lbrack i,t \right\rbrack$, we produce a pseudo-alignment $\gamma\left\lbrack i,t \right\rbrack$ that has the labels in the same order as the reference, but is also a function of the current network output. It can be either a soft alignment or a hard alignment. It is easily computed by turning the alignment sequence into an HMM and using standard Viterbi (hard alignment) or forward-backward (soft alignment) algorithms.
 
 $$ L = \ \operatorname{}{P\left( S \middle| \pi \right)P\left( \pi \right)} = \operatorname{}{P\left( \pi \right)\prod_{t}^{}{y\left\lbrack \pi\left( t \right),t \right\rbrack}} - \sum_{i}^{}{\gamma\left\lbrack i,t \right\rbrack\log\left( y\left\lbrack i,t \right\rbrack \right)} $$
@@ -49,6 +51,8 @@ $$ t_{\text{ij}} = \ \left\{ \begin{matrix} 1 & i = j, \\ 1 & i = j + 1, \\ 0 & 
 
 An example of this forward variable computed on an utterance about 2.6 seconds long, and containing 66 labels, is shown below. Yellow indicates larger values of the forward variable, and purple represents smaller values. Structures depart the main branch, searching possible paths forward in time. Because the alpha computation for a particular time has no information about the future, it is exploring all viable paths with the current information.
 
+![Alpha](./m6i2.png)
+
 The backward recursion computes the score of state k given acoustic evidence from the end of the segment back to, but not including, the current time t. Its initial state at time T - 1 doesn't include any acoustic evidence and is simply the final state of the model.
 
 $$ \beta\left\lbrack k,T - 1 \right\rbrack = 1 $$
@@ -59,7 +63,11 @@ $$ \beta_{k}\left\lbrack t \right\rbrack = \sum_{j}^{}{t_{jk}\beta\left\lbrack j
 
 When the forward and backward variables are combined into the gamma variable, each time slice contains information from the entire utterance, and the branching structures disappear. What is left is a smooth alignment between the label index and time index.
 
+![Beta](./m6i3.png)
+
 When the forward and backward variables are combined into the $\gamma$ variable, each time slice contains information from the entire utterance, and the branching structures disappear. What is left is a smooth alignment between the label index and time index.
+
+![Gamma](./m6i4.png)
 
 ## Connectionist Temporal Classification
 
@@ -119,7 +127,7 @@ A grapheme decoder, analogous to the decoder used in phoneme based systems, can 
 
 Whereas most speech recognition systems employ a separate decoding process to assign labels to the given speech frames, an encoder-decoder network uses a neural network to recursively generate its output.
 
-
+![Hard Labels](./m6i1.png)
 
 Encoder-decoder networks are common in machine translation systems, where the meaning of text in the source language must be transformed to an equivalent meaning in a target language. For this task, it is not necessary to maintain word order, and there generally isn't a one-to-one correspondence between the words in the source and target language.
 
