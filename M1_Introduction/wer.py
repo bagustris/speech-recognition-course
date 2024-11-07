@@ -14,7 +14,7 @@ def string_edit_distance(ref=None, hyp=None):
 
     # p[ix,iy] consumed ix tokens from x, iy tokens from y
     p = np.PINF * np.ones((len(x) + 1, len(y) + 1)) # track total errors
-    e = np.zeros((len(x)+1, len(y) + 1, 3), dtype=np.int) # track deletions, insertions, substitutions
+    e = np.zeros((len(x)+1, len(y) + 1, 3)) # track deletions, insertions, substitutions
     p[0] = 0
     for ix in range(len(x) + 1):
         for iy in range(len(y) + 1):
