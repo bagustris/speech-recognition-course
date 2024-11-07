@@ -7,21 +7,25 @@ Before studying HMMs, it will be useful to briefly review Markov chains. Markov 
 
 Let’s consider an example. In a weather prediction application, the states could be " Sunny", " Partly Cloud", " Cloudy", and " Raining". If we wanted to consider the probability of a particular 5 day forecast, e.g. $P(p,p,c,r,s)$, we would employ Bayes’ rule to break up this joint probability into a series of conditional probabilities.
 
-$$ p(X1,X2,X3,X4,X5)=p(X5|X4,X3,X2,X1)p(X4|X3,X2,X1)p(X3|X2,X1)p(X2|X1)p(X1) $$
+```math
+p(X1,X2,X3,X4,X5)=p(X5|X4,X3,X2,X1)p(X4|X3,X2,X1)p(X3|X2,X1)p(X2|X1)p(X1) 
+```
 
 This expression can be greatly simplified if we consider the first-order Markov assumption, which states that
 
-$$ p(X_i|X_1,\ldots,X_{i-1})=p(X_i|X_{i-1}) $$
+```math
+p(X_i|X_1,\ldots,X_{i-1})=p(X_i|X_{i-1})
+```
 
 Under this assumption, the joint probability of a 5-day forecast can be written as
 
-$$ 
+```math 
 \begin{split}
 p(X1,X2,X3,X4,X5) &= p(X5|X4)p(X4|X3)p(X3|X2)p(X2|X1)p(X1) \\
 
 &=p(X_1)\prod_{i=2}^5p(X_i|X_{i-1})
 \end{split}
-$$
+```
 
 Thus, the key elements of a Markov chain are the state identities (weather forecast in this case) and the transition probabilities p(X_i|X_{i−1}) that express the probability of moving from one state to another (including back to the same state).
 
@@ -31,24 +35,30 @@ For example, a complete (though likely inaccurate) Markov chain for weather pred
 
 Note that in addition to the conditional probabilities
 
-$$ p(X_i|X_{i-1}) $$
+```math
+p(X_i|X_{i-1})
+```
 
 in the equation above, there was also a probability associated with the first element of the sequence,
 
-$$p(X_1). $$
+```math
+p(X_1).
+```
 
 So, in addition to the state inventory and the conditional transition probabilities, we also need a set of prior probabilities that indicate the probability of starting the chain in each of the states. Let us assume our prior probabilities are as follows:
 
-$$ p(p)=\pi_p, p(c)=\pi_c, p(r)=\pi_r, p(s)=\pi_s $$
+```math
+p(p)=\pi_p, p(c)=\pi_c, p(r)=\pi_r, p(s)=\pi_s
+```
 
-Now, let us return to the example. We can now compute the probability of P(p,p,c,r,s) quite simply as
+Now, let us return to the example. We can now compute the probability of $ P(p,p,c,r,s) $ quite simply as
 
-$$ 
+```math
 \begin{split}
 p(p,p,c,r,s) &= p(s|r,c,p,p) p(r|c,p,p) p(c|p,p) p(p|p) p(p) \\
 &= p(s|r) p(r|c) p(c|p) p(p|p) p(p)
 \end{split}
-$$
+```
 
 ## Hidden Markov Models
 
@@ -60,9 +70,10 @@ The Markov chains previously described are also known as observable Markov model
 
 Thus, a HMM is characterized by a set of N states along with
 
-A transition matrix that defines probabilities of transitioning among states A with elements$a_{ij}$
-A probability distribution for each state $B=\left\{b_i(x)\right\},\left\{i= 1,2,\ldots, N \right\}$
-A prior probability distribution over states $\pi=\left\{\pi_1, \pi_2, \ldots, \pi_N\right\}$
+- A transition matrix that defines probabilities of transitioning among states $A$ with elements $a_{ij}$
+- A probability distribution for each state $B=\left\{b_i(x)\right\},\left\{i= 1,2,\ldots, N \right\}$
+- A prior probability distribution over states $\pi=\left\{\pi_1, \pi_2, \ldots, \pi_N\right\}$
+
 This, we can summarize the parameters of an HMM compactly as $\Phi = \left\{A, B, \pi\right\}$
 
 There are three fundamental problems for hidden Markov models each with well-known solutions. We will only briefly describe the problems and their solutions next. There are many good resources online and in the literature for additional details. 
@@ -187,7 +198,9 @@ The simplest and most common neural network used for acoustic modeling is the co
 
 Although we are training a DNN to predict the label for each frame of input, it is very beneficial for classification to provide a context window of frames to the network as input. Specifically, for the frame at time t, the input to the network is a symmetric window of the N frames before and N frames after. Thus, if x_t is the feature vector at time t, the input to the network is
 
+```math
 X_t = [ x_{t-N},  x_{t-N-1},  \ldots,  x_t,  \ldots,  x_{t+N-1},  x_{t+N} ]
+```
 
 Typical values of N are between 5 and 11, depending on the amount of training data. Larger context windows provide more information but require a larger matrix of parameters in the input layer of the model which can be hard to train without ample data.
 
@@ -291,12 +304,13 @@ The training, dev, and test RSCP files and the training set global mean and prec
 #### Part 1: Training a feedforward DNN
 We have provided a python program called M3_Train_AM.py which will train a feed-forward deep network acoustic model using the files described above. The program is currently configured to train a network with the following hyperparameters:
 
-4 hidden layers of size 512 hidden units per layer.
-120 output units corresponding to the phoneme states
-input context window of 23 frames, which means the input to the network for a given frame is the current frame plus 11 frames in the past and 11 frames in the future
-minibatch size of 256
-Learning is performed with Momentum SGD with a learning rate of 1e-04 per sample with momentum as a time constant of 2500
-One epoch is defined as a complete pass of the training data and training will run for 100 epochs
+- 4 hidden layers of size 512 hidden units per layer.  
+- 120 output units corresponding to the phoneme states  
+- input context window of 23 frames, which means the input to the network for a given frame is the current frame plus 11 frames in the past and 11 frames in the future  
+- minibatch size of 256
+- Learning is performed with Momentum SGD with a learning rate of 1e-04 per sample with momentum as a time constant of 2500  
+- One epoch is defined as a complete pass of the training data and training will run for 100 epochs
+
 The development set will be evaluated every 5 epochs.
 This can be executed by running
 
