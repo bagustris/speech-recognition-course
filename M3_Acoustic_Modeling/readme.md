@@ -5,7 +5,7 @@ In this module, we’ll talk about the acoustic model used in modern speech reco
 
 Before studying HMMs, it will be useful to briefly review Markov chains. Markov chains are a method for modeling random processes. In a Markov chains, discrete events are modeled with a number of states. The movement among states is governed by a random process.
 
-Let’s consider an example. In a weather prediction application, the states could be " Sunny", " Partly Cloud", " Cloudy", and " Raining". If we wanted to consider the probability of a particular 5 day forecast, e.g. $P(p,p,c,r,s)$, we would employ Bayes’ rule to break up this joint probability into a series of conditional probabilities.
+Let's consider an example. In a weather prediction application, the states could be " Sunny", " Partly Cloud", " Cloudy", and " Raining". If we wanted to consider the probability of a particular 5 day forecast, e.g. $P(p,p,c,r,s)$, we would employ Bayes' rule to break up this joint probability into a series of conditional probabilities.
 
 ```math
 p(X1,X2,X3,X4,X5)=p(X5|X4,X3,X2,X1)p(X4|X3,X2,X1)p(X3|X2,X1)p(X2|X1)p(X1) 
@@ -71,23 +71,25 @@ The Markov chains previously described are also known as observable Markov model
 Thus, a HMM is characterized by a set of N states along with
 
 - A transition matrix that defines probabilities of transitioning among states $A$ with elements $a_{ij}$
-- A probability distribution for each state $B=\left\{b_i(x)\right\},\left\{i= 1,2,\ldots, N \right\}$
-- A prior probability distribution over states $\pi=\left\{\pi_1, \pi_2, \ldots, \pi_N\right\}$
 
-This, we can summarize the parameters of an HMM compactly as $\Phi = \left\{A, B, \pi\right\}$
+- A probability distribution for each state $ B=\left\lbrace b_i(x)\right\rbrace,\left\lbrace i= 1,2,\ldots, N \right\rbrace$
+
+- A prior probability distribution over states $ \pi=\left\lbrace\pi_1, \pi_2, \ldots, \pi_N\right\rbrace $
+
+This, we can summarize the parameters of an HMM compactly as $ \Phi = \left\lbrace A, B, \pi\right\rbrace $
 
 There are three fundamental problems for hidden Markov models each with well-known solutions. We will only briefly describe the problems and their solutions next. There are many good resources online and in the literature for additional details. 
 
 ## The Evaluation Problem
 
-Given a model with parameters $\Phi$ and a sequence of observations $X = \left\{x_1, x_2, \ldots, x_T\right\}$, how do we compute the probability of the observation sequence, $P(X|\Phi)$? This is known as the evaluation problem. The solution is to use the forward algorithm. 
+Given a model with parameters $\Phi$ and a sequence of observations $X = \left \lbrace x_1, x_2, \ldots, x_T\right \rbrace$, how do we compute the probability of the observation sequence, $P(X|\Phi)$? This is known as the evaluation problem. The solution is to use the forward algorithm. 
 
 This Evaluation problem can be solved summing up the probability over all possible values of the hidden state sequence. Implemented naively this can be quite expensive as there are an exponential number of states sequences ($O(N^T)$, where $N$ is the number of states and $T$ the number of time steps).
 
 The forward algorithm is a far more efficient dynamic-programming solution. As its name implies, it processes the sequence in a single pass. It stores up to N values at each time step, and reduces the computational complexity to $O(N^2T)$.
 
 ## The Decoding Problem
-Given a model $\Phi$ and a sequence of observations $X = \left\{x_1, x_2, \ldots, x_T\right\}$, how do we find the most likely sequence of hidden states $Q = \left\{q_1, q_2, \ldots, q_T\right\}$ that produced the observations? 
+Given a model $\Phi$ and a sequence of observations $X = \left\lbrace x_1, x_2, \ldots, x_T\right\rbrace$, how do we find the most likely sequence of hidden states $Q = \left\lbrace q_1, q_2, \ldots, q_T\right\rbrace$ that produced the observations? 
 
 This is known as the decoding problem. The solution is to use the Viterbi algorithm. The application of this algorithm to the special case of large vocabulary speech recognition is discussed in Module 5, and an example of how it can be integrated into the training criterion is discussed in Module 6.  
 
@@ -143,7 +145,7 @@ This explosion of the label space leads to two major problems:
 1. Far less data is available to train each triphone
 2. Some triphones will not be observed in training but may occur in testing
 
-A solution to these problems is in widespread use which involves pooling data associated with multiple context-dependent states that have similar properties and combining them into a single “tied” or “shared” HMM state. This tied state, known as a senone, is then used to compute the acoustic model scores for all of the original HMM states who’s data was pooled to create it.
+A solution to these problems is in widespread use which involves pooling data associated with multiple context-dependent states that have similar properties and combining them into a single “tied” or “shared” HMM state. This tied state, known as a senone, is then used to compute the acoustic model scores for all of the original HMM states who's data was pooled to create it.
 
 Grouping a set of context-dependent triphone states into a collection of senones is performed using a *decision-tree clustering* process. A decision tree is constructed for every state of every context-independent phone.
 
@@ -232,13 +234,18 @@ In contrast to a feedforward layer, a recurrent layer's output has dependence on
 
 In offline applications, where latency is not a concern, it is possible to perform the recurrence in both the forward and backward directions. These networks are known as bidirectional neural networks. In this case, each layer has a set of parameters to process the sequence forward in time and a separate set of parameters to process the sequence in reverse. These two outputs can then be concatenated to input to the next layer. This can be expressed mathematically as
 
-$$ \overrightarrow{h_t^i} = f\left(W_f^i h_t^{i-1} + U_f^i h_{t-1}^i + c_f^i\right) $$
+```math
+\begin{split}
 
-$$ \overleftarrow{h_t^i} = f\left(W_b^i h_t^{i-1} + U_b^i h_{t+1}^i + c_b^i\right) $$
+\overrightarrow{h_t^i} &= f\left(W_f^i h_t^{i-1} + U_f^i h_{t-1}^i + c_f^i\right)  \\
 
-$$ h_t^i = \left[\overrightarrow{h_t^i}, \overleftarrow{h_t^i}\right] $$
+\overleftarrow{h_t^i} &= f\left(W_b^i h_t^{i-1} + U_b^i h_{t+1}^i + c_b^i\right) \\
 
-where the subscripts f and b indicate parameters for the forward and backward directions, respectively.
+h_t^i &= \left[\overrightarrow{h_t^i}, \overleftarrow{h_t^i}\right] 
+\end{split}
+```
+
+where the subscripts $f$ and $b$ indicate parameters for the forward and backward directions, respectively.
 
 RNNs are appealing for acoustic modeling because they can learn the temporal patterns in the feature vector sequences, which is very important for speech signals. In order to train RNNs, therefore, the sequential nature of the training sequences must be preserved. Thus, rather than frame-based randomization which is typically performed in feedforward networks, we perform utterance-based randomization, where the ordering the utterances is randomized but the sequential nature of the utterances themselves is preserved.
 
