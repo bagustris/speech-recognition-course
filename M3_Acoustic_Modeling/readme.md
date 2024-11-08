@@ -82,21 +82,19 @@ p(p,p,c,r,s) &= p(s|r,c,p,p) p(r|c,p,p) p(c|p,p) p(p|p) p(p) \\
 
 Hidden Markov models (HMMs) are a generalization of Markov chains. In a Markov chain, the state is directly visible to the observer, and therefore the state transition probabilities are the only parameters. In contrast, in an HMM, the state is not directly visible, but the output (in the form of data) is visible. Each state has a probability distribution over the possible output tokens. Therefore, the parameters of an HMM are the initial state distribution, the state transition probabilities, and the output token probabilities for each state.
 
-The Markov chains previously described are also known as observable Markov models. That is because once you land in a state, it is known what the outcome will be, e.g. it will rain. A hidden Markov model is different in that each state is defined not by a deterministic event or observation but by a probability distribution over events or observations. This makes the model doubly stochastic. The transitions between states are probabilistic and so are the observations in the states themselves. We could convert the Markov chain on weather to a hidden Markov model by replacing the states with distributions. Specifically, each state could have a different probability of seeing the various weather conditions, sun, partly cloudy, cloudy, or rainy.
+The Markov chains previously described are also known as observable Markov models. That is because once you land in a state, it is known what the outcome will be, e.g. it will rain. A hidden Markov model is different in that each state is defined not by a deterministic event or observation but by a probability distribution over events or observations. This makes the model doubly stochastic. The transitions between states are probabilistic and so are the observations in the states themselves. We could convert the Markov chain on weather to a hidden Markov model by replacing the states with distributions. Specifically, each state could have a different probability of seeing various weather conditions, such as sun, partly cloudy, cloudy, or rainy.
 
 ![](./m3i2.png)
 
 Thus, a HMM is characterized by a set of N states along with
 
 - A transition matrix that defines probabilities of transitioning among states $A$ with elements $a_{ij}$
+- A probability distribution for each state $B= \\{ b_i(x) \\} , \\{ i= 1,2,\ldots, N \\}$
+- A prior probability distribution over states $\pi= \lbrace \pi_1, \pi_2, \ldots, \pi_N \rbrace $
 
-- A probability distribution for each state $ B=\left \lbrace b_i(x)\right \rbrace , \left \lbrace i= 1,2,\ldots, N \right \rbrace $
+This, we can summarize the parameters of an HMM compactly as $\Phi = \left \lbrace A, B, \pi\right \rbrace $
 
-- A prior probability distribution over states $ \pi=\left \lbrace \pi_1, \pi_2, \ldots, \pi_N\right \rbrace $
-
-This, we can summarize the parameters of an HMM compactly as $ \Phi = \left \lbrace A, B, \pi\right \rbrace $
-
-There are three fundamental problems for hidden Markov models each with well-known solutions. We will only briefly describe the problems and their solutions next. There are many good resources online and in the literature for additional details. 
+There are three fundamental problems for hidden Markov models, each with well-known solutions. We will only briefly describe the problems and their solutions next. There are many good resources online and in the literature for additional details. 
 
 ## The Evaluation Problem
 
@@ -142,15 +140,15 @@ $$ p(x|s)=\sum_m w_m {\mathcal N}(x;\mu_m, \Sigma_m) $$
 
 where ${\mathcal N}(x;\mu_m,\Sigma_m)$ is a Gaussian distribution and $w_m$ is a mixture weight, with $\sum_m w_m=1$. Thus, each state of the model has its own GMM. The Baum-Welch training algorithm estimated all the transition probabilities as well as the means, variances, and mixture weights of all GMMs.
 
-All modern speech recognition systems no longer model the observations using a collection of Gaussian mixture models but rather a single deep neural network that has output labels that represent the state labels of all HMMs states of all phonemes. For example, if there were 40 phonemes and each has a 3-state HMM, the neural network would have $40\times3=120$ output labels.
+All modern speech recognition systems no longer model the observations using a collection of Gaussian mixture models but rather a single deep neural network that has output labels that represent the state labels of all HMMs states of all phonemes. For example, if there were 40 phonemes and each had a 3-state HMM, the neural network would have $40\times3=120$ output labels.
 
 Such acoustic models are called "hybrid" systems or DNN-HMM systems to reflect the fact that the observation probability estimation formerly done by GMMs is now done by a DNN, but that the rest of the HMM framework, in particular the HMM state topologies and transition probabilities, are still used.
 
 ## Choice of subword units
 
-In the previous section, we described how word HMMs can be constructed by chaining the HMMs for the individual phones in a word according to the pronunciation dictionary. These phonemes are referred to as "context-independent" phones, or CI phones for short. It turns out that the realization of a phoneme is in fact heavily dependent on the phonemes can precede and follow it. For example, the /ah/ sound in "bat" is different from the /ah/ sound in "cap".
+In the previous section, we described how word HMMs can be constructed by chaining the HMMs for the individual phones in a word according to the pronunciation dictionary. These phonemes are referred to as "context-independent" phones, or CI phones for short. It turns out that the realization of a phoneme is, in fact, heavily dependent on the phonemes that can precede and follow it. For example, the /ah/ sound in "bat" is different from the /ah/ sound in "cap."
 
-For this reason, higher accuracy can be achieved using "context-dependent" (CD) phones. Thus, to model "bat" we'd use an HMM representing the context dependent phone /b-ah+t/ for the middle /ah/ sound and for the word "cap" we'd use a separate HMM that modeled /k-ah+p/. So, imagine the word "cup" was in the utterance "a cup of coffee". Then cup would be modeled by the following context-dependent HMMs.
+For this reason, higher accuracy can be achieved using "context-dependent" (CD) phones. Thus, to model "bat," we'd use an HMM representing the context-dependent phone /b-ah+t/ for the middle /ah/ sound, and for the word "cap," we'd use a separate HMM that modeled /k-ah+p/. So, imagine the word "cup" was in the utterance "a cup of coffee". Then, the cup would be modeled by the following context-dependent HMMs.
 
 ![](m3i5.png)
 
@@ -163,7 +161,7 @@ This explosion of the label space leads to two major problems:
 1. Far less data is available to train each triphone
 2. Some triphones will not be observed in training but may occur in testing
 
-A solution to these problems is in widespread use which involves pooling data associated with multiple context-dependent states that have similar properties and combining them into a single “tied” or “shared” HMM state. This tied state, known as a senone, is then used to compute the acoustic model scores for all of the original HMM states who's data was pooled to create it.
+A solution to these problems is in widespread use, which involves pooling data associated with multiple context-dependent states that have similar properties and combining them into a single “tied” or “shared” HMM state. This tied state, known as a one, is then used to compute the acoustic model scores for all of the original HMM states whose data was pooled to create it.
 
 Grouping a set of context-dependent triphone states into a collection of senones is performed using a *decision-tree clustering* process. A decision tree is constructed for every state of every context-independent phone.
 
@@ -177,7 +175,7 @@ The clustering process is performed as follows:
 
 4. The leaves of this tree define the senones for this context-dependent phone state.
 
-This process solves both problems listed above. First, the data can now be shared among several triphone states so the parameters estimates are robust. Second, if a triphone is needed at test time that was unseen in training, it's corresponding senone can be found by walking the decision tree and answering the splitting questions appropriately.
+This process solves both problems listed above. First, the data can now be shared among several triphone states, so the parameter estimates are robust. Second, if a triphone is needed at test time that was unseen in training, it's corresponding senone can be found by walking the decision tree and answering the splitting questions appropriately.
 
 Almost all modern speech recognition systems that use phone-based units utilize senones as the context-dependent unit. A production-grade large vocabulary recognizer can typically have about 10,000 senones in the model. Note that this is far more than the 120 context-independent states but far less than the 192,000 states in an untied context-dependent system.
 
@@ -189,7 +187,7 @@ The most common objective function used for training neural networks for classif
 
 $$ E = -\sum_{i=1}^M t_m \log(y_m) $$
 
-Where $t_m$ is the label (1 if the data is from class m and 0 otherwise) and $y_m$ is the output of the network which is a softmax layer over the output activations. Thus, for each frame, we need to generate a M-dimensional 1-hot vector, that consists of all zeros except for a single 1 corresponding to the true label. This means that we need to assign every frame of every utterance to a senone in order to generate these labels.
+Where $t_m$ is the label (1 if the data is from class m and 0 otherwise) and $y_m$ is the output of the network, which is a softmax layer over the output activations. Thus, for each frame, we need to generate a M-dimensional 1-hot vector that consists of all zeros except for a single 1 corresponding to the true label. This means that we need to assign every frame of every utterance to a senone in order to generate these labels.
 
 ## Generate Frame based Sonal Levels
 
@@ -234,21 +232,21 @@ In this case the input to the network for each frame is a context window of stac
 
 $$ x_t, \Delta x_t, \Delta^2 x_t. $$
 
-This input is then processed through a number of fully connected hidden layers and then finally by a softmax layer over senone labels to make the prediction. This network can then be trained by back propagation in the usual manner.
+This input is then processed through a number of fully connected hidden layers and then finally by a softmax layer over senone labels to make the prediction. This network can then be trained by backpropagation in the usual manner.
 
 ![](./M3i6.png) 
 
 ## Training Recurrent Neural Networks
 
-Recurrent neural networks (RNNs) are a type of neural network that are particularly well-suited to sequence modeling tasks such as speech recognition. RNNs are designed to process sequences of data, such as speech signals, by maintaining an internal state that is updated at each time step. This allows RNNs to capture dependencies between elements in the sequence and to model long-term dependencies.
+Recurrent neural networks (RNNs) are a type of neural network that is particularly well-suited to sequence modeling tasks such as speech recognition. RNNs are designed to process sequences of data, such as speech signals, by maintaining an internal state that is updated at each time step. This allows RNNs to capture dependencies between elements in the sequence and to model long-term dependencies.
 
-Unlike feedforward DNNs, recurrent networks process data as a sequence and have a temporal dependency between the weights. There are several standard forms forms of recurrent networks. A conventional RNN has a hidden layer output that can be expressed as
+Unlike feedforward DNNs, recurrent networks process data as a sequence and have a temporal dependency between the weights. There are several standard forms of recurrent networks. A conventional RNN has a hidden layer output that can be expressed as
 
 $$ h_t^i = f(W^i h_t^{i-1} + U^i h_{t-1}^i + c^i) $$
 
 where f(\cdot) is a nonlinearity such as a sigmoid or relu function, i is the layer of the network, t is the frame or time index, and the input x is equivalent to the output of the zeroth layer, $h_t^0=x_t$.
 
-In contrast to a feedforward layer, a recurrent layer's output has dependence on both the current input and the output from the previous time step. If you are familiar with filtering operations in signal processing, an RNN layer can be considered a nonlinear infinite impulse response (IIR) filter.
+In contrast to a feedforward layer, a recurrent layer's output has a dependence on both the current input and the output from the previous time step. If you are familiar with filtering operations in signal processing, an RNN layer can be considered a nonlinear infinite impulse response (IIR) filter.
 
 In offline applications, where latency is not a concern, it is possible to perform the recurrence in both the forward and backward directions. These networks are known as bidirectional neural networks. In this case, each layer has a set of parameters to process the sequence forward in time and a separate set of parameters to process the sequence in reverse. These two outputs can then be concatenated to input to the next layer. This can be expressed mathematically as
 
@@ -271,28 +269,28 @@ Because the network itself is learning correlations in time of the data, the use
 
 Training an RNN can still be performed using the same cross-entropy objective function, with a slightly modified gradient computation. Due to the temporal nature of the model, a variation of back-propagation called back-propagation through time (BPTT) is used. This algorithm arises when you consider that in an RNN, the output at the current time step is dependent on the input at the current time step as well as the inputs at all previous time steps (assuming a unidirectional RNN).
 
-Like standard back propagation, BPTT optimizes the model parameters using gradient descent. The gradient of the objective function with respect to the model parameters is computed via the chain rule. Because of the temporal nature of the model, the chain rule requires the multiplication of many gradient terms (proportional to the number of frames of history). Because there is no restriction on these terms, it is possible for the expression to become close to zero (in which case no learning occurs) or become excessively large, which leads to training instability and divergent behavior. This is referred to as vanishing gradients or exploding gradients, respectively. To combat vanishing gradients, there are two well-known solutions: 1) employ specific recurrent structures that avoid these issues, such as LSTM, which will be discussed in the next section, or 2) truncate the BPTT algorithm to only look back to a fixed length history which limits the total number of terms. To combat exploding gradient, a method called gradient clipping is employed which sets an upper limit on the size of the absolute value of the gradient for any parameter in the model. Gradients with an absolute value larger than the clipping threshold are set to the clipping threshold.
+Like standard back propagation, BPTT optimizes the model parameters using gradient descent. The gradient of the objective function with respect to the model parameters is computed via the chain rule. Because of the temporal nature of the model, the chain rule requires the multiplication of many gradient terms (proportional to the number of frames of history). Because there is no restriction on these terms, it is possible for the expression to become close to zero (in which case no learning occurs) or become excessively large, which leads to training instability and divergent behavior. This is referred to as vanishing gradients or exploding gradients, respectively. To combat vanishing gradients, there are two well-known solutions: 1) employ specific recurrent structures that avoid these issues, such as LSTM, which will be discussed in the next section, or 2) truncate the BPTT algorithm to only look back to a fixed length history which limits the total number of terms. To combat exploding gradient, a method called gradient clipping is employed, which sets an upper limit on the size of the absolute value of the gradient for any parameter in the model. Gradients with an absolute value larger than the clipping threshold are set to the clipping threshold.
 
 All standard deep learning toolkits support training the recurrent networks with these features.  
 
 ## Long Short-Term Memory Networks
 
 Other Recurrent Network Architectures
-In order to combat the issues with vanishing/exploding gradients and better learn long-term relationships in the training data, a new type of recurrent architecture was proposed. These networks are called Long Short Term Memory (LSTM). Because of their widespread success on many tasks, LSTMs are now the most commonly used type of recurrent networks.
+In order to combat the issues with vanishing/exploding gradients and better learn long-term relationships in the training data, a new type of recurrent architecture was proposed. These networks are called Long Short-Term Memory (LSTM). Because of their widespread success in many tasks, LSTMs are now the most commonly used type of recurrent network.
 
-An LSTM uses the concept of a cell, which is like a memory which stores state information. This information can be preserved over time or overwritten by the current information using multiplicative interactions called gates. Gate values close to 0 blocked information while gate values close to 1 pass through information. The input gate decides whether to pass information from the current time step into the cell. The forget gate decides whether to persist or erase the current contents of the cell, and the output gate decides whether to pass the cell information onward in the network. A diagram of the LSTM is shown below.
+An LSTM uses the concept of a cell, which is like a memory that stores state information. This information can be preserved over time or overwritten by the current information using multiplicative interactions called gates. Gate values close to 0 blocked information while gate values close to 1 pass through information. The input gate decides whether to pass information from the current time step into the cell. The forget gate decides whether to persist or erase the current contents of the cell, and the output gate decides whether to pass the cell information onward in the network. A diagram of the LSTM is shown below.
 
 ![](./m3i7.png)
 
 There are many details of LSTMs that can be found online. For example, this blog post does a good job explaining the operation of LSTMs. http://colah.github.io/posts/2015-08-Understanding-LSTMs/
 
-Other variants of the LSTM have been proposed such as the Gated Recurrent Unit (GRU), which is a simplified version of the LSTM. On some tasks, GRUs have shown similar performance to LSTMs with fewer parameters.
+Other variants of the LSTM have been proposed, such as the Gated Recurrent Unit (GRU), which is a simplified version of the LSTM. On some tasks, GRUs have shown similar performance to LSTMs with fewer parameters.
 
 ## Using a Sequence-based Objective Function
 
-While RNNs are a sequential acoustic model, in that they model the sequence of acoustic feature vectors as a time series, the objective function is still frame-independent. However, because speech recognition is inherently a sequence-classification task, it is beneficial to employ a sequence-based objective function. Sequence-based objective functions have been proposed for speech recognition for GMM-HMMs and have since been updated to work with neural-network acoustic models. The key difference between frame-based cross entropy and a sequence-discriminative objective function is that the sequence-based objective function more closely models the decoding process. Specifically, a language model is incorporated in order to determine the most likely competitors that the model needs to learn to correctly classify between. Put more simply, in frame-based cross entropy, any incorrect class is penalized equally, even if that incorrect class would never be proposed in decoding due to HMM state topology or the language model. With sequence training, the competitors to the correct class are determined by performing a decoding of the training data.
+While RNNs are a sequential acoustic model in that they model the sequence of acoustic feature vectors as a time series, the objective function is still frame-independent. However, because speech recognition is inherently a sequence-classification task, it is beneficial to employ a sequence-based objective function. Sequence-based objective functions have been proposed for speech recognition for GMM-HMMs and have since been updated to work with neural-network acoustic models. The key difference between frame-based cross entropy and a sequence-discriminative objective function is that the sequence-based objective function more closely models the decoding process. Specifically, a language model is incorporated in order to determine the most likely competitors that the model needs to learn to correctly classify between. Put more simply, in frame-based cross-entropy, any incorrect class is penalized equally, even if that incorrect class would never be proposed in decoding due to HMM state topology or the language model. With sequence training, the competitors to the correct class are determined by performing a decoding of the training data.
 
-There are several sequence discriminative objective functions. One of the most well known is maximum mutual information (MMI). The MMI objective function can be written as
+There are several sequence discriminative objective functions. One of the most well-known is maximum mutual information (MMI). The MMI objective function can be written as
 
 $$ F_{MMI}= \sum_u \log \frac {p(X_u|S_u)p(W_u)} {\sum_{W'}p(X_u|S_{W'})p(W')} $$
 
@@ -341,7 +339,7 @@ This can be executed by running
 
     $ python M3_Train_AM.py
 
-On a GTX 965M GPU running on a laptop, the network trained as a rate of 63,000 samples/sec or about 20 seconds per epoch. Thus, 100 epochs will run in 2000 seconds or about 30 minutes.
+On a GTX 965M GPU running on a laptop, the network trained at a rate of 63,000 samples/sec or about 20 seconds per epoch. Thus, 100 epochs will run in 2000 seconds or about 30 minutes.
 
 After 100 epochs, the result of training, obtained from the end of the log file, was
 
@@ -360,7 +358,7 @@ Here is an example of the figure produced by this script.
 
 ![](./L3a.png)
 
-As you can see from the figure, overfitting has not yet occurred as the development set performance is still the best in the final epoch. It is possible that small additional improvements can be obtained with additional training iterations.
+As you can see from the figure, overfitting has not yet occurred, as the development set performance is still the best in the final epoch. It is possible that small improvements can be made with additional training iterations.
 
 You can now experiment with this neural network training script. You can modify the various hyperparameters to see if the performance can be further improved. For example, you can vary the
 
