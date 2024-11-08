@@ -5,7 +5,7 @@ In this module, we’ll talk about the acoustic model used in modern speech reco
 
 Before studying HMMs, it will be useful to briefly review Markov chains. Markov chains are a method for modeling random processes. In a Markov chains, discrete events are modeled with a number of states. The movement among states is governed by a random process.
 
-Let's consider an example. In a weather prediction application, the states could be " Sunny", " Partly Cloud", " Cloudy", and " Raining". If we wanted to consider the probability of a particular 5 day forecast, e.g. $P(p,p,c,r,s)$, we would employ Bayes' rule to break up this joint probability into a series of conditional probabilities.
+Let's consider an example. In a weather prediction application, the states could be "Sunny", "Partly Cloud", "Cloudy", and "Raining". If we wanted to consider the probability of a particular 5 day forecast, e.g. $P(p,p,c,r,s)$, we would employ Bayes' rule to break up this joint probability into a series of conditional probabilities.
 
 ```math
 p(X1,X2,X3,X4,X5)=p(X5|X4,X3,X2,X1)p(X4|X3,X2,X1)p(X3|X2,X1)p(X2|X1)p(X1) 
@@ -31,7 +31,7 @@ Thus, the key elements of a Markov chain are the state identities (weather forec
 
 For example, a complete (though likely inaccurate) Markov chain for weather prediction can be depicted as
 
-![](./M3i1.png)
+![](./m3i1.png)
 
 Note that in addition to the conditional probabilities
 
@@ -66,17 +66,17 @@ Hidden Markov models (HMMs) are a generalization of Markov chains. In a Markov c
 
 The Markov chains previously described are also known as observable Markov models. That is because once you land in a state, it is known what the outcome will be, e.g. it will rain. A hidden Markov model is different in that each state is defined not by a deterministic event or observation but by a probability distribution over events or observations. This makes the model doubly stochastic. The transitions between states are probabilistic and so are the observations in the states themselves. We could convert the Markov chain on weather to a hidden Markov model by replacing the states with distributions. Specifically, each state could have a different probability of seeing the various weather conditions, sun, partly cloudy, cloudy, or rainy.
 
-![](./M3i2.png)
+![](./m3i2.png)
 
 Thus, a HMM is characterized by a set of N states along with
 
 - A transition matrix that defines probabilities of transitioning among states $A$ with elements $a_{ij}$
 
-- A probability distribution for each state $ B=\left\lbrace b_i(x)\right\rbrace,\left\lbrace i= 1,2,\ldots, N \right\rbrace$
+- A probability distribution for each state $ B=\left \lbrace b_i(x)\right \rbrace , \left \lbrace i= 1,2,\ldots, N \right \rbrace $
 
-- A prior probability distribution over states $ \pi=\left\lbrace\pi_1, \pi_2, \ldots, \pi_N\right\rbrace $
+- A prior probability distribution over states $ \pi=\left \lbrace \pi_1, \pi_2, \ldots, \pi_N\right \rbrace $
 
-This, we can summarize the parameters of an HMM compactly as $ \Phi = \left\lbrace A, B, \pi\right\rbrace $
+This, we can summarize the parameters of an HMM compactly as $ \Phi = \left \lbrace A, B, \pi\right \rbrace $
 
 There are three fundamental problems for hidden Markov models each with well-known solutions. We will only briefly describe the problems and their solutions next. There are many good resources online and in the literature for additional details. 
 
@@ -110,11 +110,11 @@ In speech recognition, hidden Markov models are used to model the acoustic obser
 
 It is typically for each phoneme to be modeled with 3 states, to separately model the beginning, middle and end of the phoneme. Each state has a self-transition and a transition to the next state.  
 
-![](./M3i3.png)
+![](./m3i3.png)
 
 Word HMMs can be formed by concatenating its constituent phoneme HMMs. For example, the HMM word "cup" can be formed by concatenating the HMMs for its three phonemes.
 
-![](./M3i4.png)
+![](./m3i4.png)
 
 Thus, a high-quality pronunciation dictionary which "spells" each word in the system by its phonemes is critically important for successful acoustic modeling.
 
@@ -134,7 +134,7 @@ In the previous section, we described how word HMMs can be constructed by chaini
 
 For this reason, higher accuracy can be achieved using "context-dependent" (CD) phones. Thus, to model "bat" we'd use an HMM representing the context dependent phone /b-ah+t/ for the middle /ah/ sound and for the word "cap" we'd use a separate HMM that modeled /k-ah+p/. So, imagine the word "cup" was in the utterance "a cup of coffee". Then cup would be modeled by the following context-dependent HMMs.
 
-![](./M3i5.png)
+![](m3i5.png)
 
 Because this choice of context-dependent phones models 3 consecutive phones, they are referred to as "triphones". Though not common, some systems model an even longer phonetic context, such as "quinphones" which is a sequence of 5 consecutive phones.
 
@@ -264,7 +264,7 @@ In order to combat the issues with vanishing/exploding gradients and better lear
 
 An LSTM uses the concept of a cell, which is like a memory which stores state information. This information can be preserved over time or overwritten by the current information using multiplicative interactions called gates. Gate values close to 0 blocked information while gate values close to 1 pass through information. The input gate decides whether to pass information from the current time step into the cell. The forget gate decides whether to persist or erase the current contents of the cell, and the output gate decides whether to pass the cell information onward in the network. A diagram of the LSTM is shown below.
 
-![](./M3i7.png)
+![](./m3i7.png)
 
 There are many details of LSTMs that can be found online. For example, this blog post does a good job explaining the operation of LSTMs. http://colah.github.io/posts/2015-08-Understanding-LSTMs/
 
@@ -313,8 +313,8 @@ We have provided a python program called M3_Train_AM.py which will train a feed-
 
 - 4 hidden layers of size 512 hidden units per layer.  
 - 120 output units corresponding to the phoneme states  
-- input context window of 23 frames, which means the input to the network for a given frame is the current frame plus 11 frames in the past and 11 frames in the future  
-- minibatch size of 256
+- Input context window of 23 frames, which means the input to the network for a given frame is the current frame plus 11 frames in the past and 11 frames in the future  
+- Minibatch size of 256
 - Learning is performed with Momentum SGD with a learning rate of 1e-04 per sample with momentum as a time constant of 2500  
 - One epoch is defined as a complete pass of the training data and training will run for 100 epochs
 
@@ -323,7 +323,7 @@ This can be executed by running
 
     $ python M3_Train_AM.py
 
-On a GTX 965M GPU running on a laptop, the network trained as a rate of 63,000 samples/sec or about 20 seconds per epoch. Thus 100 epochs will run in 2000 seconds or about 30 minutes.
+On a GTX 965M GPU running on a laptop, the network trained as a rate of 63,000 samples/sec or about 20 seconds per epoch. Thus, 100 epochs will run in 2000 seconds or about 30 minutes.
 
 After 100 epochs, the result of training, obtained from the end of the log file, was
 

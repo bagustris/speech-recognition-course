@@ -1,3 +1,26 @@
 # ignore specific dir
 fig
 Experiments/LibriSpeech
+*.tgz
+*.tar.gz
+*.tar
+*.zip
+*.rar
+*.7z
+*.gz
+*.bz2
+*.xz
+*.tar.xz
+*.tar.bz2
+
+# copied file
+*(copy).*
+
+# bak file
+*.bak
+*.swp
+*.swo
+*.bak?
+
+# ignore specific file
+

@@ -5,6 +5,8 @@ from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import os
 import argparse
+from htk_featio import read_htk_user_feat
+
 
 # Keep the same data directory structure and globals
 data_dir = "../Experiments"
@@ -27,14 +29,26 @@ globals = {
 
 class SpeechDataset(Dataset):
     def __init__(self, features_file, labels_file):
-        self.features = np.load(features_file)
-        self.labels = np.load(labels_file)
-
+        # Read feature file paths
+        with open(features_file, 'r') as f:
+            self.feature_paths = [line.strip() for line in f.readlines()]
+            
+        # Read label file paths
+        with open(labels_file, 'r') as f:
+            self.label_paths = [line.strip() for line in f.readlines()]
+            
     def __len__(self):
-        return len(self.features)
-
+        return len(self.feature_paths)
+    
     def __getitem__(self, idx):
-        return self.features[idx], self.labels[idx]
+        # Load feature from HTK file
+        feature = read_htk_user_feat(self.feature_paths[idx])
+        
+        # Load corresponding label
+        with open(self.label_paths[idx], 'r') as f:
+            label = np.array([int(x) for x in f.readline().strip().split()])
+            
+        return torch.FloatTensor(feature), torch.LongTensor(label)
 
 
 class DNNModel(nn.Module):
