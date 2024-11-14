@@ -108,7 +108,7 @@ In general, any ASR system can be tuned to tradeoff speed for accuracy. But, the
 Speech recognition is cast as a statistical optimization problem. Specifically, for a given sequence of observations $\mathbf{O} = \lbrace O_{1},\ldots,O_{N} \rbrace$, we seek the most likely word sequence $\mathbf{W} = \{ W_{1},\ldots,W_{M}\}$. That is, we are looking for the word sequence which maximizes the posterior probability $P\left( \mathbf{W} \middle| \mathbf{O} \right)\text{.\ }$ Mathematically, this can be expressed as:
 
 ```math
-\hat{W} = arg\,max_{W}P(W|O)
+\hat{W} = \mathrm{arg\,max}_{W}P(W|O)
 ```
 
 To solve this expression, we employ Bayes rule
@@ -120,7 +120,7 @@ P\left( W \middle| O \right) = \frac{P\left( O \middle| W \right)P\left( W \righ
 Because the word sequence does not depend on the marginal probability of the observation $P(O)$, this term can be ignored. This, we can rewrite this expression as
 
 ```math
-\hat{W} = \argmax_{W}P\left( O \middle| W \right)P(W)
+\hat{W} = \mathrm{arg\,max}_{W}P\left( O \middle| W \right)P(W)
 ```
 
 This is known as the fundamental equation of speech recognition. The speech recognition problem can be cast as a search over this joint model for the best word sequence.
