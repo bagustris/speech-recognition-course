@@ -32,13 +32,17 @@ Because we are extracting a chunk from a longer continuous signal is it importan
 
 If we let m be in the frame index, n is the sample index, and L is the frame size in samples and N is the frame shift in samples, each frame of audio is exacted from the original signal as
 
-$$ x_m[n] = w[n] x[m N+n], n=0, 1, \ldots, L-1 $$
+```math
+x_m[n] = w[n] x[m N+n], n=0, 1, \ldots, L-1
+```
 
 where $w[n]$ is the window function.
 
 We then transform each frame of data into the frequency-domain using a discrete Fourier transform.
 
-$$ X_m[k]=\sum_{n=0}^{N-1}x_m[n]e^{-j 2 \pi k n N} $$
+```math
+X_m[k]=\sum_{n=0}^{N-1}x_m[n]e^{-j 2 \pi k n N}
+```
 
 Note that all modern software packages have routines for efficiently computing the Fast Fourier Transform (FFT), which is an efficient way of computing the discrete Fourier transform.
 
@@ -58,7 +62,9 @@ Observe that the filters are narrow and closely spaced on the left size of the f
 
 It is typical to represent the mel filterbank as a matrix, where each row corresponds to one filter in the filterbank. Thus, P-dimensional mel filterbank coefficients can be computed from the magnitude spectrum as
 
-$$ X_{\tt{mel}}[p] = \sum_k M[p,k] \left|X_m[k]\right|,      p = 0, 1, \ldots, P-1 $$
+```math
+X_{\tt{mel}}[p] = \sum_k M[p,k] \left|X_m[k]\right|,      p = 0, 1, \ldots, P-1
+```
 
 A mel filterbank of length $40$ is typical, though state of the art system have been built with fewer or more. Fewer results in more smoothing and more results in less smoothing. 
 
@@ -80,7 +86,9 @@ There are other pre-processing steps that can be applied prior to feature extrac
 
 **Pre-emphasis**: applying a high pass filter to the signal prior to feature extraction to counteract that fact that typically the voiced speech at the lower frequencies has much high energy than the unvoiced speech at high frequencies. Pre-emphasis is performed with a simple linear filter.
 
-$$ y[n] = x[n] - \alpha x[n-1] $$
+```math
+y[n] = x[n] - \alpha x[n-1]
+```
 
 where a value of $\alpha=0.97$ is commonly used.
 
@@ -90,15 +98,19 @@ It is possible that the communication channel will introduce some bias (constant
 
 Thus, we can model the channel effects as a constant filter
 
-$$ X_{t,{\tt obs}}[k] = H[k] X_t[k] $$
+```math
+X_{t,{\tt obs}}[k] = H[k] X_t[k]
+```
 
 And the magnitude of the observation as
 
-$$ \left|X_{t,{\tt obs}}[k]\right| = \left|H[k]\right|\left|X_t[k]\right| $$
+```math
+\left|X_{t,{\tt obs}}[k]\right| = \left|H[k]\right|\left|X_t[k]\right|
+```
 
 If we take the log of both sides and compute the mean of all frames in the utterance, we have
 
-$$ 
+```math
 \begin{split}
 
 \mu_{\tt obs} &=\frac{1}{T}\sum_t \log\left(\left|X_{t,{\tt obs}}[k]\right|\right) \\
@@ -107,11 +119,13 @@ $$
 
 &=\frac{1}{T}\sum_t \log\left(\left|H[k]\right|\right)+\frac{1}{T}\sum_t \log\left(\left|X_t[k]\right|\right) 
 \end{split}
-$$
+```
 
 Now, if we assume that the filter is constant over time and the log magnitude of the underlying speech signal has zero mean, this can be simplified to:
 
-$$ \mu_{tt obs}=\log\left(\left|H[k]\right|\right) $$
+```math
+\mu_{tt obs}=\log\left(\left|H[k]\right|\right)
+```
 
 Thus, if we compute the mean of the log magnitude of the observed utterance and subtract it from every frame in the utterance, we’ll remove any constant channel effects from the signal.
 
@@ -123,47 +137,47 @@ For convenience, we perform this normalization on filterbank features directly, 
 
 To compute features for speech recognition from a speech signal, we are interested in extracting information about the time-varying spectral information that corresponds to the different underlying shapes of the vocal tract. These are modeled by a filter in the common source-filter model. The steps for computing the features for an utterance can be summarized as
 
-1. Pre-process the signal, including pre-emphasis and dithering
-2. Segment the signal into a series of overlapping frames, typically 25 ms frames with 10 ms frame shift
+1. Pre-process the signal, including pre-emphasis and dithering  
+2. Segment the signal into a series of overlapping frames, typically 25 ms frames with 10 ms frame shift  
 3. For each frame,  
-    - Apply a Hamming window function to the signal
-    - Compute the Fourier transform using the FFT operation
-    - Compute the magnitude of the spectrum
-    - Apply the mel filterbank
-    - Apply the log operation
-4. If channel compensation is desired, apply mean normalize the frames of filterbank coefficients.
+    - Apply a Hamming window function to the signal  
+    - Compute the Fourier transform using the FFT operation  
+    - Compute the magnitude of the spectrum  
+    - Apply the mel filterbank  
+    - Apply the log operation  
+4. If channel compensation is desired, apply mean normalize the frames of filterbank coefficients.  
 
 ## Lab: Feature extraction for speech recognition
 ### Required files:
-- `M2_Wav2Feat_Single.py`
-- `M2_Wav2Feat_Batch.py`
-- `speech_sigproc.py`
-- `htk_featio.py`
+- [M2_Wav2Feat_Single.py](../Experiments/M2_Wav2Feat_Single.py)
+- [M2_Wav2Feat_Batch.py](../Experiments/M2_Wav2Feat_Batch.py)
+- [speech_sigproc.py](../Experiments/speech_sigproc.py)
+- [htk_featio.py](../Experiments/htk_featio.py)
 
 #### Instructions:
 In this lab, you will write the core functions necessary to perform feature extraction on audio waveforms. Your program will convert an audio file to a sequence of log mel frequency filterbank ("FBANK") coefficients.
 
 The basic steps in features extraction are
 
-1. Pre-emphasis of the waveform
-2. Dividing the signal into overlapping segments or frames
-3. For each frame of audio:
-    - Windowing the frame
-    - Computing the magnitude spectrum of the frame
-    - Applying the mel filterbank to the spectrum to create mel filterbank coefficients
-    - Applying a logarithm operation to the mel filterbank coefficient
+1. Pre-emphasis of the waveform  
+2. Dividing the signal into overlapping segments or frames  
+3. For each frame of audio:  
+    - Windowing the frame  
+    - Computing the magnitude spectrum of the frame  
+    - Applying the mel filterbank to the spectrum to create mel filterbank coefficients  
+    - Applying a logarithm operation to the mel filterbank coefficient  
 
-In the lab, you will be supplied with python file called `speech_sigproc.py`. This file contains a partially completed python class called FrontEnd that performs feature extraction, using methods that perform the steps listed above. The methods for dividing the signal into frames (step 2) will be provided for you, as will the code for generating the coefficients of the mel filterbank that is used in step 3c. You are responsible for filling in the code in all the remaining methods.
+In the lab, you will be supplied with python file called `speech_sigproc.py`. This file contains a partially completed python class called FrontEnd that performs feature extraction, using methods that perform the steps listed above. The methods for dividing the signal into frames (step 2) will be provided for you, as will the code for generating the coefficients of the mel filterbank that is used in step 3c. You are responsible for filling in the code in all the remaining methods.  
 
-There are two top-level python scripts that call this class. The first is called `M2_Wav2Feat_Single.py`. This function reads a single pre-specified audio file, computes the features, and writes them to a feature file in HTK format.
+There are two top-level python scripts that call this class. The first is called `M2_Wav2Feat_Single.py`. This function reads a single pre-specified audio file, computes the features, and writes them to a feature file in HTK format.  
 
-In the first part of this lab, you are to complete the missing code in the FrontEnd class and then modify `M2_Wav2Feat_Single.py` to plot the following items:
+In the first part of this lab, you are to complete the missing code in the FrontEnd class and then modify `M2_Wav2Feat_Single.py` to plot the following items:  
 
-1. Waveform
-2. Mel frequency filterbank
-3. Log mel filterbank coefficients
+1. Waveform  
+2. Mel frequency filterbank  
+3. Log mel filterbank coefficients  
 
-You can compare the figures to the figures below. Once the code is verified to be working, the feature extraction program should be used to create feature vector files for the training, development, and test sets. This will be done using M2_Wav2Feat_Batch.py. This program takes a command line argument `–-set` (or `-s`) which takes as an argument either `train` , `dev` , or `test`. For example
+You can compare the figures to the figures below. Once the code is verified to be working, the feature extraction program should be used to create feature vector files for the training, development, and test sets. This will be done using M2_Wav2Feat_Batch.py. This program takes a command line argument `–-set` (or `-s`) which takes as an argument either `train` , `dev` , or `test`. For example  
 
     $ python M2_Wav2Feat_Batch.py –set train
 
