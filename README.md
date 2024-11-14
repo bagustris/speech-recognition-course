@@ -1,13 +1,13 @@
 # Speech-Recognition
 Material for learning speech recognition, based on Microsoft teaching material on EdX. 
 
-Convert from markdown to pdf with pandoc:
+Convert from markdown to pdf with pandoc in each module:
 
 ```bash
-pandoc module_X.md -o module_X.pdf
+pandoc readme.md -o readme.pdf
 ``` 
 
-where 'X' is the module number.
+Then you can inspect the generated PDFs.
 
 Logs: 
 - 07-11-2024: added module 1 md
