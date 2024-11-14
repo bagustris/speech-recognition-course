@@ -15,11 +15,11 @@ A note on terminology: in language modeling we often talk about sentences as the
 
 ## Vocabulary  
 
-
-
 We need to assign a probability to every possible sentence
 
+```math
 W = w_1 w_2 \ldots w_n
+```
 
 where n is the number of words, which is unbounded in principle. First, we simplify the problem by limiting the choice of words to a finite set, the vocabulary of the LM. Note the vocabulary of the LM is also the vocabulary of the speech recognizer – we cannot recognize a word that is not considered possible by the LM (i.e., it’s probability would be effectively zero).
 
@@ -27,42 +27,44 @@ Words outside the vocabulary are called out-of-vocabulary words, or OOVs. If we 
 
 ## Markov factorization and N-grams  
 
-
-
 Even with a finite vocabulary, we still have an infinite set of word sequences, so clearly we cannot parameterize the LM by listing the probability of every possible sentence. Even if we conceptually could do so, it would be impossible to get reliable probability estimates as the majority of possible sentences are very rare (the smaller a probability the more data is needed to estimate it reliably).
 
 We can work around both these problems by using a trick we already discussed in the acoustic modeling module: use the chain rule to factor the sentence probability into a product of conditional word probabilities, and then apply the Markov assumption to limit the number of states, and thereby, parameters.
 
+```math
 P(W) = P(w_1) \times P(w_2 |w_1) \times P(w_3 | w_1 w_2)
 \times \ldots \times P(w_n | w_1 \ldots w_{n-1})
+```
 
 Now let’s assume that the Markov state of the LM (often called the context or history) is limited to just one word. This gives us
 
+```math
 P(W) = P(w_1) \times P(w_2 |w_1) \times P(w_3 | w_2) \times
 \ldots \times P(w_n | w_{n-1})
+```
 
 Note how each word is now predicted by only the immediately preceding one, i.e., we’re using a first-order Markov model. However, in language modeling this terminology is not usually used, and instead we call such a model a bigram model, because it uses only statistics of two adjacent words at a time. Correspondingly, a second-order Markov model would be called a trigram model, and predict each word based on the preceding two, and so forth.
 
-The generalization of this scheme is the N-gram model, i.e., each word is conditioned on the previous N-1 words. The parameters of such a model as associated with N-grams, i.e., strings N words. It turns out that there is good improvement when going from bigrams to trigrams, but little improvement as N is increased further. Therefore, in practice we rarely use LMs beyond 4-grams and 5-grams. In the labs we we will use trigrams, and in the remainder of this module we will stick to bigrams for the most part, just to simplify notation. Just keep in mind that the concepts generalize to longer N-grams. 
+The generalization of this scheme is the N-gram model, i.e., each word is conditioned on the previous N-1 words. The parameters of such a model as associated with N-grams, i.e., strings N words. It turns out that there is good improvement when going from bigrams to trigrams, but little improvement as N is increased further. Therefore, in practice we rarely use LMs beyond 4-grams and 5-grams. In the labs we will use trigrams, and in the remainder of this module we will stick to bigrams for the most part, just to simplify notation. Just keep in mind that the concepts generalize to longer N-grams. 
 
 ## Sentence start and end
 
 To let our N-gram model assign probabilities to all possible finite word sequences we are left with one small problem: how will the model predict where to end the sentence? We could devise a separate model component for the sentence length n, but it is far easier to introduce a special end-of-sentence tag `</s>` into the vocabulary that marks the end of a sentence. In other words, the LM generates words left to right, and stops as soon as `</s>` is drawn according to the conditional probability distribution. Importantly, this also ensures that the (infinite) sum of all sentences probabilities is equal to one, as it should be for a probability distribution.
 
-Similarly, we also introduce a start-of-sentence tag `<s>`. It is inserted before the first word $w_1$, and in fact represents the context for the first real word. This is important because we want the first word to be predicted with knowledge that it is occurring first thing in the sentence. Certain words such as “I” and “well” are especially frequent in first position, and using the start-of-sentence tag we can represent this using the bigram probabilities $P(w_1 | <s>)$.
+Similarly, we also introduce a start-of-sentence tag `<s>`. It is inserted before the first word $w_1$, and in fact represents the context for the first real word. This is important because we want the first word to be predicted with knowledge that it is occurring first thing in the sentence. Certain words such as “I” and “well” are especially frequent in first position, and using the start-of-sentence tag we can represent this using the bigram probabilities $P(w_1 | \lt s \gt)$.
 
 The complete sentence probability according to the bigram model is now
 
 ```math
-P(W) = P(w_1 | <s>) \times P(w_2 |w_1) \times \ldots
-\times P(w_n | w_{n-1}) \times P(</s> | w_n)
+P(W) = P(w_1 | \lt s \gt ) \times P(w_2 |w_1) \times \ldots
+\times P(w_n | w_{n-1}) \times P(\lt/s\gt | w_n)
 ```
 
 We now turn to the problem of actually estimating these N-gram probabilities.
 
 ## N-gram probability estimation  
 
-The conditional probabilities based on N-grams can be naively estimated by their relative frequencies. Let c(w_1 \dots w_k) be the number of occurrences (or count) of the k-gram w_1 \ldots w_k. For example, the conditional probability of “bites” following “dog” is the ratio
+The conditional probabilities based on N-grams can be naively estimated by their relative frequencies. Let $c(w_1 \dots w_k)$ be the number of occurrences (or count) of the k-gram $w_1 \ldots w_k$. For example, the conditional probability of “bites” following “dog” is the ratio
 
 ```math
 P(bites| dog) = { c(dog\ bites) \over c(dog) }
@@ -87,7 +89,7 @@ P(w_k | w_1 \ldots w_{k-1}) = { c(w_1 \ldots w_k) \over c(w_1
 
 Relative frequencies as estimates for probabilities have one severe problem: they give probability zero to any N-gram that is not observed in the training data (the numerator in the equation becomes zero). Training data is finite, and we should not rule out a combination of words simply because our limited language sample did not contain it. (Another reason is that language is not a static system, and speakers come up with new expression and even words all the time, either because they are being creative or because language production is error-prone.)
 
-So we need a principled way to assign nonzero probability estimates to N-grams that we never seen, a process that is often called language model smoothing (we can think of the unobserved N-grams as "holes" in the model, that have to smoothed over). An entire sub-specialty of LM research has looked at this problem and many methods have been proposed, several of which are implemented by the SRILM tools. Here we will discuss one method in detail, known as Witten-Bell smoothing, chosen for two reasons. First, it is relative simple to explain and implement. Second, unlike some of the more sophisticated methods that make additional assumptions about the training data distribution, this method is a very robust.
+So we need a principled way to assign nonzero probability estimates to N-grams that we have never seen, a process that is often called language model smoothing (we can think of the unobserved N-grams as "holes" in the model, that have to smoothed over). An entire sub-specialty of LM research has looked at this problem and many methods have been proposed, several of which are implemented by the SRILM tools. Here we will discuss one method in detail, known as Witten-Bell smoothing, chosen for two reasons. First, it is relative simple to explain and implement. Second, unlike some of the more sophisticated methods that make additional assumptions about the training data distribution, this method is a very robust.
 
 The idea behind Witten-Bell smoothing is to treat the advent of a previously unseen word type as an event in itself, to be counted along with the seen words. How many times does an "unseen" word occur in the training data? Once for every unique word type, since the first time we encounter it, it counts as a novel word. For unigram (context-independent) probability estimates this means that
 
@@ -161,9 +163,9 @@ How to compute perplexity: Because probabilities are combined by multiplication,
 
 This means that perplexity is just the anti-logarithm (exponential) of the entropy, which means all the above metrics are equivalent and related as follows:
 
-    HIGH likelihood ↔ LOW entropy ↔ LOW perplexity ↔ GOOD model
+>   HIGH likelihood ↔ LOW entropy ↔ LOW perplexity ↔ GOOD model
 
-    LOW likelihood ↔ HIGH entropy ↔ HIGH perplexity ↔ BAD model
+>   LOW likelihood ↔ HIGH entropy ↔ HIGH perplexity ↔ BAD model
 
 Remember to evaluate model quality (by likelihood, entropy, or perplexity) on a test set that is independent (not part) of the training data to get an unbiased estimate.
 
@@ -171,7 +173,7 @@ Remember to evaluate model quality (by likelihood, entropy, or perplexity) on a 
 
 An N-gram language model effectively records the N-grams in the training data, since each such N-gram yields a probability estimate that becomes a parameter in the model. This has the disadvantage that model size grows almost linearly with the amount of training data. It would be good to eliminate parameters that are redundant, i.e., where the back-off mechanism gives essentially the same result after removing a higher-order N-gram parameter. In a related task, we may want to shrink a model down to a certain size (for practical reasons) such that the least important parameters are removed to save space.
 
-We can use the notion of entropy (or perplexity) to perform these tasks in a principled way. For each N-gram probability in the model, we can compute the change in entropy (perplexity) this entails, and if the difference is below some threshold eliminate, or prune, the parameter. After pruning probabilities, the model needs to be renormalized (back-off weights recomputed).
+We can use the notion of entropy (or perplexity) to perform these tasks in a principled way. For each N-gram probability in the model, we can compute the change in entropy (perplexity) this entails, and if the difference is below some threshold eliminates, or prune, the parameter. After pruning probabilities, the model needs to be renormalized (back-off weights recomputed).
 
 To make this algorithm practical, we don't need or want to use a separate test set to estimate entropy. Instead, we can use the entropy of the distribution embodied by the model itself. This leads to a succinct and [efficient pruning criterion](https://arxiv.org/pdf/cs/0006025v1.pdf) that uses only the information contained in the model.
 
@@ -234,11 +236,11 @@ Much of the success of ANNs in language modeling stems from overcoming two speci
 
 As depicted in the figure (taken from the Bengio et al. paper), the input to the network are unary (one-hot) encodings of the N - 1 words forming the N-gram context. The output is a vector of probabilities of predicted following words. (In both input and outputs, we use vectors of the length of the vocabulary size.) The model is thus a drop-in replacement for the old N-gram-based LM. The key is that the input words are reencoded via a shared matrix into new vectors, which are no longer one-hot, i.e., they live into a dense high-dimensional space. This mapping is shared for all context word positions, and, crucially, is trained concurrently with the next-word predictor. The beauty of this approach is that the learned word embeddings can be tuned to represent word similarity for the purposes of word prediction. In other words, context words that affect the next word similarly, will be encoded as nearby points in space, and the network can then exploit this similarity when encountering the words in novel combinations. This is because all network layers perform smooth mappings, i.e., nearby inputs will generate similar outputs. (It has been shown that words like 'Tuesday' and 'Wednesday' do indeed end up with similar embeddings.)
 
-The second limitation of N-grams that was overcome with ANN methods is the truncation of the context, which so far always was limited to the previous N - 1 words. This is a problem because language allows embedded clauses, arbitrarily long lists of adjectives, and other constructs that can put arbitrary distance between related words that would be useful in next-word prediction. Any reasonable value of N would be insufficient to capture all predictive words in a context. The limitation is overcome in recurrent networks , which feed the activations of a hidden layer at time t - 1 as extra inputs to the next processing step at time t, as shown in this figure:
+The second limitation of N-grams that was overcome with ANN methods is the truncation of the context, which so far always was limited to the previous N - 1 words. This is a problem because language allows embedded clauses, arbitrarily long lists of adjectives, and other constructs that can put arbitrary distance between related words that would be useful in next-word prediction. Any reasonable value of N would be insufficient to capture all predictive words in a context. The limitation is overcome in recurrent networks, which feed the activations of a hidden layer at time t - 1 as extra inputs to the next processing step at time t, as shown in this figure:
 
 ![Recurrent LM](./m4i2.JPG)
 
-This allows the network to pass information from one word position to the next, repeatedly, without a hard limit on how far back in time information originates that can be used to predict the current next word. There are practical issues with the trainability of such recurrent networks because the mathematical rules governing ANN activations lead to an exponential dilution of information over time. However, these problems can been solved with mechanisms to gate information flow from one time step to the next.
+This allows the network to pass information from one word position to the next, repeatedly, without a hard limit on how far back in time information originates that can be used to predict the current next word. There are practical issues with the trainability of such recurrent networks because the mathematical rules governing ANN activations lead to an exponential dilution of information over time. However, these problems can be solved with mechanisms to gate information flow from one time step to the next.
 
 Both feed-forward and recurrent network LMs have also benefited from general improvements in ANN technology, such as deeper stacking of network layers ('deep learning') and better training methods. Another trend in neural LMs is to base the model on characters rather than word units. It is clear that the flexibility that ANNs provide for experimenting with model architectures in terms of high-level information flow, rather than having to worry about the detailed design of encodings and probability distributions, have greatly advanced the field, with more still to come.
 
@@ -329,7 +331,7 @@ SOLUTION left to the reader!
 
 ### Defining a vocabulary
 
-The first step in building a LM is to define the set of words that it should model. We want to cover the largest possible share of the word tokens with the smallest set of words, so as to keep model size to a minimum. That suggests picking the words that are most frequent based on the training data.
+The first step in building a LM is to define the set of words that it should model. We want to cover the largest possible share of the word tokens with the smallest set of words, to keep model size to a minimum. That suggests picking the words that are most frequent based on the training data.
 
 One of the functions of the ngram-count tool is to count word and ngram occurrences in a text file.
 
