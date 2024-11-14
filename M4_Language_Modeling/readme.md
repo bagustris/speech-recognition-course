@@ -122,12 +122,12 @@ How should we distribute the discounted probability mass for a given context? On
 So we now have probability $1/3$ to share with all the other words that might follow "white dog". Distributing it evenly would ignore the fact that some words are just overall more frequent than others. Therefore, we could distribute $1/3$ in proportion to the unigram probabilities of words. However, this would make "white dog the" much more probable than "white dog barks", since "the" much more common than "barks". A better solution is to use reduced context, in this case just "dog" to allocate the probability mass. This means we can draw all occurrences of "dog" to guess what could come next. This method is called back-off, since we are falling back to a shorter (1-word) version of the context when the following word has not been observed in the full (2-word) context. We can write this as
 
 ```math
-{\hat{P}}_{\text{bo}}\left( w_{k} \right|w_{1}\ldots w_{k - 1}) = \ \left\{ \begin{matrix} \hat{P}\left( w_{k} \right|w_{1}\ldots w_{k - 1}),\ \ \ c(w_{1}\ldots w_{k}) > 0 \\ {\hat{P}}_{\text{bo}}\left( w_{k} \right|w_{2}\ldots w_{k - 1})\ \alpha(w_{2}\ldots w_{k - 1}),\ \  c\left( w_{1}\ldots w_{k} \right) = 0 \\ \end{matrix} \right.\
+{\hat{P}}_{\text{bo}}\left( w_{k} \right|w_{1}\ldots w_{k - 1}) = \ \left\{ \begin{matrix} \hat{P}\left( w_{k} \right|w_{1}\ldots w_{k - 1}),\ \ \ c(w_{1}\ldots w_{k}) > 0 \\ {\hat{P}}_{\text{bo}}\left( w_{k} \right|w_{2}\ldots w_{k - 1})\ \alpha(w_{2}\ldots w_{k - 1}),\ \  c\left( w_{1}\ldots w_{k} \right) = 0 \\ \end{matrix} \right.
 ```
 
 $\hat{P}_{bo}$ is the new back-off estimate for all N-grams. If an N-grams has been observed (count > 0, the first branch) it makes direct use of the discounted estimates $\hat{P}$. If the N-grams is unseen in training, looks up the estimate recursively for the shortened context (leaving out $w_1$) and then scales it by a factor α, which is a function of the context, so that the estimates for all w_k again sum to one. ($α$ is the probability of the unseen words in context $w_1…w_{k−1}$, as discussed earlier, divided by the sum of the same unseen-word probabilities according to the back-off distribution $\hat{P}_{bo}(⋅|w_2…w_{k−1}$).
 
-The α parameters are called backoff weights, but they are not free parameters of the model. Rather, once the N-gram probabilities \hat{P} have been determined, the backoff weights are completely determined. Computing them is sometimes called (re-)normalizing the model, since they are chosen just so all the probability distributions sum to unity.
+The $\alpha$ parameters are called backoff weights, but they are not free parameters of the model. Rather, once the N-gram probabilities \hat{P} have been determined, the backoff weights are completely determined. Computing them is sometimes called (re-)normalizing the model, since they are chosen just so all the probability distributions sum to unity.
 
 
 ## Likelihood, Entropy, and Perplexity
@@ -151,7 +151,7 @@ Viewed as a function of the model, this is sometimes called the log likelihood o
 - \frac{1}{n}\log{P(w_{1}\ldots w_{n})}
 ```
 
-we get a metric called entropy, which is a measure of information rate of the word stream. The entropy gives us the average number of bits required to encode the word stream using a code based on the model probabilities (more probable words are encoded with fewer bits, so as to minimize the overall bit rate).
+we get a metric called entropy, which is a measure of information rate of the word stream. The entropy gives us the average number of bits required to encode the word stream using a code based on the model probabilities (more probable words are encoded with fewer bits, to minimize the overall bit rate).
 
 Yet another metric for model quality (relative to some test data) is the average reciprocal of the word probability, or perplexity. So, if words on average are assigned probability 1/100 then the perplexity would be 100. In other words, the perplexity is the size of a vocabulary of equally probable words that produces the same uncertainty about what comes next, as the actual model in question (justifying the term "perplexity").
 
