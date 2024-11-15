@@ -1,4 +1,5 @@
-# Speech-Recognition
+# Speech recognition course
+
 Material for learning speech recognition, based on Microsoft teaching material on EdX (changed CNTK to PyTorch. Learning/teaching materials are given in each module/directory.
 
 Convert from markdown to pdf with pandoc in each module:
