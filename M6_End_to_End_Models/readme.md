@@ -29,7 +29,7 @@ Acoustic modeling is essentially a sequential task. Given a sequence of acoustic
 
 Sequential objective functions allow the training labels to drift in time. As the model converges, it finds a segmentation that explains the labels and obeys the constraint that the ground-truth sequence label sequence is unchanged.
 
-Whereas the frame-based cross entropy objective function requires a sequence of labels z\lbrack t\rbrack that is the same length as the acoustic feature vector sequence, sequential objective functions specify a sequence of symbols $S = \left\{ s_{0},s_{1},\ldots,\ s_{K - 1} \right\}$ for each utterance. An alignment from the T acoustic features to the K symbols is denoted by $\pi\left\lbrack t \right\rbrack$. The label for time t is found in the entry of $S$ indexed by $\pi[t]$.
+Whereas the frame-based cross entropy objective function requires a sequence of labels $z\lbrack t\rbrack$ that is the same length as the acoustic feature vector sequence, sequential objective functions specify a sequence of symbols $S=\lbrace s_{0},s_{1},\ldots,\ s_{K - 1} \rbrace$ for each utterance. An alignment from the T acoustic features to the K symbols is denoted by $\pi\left\lbrack t \right\rbrack$. The label for time $t$ is found in the entry of $S$ indexed by $\pi[t]$.
 
 ![Hard Labels](./m6i1.png)
 
