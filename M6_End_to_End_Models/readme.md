@@ -60,7 +60,10 @@ The recursion moves forward in time by first projecting this score through a tra
 The transition matrix $T$ simply restricts the model topology to be left-to-right.
 
 ```math
-t_{\text{ij}} = \ \left\{ \begin{matrix} 1 & i = j, \\ 1 & i = j + 1, \\ 0 & \text{otherwise} \\ \end{matrix} \right. \
+t_{\text{ij}} = \left\{ \begin{matrix} 
+1 & i = j, \\ 
+1 & i = j + 1, \\ 
+0 & \text{otherwise} \end{matrix} \right.
 ```
 
 An example of this forward variable computed on an utterance about 2.6 seconds long, and containing 66 labels, is shown below. Yellow indicates larger values of the forward variable, and purple represents smaller values. Structures depart the main branch, searching possible paths forward in time. Because the alpha computation for a particular time has no information about the future, it is exploring all viable paths with the current information.
