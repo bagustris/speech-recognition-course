@@ -1,6 +1,14 @@
 # Speech recognition course
 
-Material for learning speech recognition, based on Microsoft teaching material on EdX (changed CNTK to PyTorch. Learning/teaching materials are given in each module/directory.
+Material for learning speech recognition, based on Microsoft teaching material on EdX (changed from CNTK to PyTorch). Learning/teaching materials are given in each module/directory.
+
+## Modules
+- [Module 1: Introduction to Speech Recognition](./M1_Introduction/readme.md)
+- [Module 2: Speech Signal Processing](./M2_Speech_Signal_Processing/readme.md)
+- [Module 3: Acoustic Modeling](./M3_Acoustic_Modeling/readme.md)
+- [Module 4: Language Modeling](./M4_Language_Modeling/readme.md)
+- [Module 5: Decoding](./M5_Decoding/readme.md)
+- [Module 6: End-to-End Models](./M6_End_to_End_Models/readme.md)
 
 Convert from markdown to pdf with pandoc in each module:
 
