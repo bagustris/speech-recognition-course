@@ -41,7 +41,9 @@ L = \ {P\left( S \middle| \pi \right)P\left( \pi \right)} = {P\left( \pi \right)
 
 Let $\overset{\overline{}}{z}\left\lbrack k \right\rbrack$ represent the $K$ symbols in the label sequence, after duplicates have been removed. Define a HMM that represents moving through each of these labels in order. It always begins in state zero, always ends in state $K - 1$, and will emit symbol $\overset{\overline{}}{z}\lbrack k\rbrack$ in state $k$. The soft alignment is the product of a forward variable $\alpha$ and a backward variable $\beta$. The nonzero values are given by:
 
-$$ \gamma\left\lbrack \overset{\overline{}}{z}\left\lbrack k \right\rbrack,t \right\rbrack = \alpha\left\lbrack k,t \right\rbrack\beta\lbrack k,t\rbrack $$
+```math
+\gamma\left\lbrack \overset{\overline{}}{z}\left\lbrack k \right\rbrack,t \right\rbrack = \alpha\left\lbrack k,t \right\rbrack\beta\lbrack k,t\rbrack
+```
 
 The forward recursion computes the score of state k given the acoustic evidence up to, and including, time t. Its initial state is the model's prediction for the score of the first label in the sequence.
 
