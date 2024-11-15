@@ -47,7 +47,9 @@ Let $\overset{\overline{}}{z}\left\lbrack k \right\rbrack$ represent the $K$ sym
 
 The forward recursion computes the score of state k given the acoustic evidence up to, and including, time t. Its initial state is the model's prediction for the score of the first label in the sequence.
 
-$$ \alpha\lbrack k,0\rbrack = \left\{ \begin{matrix} y\left\lbrack \overset{\overline{}}{z}\left\lbrack k \right\rbrack,\ 0 \right\rbrack & k = 0, \\ 0 & \text{otherwise} \\ \end{matrix} \right.\ $$
+```math
+\alpha\lbrack k,0\rbrack = \left\{ \begin{matrix} y\left\lbrack \overset{\overline{}}{z}\left\lbrack k \right\rbrack,\ 0 \right\rbrack & k = 0, \\ 0 & \text{otherwise} \\ \end{matrix} \right.\
+```
 
 The recursion moves forward in time by first projecting this score through a transition matrix $T$ with elements $t_{\text{ij}}$, and then applying the model's score for the labels.
 
