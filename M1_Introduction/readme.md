@@ -1,4 +1,18 @@
-## Sound and Human Speech
+# Module 1: Introduction
+## Table of Contents
+- [Introduction](#introduction)
+- [Sound and Human Speech](#sound-and-human-speech)
+- [Phonetics](#phonetics)
+- [Phonology](#phonology)
+- [Speech Production](#speech-production)
+- [Words and Syntax](#words-and-syntax)
+- [Semantics](#semantics)
+- [Measuring Performance](#measuring-performance)
+- [Significance Testing](#significance-testing)
+- [Real-time Factor](#real-time-factor)
+- [The Fundamental Equation](#the-fundamental-equation)
+- [Lab](#lab) 
+
 Developing and understanding Automatic Speech Recognition systems is an inter-disciplinary activity, taking expertise in linguistics, computer science, and electrical engineering.
 
 This course will focus on the structure of American English speech. Other languages may differ in more or less significant ways, from the use of tone to convey meaning, to the sets of meaningful distinctions in the sound inventory of the language.

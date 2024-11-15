@@ -1,5 +1,16 @@
 # Speech Signal Processing
 
+## Table of Contents
+- [Introduction](#introduction)
+- [Feature Extraction for Speech Recognition](#feature-extraction-for-speech-recognition)
+- [Mel filtering](#mel-filtering)
+- [Logarithmic compression](#logarithmic-compression)
+- [Other considerations](#other-considerations)
+- [Feature Normalization](#feature-normalization)
+- [Summary](#summary)
+- [Lab](#lab)
+
+
 ## Introduction
 Speech sound waves propagate through the air and are captured by a microphone which converts the pressure wave into electrical activity which can be captured. The electrical activity is sampled to create a sequence of waveform samples that describe the signal. Music signals are typically sampled at 44,100 Hz (or 44,100 samples per second). Due to the Nyquist theorem, this means that audio with frequencies of up to 22,050 Hz can be faithfully captured by sampling. Speech signals have less high frequency (only up to 8000 Hz) information so a sampling rate of 16,000 Hz is typically used. Speech over conventional telephone lines and most mobile phones is band-limited to about 3400 Hz, so a sampling rate of 8000 Hz is typically used for telephone speech.
 
@@ -147,8 +158,10 @@ To compute features for speech recognition from a speech signal, we are interest
     - Apply the log operation  
 4. If channel compensation is desired, apply mean normalize the frames of filterbank coefficients.  
 
-## Lab: Feature extraction for speech recognition
-### Required files:
+## Lab
+
+### Feature extraction for speech recognition
+#### Required files:
 - [M2_Wav2Feat_Single.py](../Experiments/M2_Wav2Feat_Single.py)
 - [M2_Wav2Feat_Batch.py](../Experiments/M2_Wav2Feat_Batch.py)
 - [speech_sigproc.py](../Experiments/speech_sigproc.py)

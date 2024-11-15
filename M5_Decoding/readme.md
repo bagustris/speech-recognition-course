@@ -1,5 +1,18 @@
 # Speech Decoding
 
+## Table of Contents
+- [Overview](#overview)
+- [Weighted Finite State Transducers](#weighted-finite-state-transducers)
+- [The Decoding Problem](#the-decoding-problem)
+- [The Grammar, a Finite State Acceptor](#the-grammar-a-finite-state-acceptor)
+- [The HMM State Transducer, a Finite State Transducer](#the-hmm-state-transducer-a-finite-state-transducer)
+- [Weighted Finite State Transducers and Acceptors](#weighted-finite-state-transducers-and-acceptors)
+- [The N-gram Grammar Transducer, a More Complex Grammar WFST](#the-n-gram-grammar-transducer-a-more-complex-grammar-wfst)
+- [Graph Composition](#graph-composition)
+- [The Search](#the-search)
+- [Quiz](#quiz)
+- [Lab](#lab)
+
 ## Overview  
 
 The acoustic model scores sequences of acoustic model labels. For every time frame of input data, it computes the relative score for every label. Every sequence of labels has an associated score.
@@ -225,7 +238,7 @@ An visualization of the HMM transducer covering three of the ten phones in our t
 
 A weighted finite state automaton (WFSA) is a FSA that assigns a score to every sequence that it accepts. Every string that the automaton accepts is mapped to a score. A lexical FST might be augmented with weights to encode the relative probability of each word's pronunciation variants. A grammar FSA can be augmented with weights to encode the relative probability of the word sequences it represents.  
 
-## The ngram Grammar Transducer, a More Complex Grammar WFST
+## The n-gram Grammar Transducer, a More Complex Grammar WFST
 
 An ngram language model, such as those developed in Module 4, can be approximately expressed as a WFSA that accepts strings of words, interspersed with special non-word tokens that indicate when the language model context experiences a backoff. As an example, we will examine a small part of a transducer that encodes the following ngrams:
 

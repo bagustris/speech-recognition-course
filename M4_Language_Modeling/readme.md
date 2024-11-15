@@ -1,5 +1,20 @@
 # Language Modeling
 
+## Table of Contents
+- [Introduction](#introduction)
+- [Vocabulary](#vocabulary)
+- [Markov factorization and N-grams](#markov-factorization-and-n-grams)
+- [N-gram probability estimation](#n-gram-probability-estimation)
+- [N-gram smoothing and discounting](#n-gram-smoothing-and-discounting)
+- [Back-off in N-gram models](#back-off-in-n-gram-models)
+- [Likelihood, Entropy, and Perplexity](#likelihood-entropy-and-perplexity)
+- [N-gram Pruning](#n-gram-pruning)
+- [Interpolating Probabilities](#interpolating-probabilities)
+- [Merging Models](#merging-models)
+- [Class-based Language Models](#class-based-language-models)
+- [Neural Network Language Models](#neural-network-language-models)
+- [Lab](#lab)
+
 
 ## Introduction
 
@@ -244,7 +259,9 @@ This allows the network to pass information from one word position to the next, 
 
 Both feed-forward and recurrent network LMs have also benefited from general improvements in ANN technology, such as deeper stacking of network layers ('deep learning') and better training methods. Another trend in neural LMs is to base the model on characters rather than word units. It is clear that the flexibility that ANNs provide for experimenting with model architectures in terms of high-level information flow, rather than having to worry about the detailed design of encodings and probability distributions, have greatly advanced the field, with more still to come.
 
-## M4 Lab: Language Modeling
+## Lab 
+
+## Language Modeling
 
 This lab covers the following topics:
 - Defining a top-N vocabulary from training data
@@ -584,7 +601,8 @@ The tuning of interpolation weights would be rather tedious if carried out by tr
 
 TASK (optional): Use compute-best-mix to find the best -lambda value for interpolation for the two models we built.
 
-HINT: As input to the command, generate detailed perplexity output for both models, using ngram -debug 2 -ppl data/ami-dev.txt .
+HINT: As input to the command, generate detailed perplexity output for both models, using `ngram -debug 2 -ppl data/ami-dev.txt`.
+
 Model pruning
 
 We saw earlier that model size (and perplexity) varies with the amount of training data. However, if a model gets too big for deployment as the data size increases it would be a shame to have to not use it just for that reason. A better approach is to train a model on all available data, and then eliminate parameters that are redundant or have little effect on model performance. This is what model pruning does.
