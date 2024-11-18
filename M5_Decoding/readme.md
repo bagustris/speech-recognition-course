@@ -369,10 +369,10 @@ Question 6
 
 When successfully applied, which of these algorithms tend to make the resulting structure larger? (Choose all that apply)
 
-- [] Minimization
-- [] Determinization
-- [] Composition
-- [] None of the Above
+- [ ] Minimization  
+- [ ] Determinization   
+- [ ] Composition  
+- [ ] None of the Above  
 
 
 Question 7
