@@ -3,3 +3,25 @@ kramdown:
   math_engine: mathjax
   syntax_highlighter: rouge
   parse_block_html: true
+
+exclude:
+  - node_modules
+  - script
+  - ./M
+
+sass:
+  style: :compressed
+
+theme: jekyll-theme-primer
+
+github:
+  private: false
+  license:
+    name: MIT
+  source:
+    branch: "master"
+    path: "/"
+  repository_url: "https://github.com/bagustris/speech-recognition-course"
+  
+title: Speech Recognition Course
+description: A course on speech recognition
