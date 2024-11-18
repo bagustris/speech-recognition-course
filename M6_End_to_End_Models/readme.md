@@ -54,7 +54,7 @@ Let $\overset{\overline{}}{z}\left\lbrack k \right\rbrack$ represent the $K$ sym
 $$\gamma\left\lbrack \overset{\overline{}}{z}\left\lbrack k \right\rbrack,t \right\rbrack = \alpha\left\lbrack k,t \right\rbrack\beta\lbrack k,t\rbrack
 $$
 
-The forward recursion computes the score of state k given the acoustic evidence up to, and including, time t. Its initial state is the model's prediction for the score of the first label in the sequence.
+The forward recursion computes the score of state k given the acoustic evidence up to, and including, time $t$. Its initial state is the model's prediction for the score of the first label in the sequence.
 
 $$\alpha\lbrack k,0\rbrack = \left\{ 
     \begin{matrix} 
@@ -70,7 +70,7 @@ $$
 
 The transition matrix $T$ simply restricts the model topology to be left-to-right.
 
-$$t_{\text{ij}} = \left\{ \begin{matrix} 
+$$t_{\text{ij}} = \left\lbrace \begin{matrix} 
 1 & i = j, \\ 
 1 & i = j + 1, \\ 
 0 & \text{otherwise} \end{matrix} \right.
