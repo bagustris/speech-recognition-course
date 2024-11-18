@@ -291,13 +291,11 @@ Because the decoder doesn't need this information, these symbols are usually rep
 
 ## The Search  
 
-
-
 Speech recognition decoding is the process of finding the word sequence that jointly maximizes the language model score and acoustic model score. A sequence of acoustic states is assigned an acoustic model score by the acoustic model, and a language model score by path it describes through the decoding graph.
 
-It is a path search algorithm through the decoding graph, where the score of the path is the sum of the score given to it by the decoding graph, and the score given to it by the acoustic model. Due to the nature of our models, we can use a simple dynamic programming approach to find the shortest path. If the best path passes through state S at time T, then it includes the best prefix path ending at time T and state S.
+It is a path search algorithm through the decoding graph, where the score of the path is the sum of the score given to it by the decoding graph, and the score given to it by the acoustic model. Due to the nature of our models, we can use a simple dynamic programming approach to find the shortest path. If the best path passes through state $S$ at time $T$, then it includes the best prefix path ending at time $T$ and state $S$.
 
-A typical frame synchronous beam search proceeds in three stages. For each time t,
+A typical frame synchronous beam search proceeds in three stages. For each time $t$,
 
 1. Advance each partial hypothesis forward in the graph across arcs that have a non-epsilon input symbol.
    1.  As a result, all the new partial hypotheses that are generated have exactly t input symbols in their path.

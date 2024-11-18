@@ -18,7 +18,7 @@ If we define
 $$z\lbrack i,t\rbrack = \left\lbrace \begin{matrix} 1 & z\lbrack t\rbrack = i, \\ 0 & \text{otherwise} \end{matrix} \right.
 $$
 
-then the cross-entropy against the softmax network ouput $y[i,t]$ is as follows.
+then the cross-entropy against the softmax network output $y[i,t]$ is as follows.
 
 $$L = - \sum_{t = 1}^{T} \sum_{i = 1}^{M} z\left\lbrack i,t \right\rbrack\log\left( y\left\lbrack i,t \right\rbrack \right)
 $$
@@ -82,7 +82,7 @@ The backward recursion computes the score of state k given acoustic evidence fro
 $$\beta\left\lbrack k,T - 1 \right\rbrack = 1 
 $$
 
-The recursion applies the appropriate acoustic score from the model, and then projects the state backward in time using the transpose of the transition matrix T.
+The recursion applies the appropriate acoustic score from the model, and then projects the state backward in time using the transpose of the transition matrix $T$.
 
 $$\beta_{k}\left\lbrack t \right\rbrack = \sum_{j}^{}{t_{jk}\beta\left\lbrack j,t + 1 \right\rbrack}y\lbrack\overset{\overline{}}{z}\lbrack j\rbrack,t + 1\rbrack\backslash n 
 $$

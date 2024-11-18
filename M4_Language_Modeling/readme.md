@@ -62,7 +62,7 @@ The generalization of this scheme is the N-gram model, i.e., each word is condit
 
 To let our N-gram model assign probabilities to all possible finite word sequences we are left with one small problem: how will the model predict where to end the sentence? We could devise a separate model component for the sentence length n, but it is far easier to introduce a special end-of-sentence tag `</s>` into the vocabulary that marks the end of a sentence. In other words, the LM generates words left to right, and stops as soon as `</s>` is drawn according to the conditional probability distribution. Importantly, this also ensures that the (infinite) sum of all sentences probabilities is equal to one, as it should be for a probability distribution.
 
-Similarly, we also introduce a start-of-sentence tag `<s>`. It is inserted before the first word $w_1$, and in fact represents the context for the first real word. This is important because we want the first word to be predicted with knowledge that it is occurring first thing in the sentence. Certain words such as “I” and “well” are especially frequent in first position, and using the start-of-sentence tag we can represent this using the bigram probabilities $P(w_1 | \lt s \gt)$.
+Similarly, we also introduce a start-of-sentence tag `<s>`. It is inserted before the first word $w_1$, and in fact represents the context for the first real word. This is important because we want the first word to be predicted with knowledge that it is occurring first thing in the sentence. Certain words such as “I” and “well” are especially frequent in first position, and using the start-of-sentence tag we can represent this using the bigram probabilities $P(w_1 \vert \lt s \gt)$.
 
 The complete sentence probability according to the bigram model is now
 
@@ -127,7 +127,7 @@ So we now have probability $1/3$ to share with all the other words that might fo
 $${\hat{P}}_{\text{bo}}\left( w_{k} \right|w_{1}\ldots w_{k - 1}) = \ \left\{ \begin{matrix} \hat{P}\left( w_{k} \right|w_{1}\ldots w_{k - 1}),\ \ \ c(w_{1}\ldots w_{k}) > 0 \\ {\hat{P}}_{\text{bo}}\left( w_{k} \right|w_{2}\ldots w_{k - 1})\ \alpha(w_{2}\ldots w_{k - 1}),\ \  c\left( w_{1}\ldots w_{k} \right) = 0 \\ \end{matrix} \right.
 $$
 
-$\hat{P}_{bo}$ is the new back-off estimate for all N-grams. If an N-grams has been observed (count > 0, the first branch) it makes direct use of the discounted estimates $\hat{P}$. If the N-grams is unseen in training, looks up the estimate recursively for the shortened context (leaving out $w_1$) and then scales it by a factor α, which is a function of the context, so that the estimates for all w_k again sum to one. ($α$ is the probability of the unseen words in context $w_1…w_{k−1}$, as discussed earlier, divided by the sum of the same unseen-word probabilities according to the back-off distribution $\hat{P}_{bo}(⋅|w_2…w_{k−1}$).
+$\hat{P}_{bo}$ is the new back-off estimate for all N-grams. If an N-grams has been observed (count > 0, the first branch) it makes direct use of the discounted estimates $\hat{P}$. If the N-grams is unseen in training, looks up the estimate recursively for the shortened context (leaving out $w_1$) and then scales it by a factor α, which is a function of the context, so that the estimates for all w_k again sum to one. ($\alpha$ is the probability of the unseen words in context $w_1…w_{k−1}$, as discussed earlier, divided by the sum of the same unseen-word probabilities according to the back-off distribution $\hat{P}_{bo}(⋅\vert w_2…w_{k−1}$).
 
 The $\alpha$ parameters are called backoff weights, but they are not free parameters of the model. Rather, once the N-gram probabilities \hat{P} have been determined, the backoff weights are completely determined. Computing them is sometimes called (re-)normalizing the model, since they are chosen just so all the probability distributions sum to unity.
 
@@ -147,7 +147,7 @@ $$
 
 Viewed as a function of the model, this is sometimes called the log likelihood of the model on the test data. Log likelihoods are always negative because the probabilities are less than one. If we flip the sign, and take the average over all the words in the test data
 
-$$- \frac{1}{n}\log{P(w_{1}\ldots w_{n})}
+$$- \frac{1}{n}\log{P(w_{1}\ldots w_{n})},
 $$
 
 we get a metric called entropy, which is a measure of information rate of the word stream. The entropy gives us the average number of bits required to encode the word stream using a code based on the model probabilities (more probable words are encoded with fewer bits, to minimize the overall bit rate).
@@ -205,7 +205,7 @@ Fortunately, in the case of backoff N-gram based LMs we can construct a single c
 
        end
 
-       Compute backoff weights for all ngram contexts of length k−1 in the new model
+       Compute backoff weights for all n-gram contexts of length k−1 in the new model
 
     end
 
@@ -233,7 +233,7 @@ Much of the success of ANNs in language modeling stems from overcoming two speci
 
 As depicted in the figure (taken from the Bengio et al. paper), the input to the network are unary (one-hot) encodings of the N - 1 words forming the N-gram context. The output is a vector of probabilities of predicted following words. (In both input and outputs, we use vectors of the length of the vocabulary size.) The model is thus a drop-in replacement for the old N-gram-based LM. The key is that the input words are reencoded via a shared matrix into new vectors, which are no longer one-hot, i.e., they live into a dense high-dimensional space. This mapping is shared for all context word positions, and, crucially, is trained concurrently with the next-word predictor. The beauty of this approach is that the learned word embeddings can be tuned to represent word similarity for the purposes of word prediction. In other words, context words that affect the next word similarly, will be encoded as nearby points in space, and the network can then exploit this similarity when encountering the words in novel combinations. This is because all network layers perform smooth mappings, i.e., nearby inputs will generate similar outputs. (It has been shown that words like 'Tuesday' and 'Wednesday' do indeed end up with similar embeddings.)
 
-The second limitation of N-grams that was overcome with ANN methods is the truncation of the context, which so far always was limited to the previous N - 1 words. This is a problem because language allows embedded clauses, arbitrarily long lists of adjectives, and other constructs that can put arbitrary distance between related words that would be useful in next-word prediction. Any reasonable value of N would be insufficient to capture all predictive words in a context. The limitation is overcome in recurrent networks, which feed the activations of a hidden layer at time t - 1 as extra inputs to the next processing step at time t, as shown in this figure:
+The second limitation of N-grams that was overcome with ANN methods is the truncation of the context, which so far always was limited to the previous $N - 1$ words. This is a problem because language allows embedded clauses, arbitrarily long lists of adjectives, and other constructs that can put arbitrary distance between related words that would be useful in next-word prediction. Any reasonable value of $N$ would be insufficient to capture all predictive words in a context. The limitation is overcome in recurrent networks, which feed the activations of a hidden layer at time $t - 1$ as extra inputs to the next processing step at time $t$, as shown in this figure:
 
 ![Recurrent LM](./m4i2.JPG)
 

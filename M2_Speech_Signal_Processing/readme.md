@@ -190,6 +190,5 @@ When the training set features are computed (`–set train`) the code will also 
 
 Here are the outputs you should get from plotting:
 
-![](L2a.png)
-![](L2b.png)
+![](L2a.png) ![](L2b.png)
 ![](L2c.png)

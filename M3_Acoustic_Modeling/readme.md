@@ -35,7 +35,7 @@ $$
 
 Under this assumption, the joint probability of a 5-day forecast can be written as
 
-$$math 
+$$ 
 \begin{split}
 p(X1,X2,X3,X4,X5) &= p(X5|X4)p(X4|X3)p(X3|X2)p(X2|X1)p(X1) \\
 
@@ -237,7 +237,7 @@ Unlike feedforward DNNs, recurrent networks process data as a sequence and have 
 
 $$ h_t^i = f(W^i h_t^{i-1} + U^i h_{t-1}^i + c^i) $$
 
-where f(\cdot) is a nonlinearity such as a sigmoid or relu function, i is the layer of the network, t is the frame or time index, and the input x is equivalent to the output of the zeroth layer, $h_t^0=x_t$.
+where $f(\cdot)$ is a nonlinearity such as a sigmoid or relu function, i is the layer of the network, $t$ is the frame or time index, and the input $x$ is equivalent to the output of the zeroth layer, $h_t^0=x_t$.
 
 In contrast to a feedforward layer, a recurrent layer's output has a dependence on both the current input and the output from the previous time step. If you are familiar with filtering operations in signal processing, an RNN layer can be considered a nonlinear infinite impulse response (IIR) filter.
 
