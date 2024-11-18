@@ -1,4 +1,4 @@
-# Speech Recognition Course
+<!-- # Speech Recognition Course -->
 
 Material for learning speech recognition, based on Microsoft teaching material on EdX (changed from CNTK to PyTorch). Learning/teaching materials are given in each module/directory.
 
