@@ -117,10 +117,9 @@ In general, any ASR system can be tuned to tradeoff speed for accuracy. But, the
 
 ## The Fundamental Equation
 
-Speech recognition is cast as a statistical optimization problem. Specifically, for a given sequence of observations $\mathbf{O} = \lbrace O_{1},\ldots,O_{N} \rbrace$, we seek the most likely word sequence $\mathbf{W} = \{ W_{1},\ldots,W_{M}\}$. That is, we are looking for the word sequence which maximizes the posterior probability $P\left( \mathbf{W} \middle| \mathbf{O} \right)\text{.\ }$ Mathematically, this can be expressed as:
+Speech recognition is cast as a statistical optimization problem. Specifically, for a given sequence of observations $\mathbf{O} = \lbrace O_{1},\ldots,O_{N} \rbrace$, we seek the most likely word sequence $\mathbf{W} = \lbrace W_{1},\ldots,W_{M}\brace$. That is, we are looking for the word sequence which maximizes the posterior probability $P( \mathbf{W} \middle| \mathbf{O} )\text{.\ }$ Mathematically, this can be expressed as:
 
-$$\hat{W} = \mathrm{arg\,max}_{W}P(W|O)
-$$
+$$\hat{W} = \mathrm{arg\,max}_{W}P(W|O)$$
 
 To solve this expression, we employ Bayes rule
 
@@ -134,7 +133,7 @@ $$
 
 This is known as the fundamental equation of speech recognition. The speech recognition problem can be cast as a search over this joint model for the best word sequence.
 
-The equation has a component $P(O|W)$ known as an acoustic model, that describes the distribution over acoustic observations $O$ given the word sequence $W$. The acoustic model is responsible for modeling how sequences of words are converted into acoustic realizations, and then into the acoustic observations presented to the ASR system. Acoustics and acoustic modeling are covered in Modules 2 and 3 of this course.
+The equation has a component $`P(O|W)`$ known as an acoustic model, that describes the distribution over acoustic observations $O$ given the word sequence $W$. The acoustic model is responsible for modeling how sequences of words are converted into acoustic realizations, and then into the acoustic observations presented to the ASR system. Acoustics and acoustic modeling are covered in Modules 2 and 3 of this course.
 
 The equation has a component $P(W)$ called a language model based solely on the word sequence $W$. The language model assigns a probability to every possible word sequence. It is trained on sequences of words that are expected to be like those the final system will encounter in everyday use. A language model trained on English text will probably assign a high value to the word sequence “I like turtles” and a low value to “Turtles sing table.” The language model steers the search towards word sequences that follow the same patterns as in the training data. Language models can also be seen in purely text-based applications, such as the autocomplete field in modern web browsers. Module 4 of this course is dedicated to language modeling.
 
