@@ -7,7 +7,9 @@
   <title>{{ page.title }}</title>
   <!-- {% include head-custom.html %} -->
   {% seo %}
-  <link rel="stylesheet" href="{{ " /assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
+<link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}" 
+    integrity="sha384-[YOUR-HASH-HERE]" 
+    crossorigin="anonymous">
   {% include head-custom.html %}
 
 </head>
