@@ -86,8 +86,7 @@ chat	| chat	||
 
 The WER for this example is 4/7 = 0.4444 or 44.44%. It can be calculated as follows:
 
-```math
-WER = \frac{2 + 1 + 1}{9} = 0.4444 
+$$WER = \frac{2 + 1 + 1}{9} = 0.4444 
 ```
 
 In some cases, the cost of the three different types of errors may not be equivalent. In this case the edit distance computation can be adjusted accordingly.
@@ -107,8 +106,7 @@ In this approach, the test set is divided up into segments with the assumption t
 
 Besides accuracy, there may be computational requirements that impact performance, such as processing speed or latency. Decoding speed is usually measured with respect to a real-time factor (RTF). A RTF of 1.0 means that the system processes the data in real-time, takes ten seconds to process ten seconds of audio.
 
-```math
-RTF = \frac{\text{Total processing time}}{\text{Total audio time}} 
+$$RTF = \frac{\text{Total processing time}}{\text{Total audio time}} 
 ```
 
 Factors above 1.0 indicate that the system needs more time to process the data. For some applications, this may be acceptable. For instance, when creating a transcription of a meeting or lecture, it may be more important to take more time and produce accurate transcriptions than to get the transcriptions quickly.
@@ -121,20 +119,17 @@ In general, any ASR system can be tuned to tradeoff speed for accuracy. But, the
 
 Speech recognition is cast as a statistical optimization problem. Specifically, for a given sequence of observations $\mathbf{O} = \lbrace O_{1},\ldots,O_{N} \rbrace$, we seek the most likely word sequence $\mathbf{W} = \{ W_{1},\ldots,W_{M}\}$. That is, we are looking for the word sequence which maximizes the posterior probability $P\left( \mathbf{W} \middle| \mathbf{O} \right)\text{.\ }$ Mathematically, this can be expressed as:
 
-```math
-\hat{W} = \mathrm{arg\,max}_{W}P(W|O)
+$$\hat{W} = \mathrm{arg\,max}_{W}P(W|O)
 ```
 
 To solve this expression, we employ Bayes rule
 
-```math
-P\left( W \middle| O \right) = \frac{P\left( O \middle| W \right)P\left( W \right)}{P(O)}
+$$P\left( W \middle| O \right) = \frac{P\left( O \middle| W \right)P\left( W \right)}{P(O)}
 ```
 
 Because the word sequence does not depend on the marginal probability of the observation $P(O)$, this term can be ignored. This, we can rewrite this expression as
 
-```math
-\hat{W} = \mathrm{arg\,max}_{W}P\left( O \middle| W \right)P(W)
+$$\hat{W} = \mathrm{arg\,max}_{W}P\left( O \middle| W \right)P(W)
 ```
 
 This is known as the fundamental equation of speech recognition. The speech recognition problem can be cast as a search over this joint model for the best word sequence.

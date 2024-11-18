@@ -25,19 +25,17 @@ Before studying HMMs, it will be useful to briefly review Markov chains. Markov 
 
 Let's consider an example. In a weather prediction application, the states could be "Sunny", "Partly Cloud", "Cloudy", and "Raining". If we wanted to consider the probability of a particular 5 day forecast, e.g. $P(p,p,c,r,s)$, we would employ Bayes' rule to break up this joint probability into a series of conditional probabilities.
 
-```math
-p(X1,X2,X3,X4,X5)=p(X5|X4,X3,X2,X1)p(X4|X3,X2,X1)p(X3|X2,X1)p(X2|X1)p(X1) 
+$$p(X1,X2,X3,X4,X5)=p(X5|X4,X3,X2,X1)p(X4|X3,X2,X1)p(X3|X2,X1)p(X2|X1)p(X1) 
 ```
 
 This expression can be greatly simplified if we consider the first-order Markov assumption, which states that
 
-```math
-p(X_i|X_1,\ldots,X_{i-1})=p(X_i|X_{i-1})
+$$p(X_i|X_1,\ldots,X_{i-1})=p(X_i|X_{i-1})
 ```
 
 Under this assumption, the joint probability of a 5-day forecast can be written as
 
-```math 
+$$math 
 \begin{split}
 p(X1,X2,X3,X4,X5) &= p(X5|X4)p(X4|X3)p(X3|X2)p(X2|X1)p(X1) \\
 
@@ -53,26 +51,22 @@ For example, a complete (though likely inaccurate) Markov chain for weather pred
 
 Note that in addition to the conditional probabilities
 
-```math
-p(X_i|X_{i-1})
+$$p(X_i|X_{i-1})
 ```
 
 in the equation above, there was also a probability associated with the first element of the sequence,
 
-```math
-p(X_1).
+$$p(X_1).
 ```
 
 So, in addition to the state inventory and the conditional transition probabilities, we also need a set of prior probabilities that indicate the probability of starting the chain in each of the states. Let us assume our prior probabilities are as follows:
 
-```math
-p(p)=\pi_p, p(c)=\pi_c, p(r)=\pi_r, p(s)=\pi_s
+$$p(p)=\pi_p, p(c)=\pi_c, p(r)=\pi_r, p(s)=\pi_s
 ```
 
 Now, let us return to the example. We can now compute the probability of $ P(p,p,c,r,s) $ quite simply as
 
-```math
-\begin{split}
+$$\begin{split}
 p(p,p,c,r,s) &= p(s|r,c,p,p) p(r|c,p,p) p(c|p,p) p(p|p) p(p) \\
 &= p(s|r) p(r|c) p(c|p) p(p|p) p(p)
 \end{split}
@@ -216,8 +210,7 @@ The simplest and most common neural network used for acoustic modeling is the co
 
 Although we are training a DNN to predict the label for each frame of input, it is very beneficial for classification to provide a context window of frames to the network as input. Specifically, for the frame at time t, the input to the network is a symmetric window of the N frames before and N frames after. Thus, if x_t is the feature vector at time t, the input to the network is
 
-```math
-X_t = [ x_{t-N},  x_{t-N-1},  \ldots,  x_t,  \ldots,  x_{t+N-1},  x_{t+N} ]
+$$X_t = [ x_{t-N},  x_{t-N-1},  \ldots,  x_t,  \ldots,  x_{t+N-1},  x_{t+N} ]
 ```
 
 Typical values of N are between 5 and 11, depending on the amount of training data. Larger context windows provide more information but require a larger matrix of parameters in the input layer of the model which can be hard to train without ample data.
@@ -250,8 +243,7 @@ In contrast to a feedforward layer, a recurrent layer's output has a dependence 
 
 In offline applications, where latency is not a concern, it is possible to perform the recurrence in both the forward and backward directions. These networks are known as bidirectional neural networks. In this case, each layer has a set of parameters to process the sequence forward in time and a separate set of parameters to process the sequence in reverse. These two outputs can then be concatenated to input to the next layer. This can be expressed mathematically as
 
-```math
-\begin{split}
+$$\begin{split}
 
 \overrightarrow{h_t^i} &= f\left(W_f^i h_t^{i-1} + U_f^i h_{t-1}^i + c_f^i\right)  \\
 
