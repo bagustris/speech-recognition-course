@@ -117,7 +117,7 @@ In general, any ASR system can be tuned to tradeoff speed for accuracy. But, the
 
 ## The Fundamental Equation
 
-Speech recognition is cast as a statistical optimization problem. Specifically, for a given sequence of observations $\mathbf{O} = \lbrace O_{1},\ldots,O_{N} \rbrace$, we seek the most likely word sequence $\mathbf{W} = \lbrace W_{1},\ldots,W_{M}\rbrace$. That is, we are looking for the word sequence which maximizes the posterior probability $P( \mathbf{W} \middle \vert \mathbf{O} )\text{.\ }$ Mathematically, this can be expressed as:
+Speech recognition is cast as a statistical optimization problem. Specifically, for a given sequence of observations $\mathbf{O} = \lbrace O_{1},\ldots,O_{N} \rbrace$, we seek the most likely word sequence $\mathbf {W } =\lbrace W_{1},\ldots,W_{M} \rbrace$. That is, we are looking for the word sequence which maximizes the posterior probability $P( \mathbf{W} \vert \mathbf{O} )$. Mathematically, this can be expressed as:
 
 $$\hat{W} = \mathrm{arg\,max}_{W}P(W|O)$$
 
