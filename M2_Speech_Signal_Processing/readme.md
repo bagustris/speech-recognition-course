@@ -43,19 +43,17 @@ Because we are extracting a chunk from a longer continuous signal is it importan
 
 If we let m be in the frame index, n is the sample index, and L is the frame size in samples and N is the frame shift in samples, each frame of audio is exacted from the original signal as
 
-$$x_m[n] = w[n] x[m N+n], n=0, 1, \ldots, L-1
-$$
+$$x_m[n] = w[n] x[m N+n], n=0, 1, \ldots, L-1$$
 
 where $w[n]$ is the window function.
 
 We then transform each frame of data into the frequency-domain using a discrete Fourier transform.
 
-$$X_m[k]=\sum_{n=0}^{N-1}x_m[n]e^{-j 2 \pi k n N}
-$$
+$$X_m[k]=\sum_{n=0}^{N-1}x_m[n]e^{-j 2 \pi k n N}$$
 
 Note that all modern software packages have routines for efficiently computing the Fast Fourier Transform (FFT), which is an efficient way of computing the discrete Fourier transform.
 
-The Fourier representation $X_M[k]$ is a complex number which represents both the spectral magnitude (absolute amplitude) and phase each frame and frequency. For feature extraction purposes, we do not use the phase information so only consider the magnitude $\left|X_m[k]\right|$.
+The Fourier representation $X_M[k]$ is a complex number which represents both the spectral magnitude (absolute amplitude) and phase each frame and frequency. For feature extraction purposes, we do not use the phase information so only consider the magnitude $\vert X_m[k] \vert$.
 
 A spectrogram shows a 2D plot log-magnitude (or log-power) of the result of short-time Fourier analysis of a speech signal. The horizontal axis shows the frame index (in 10 ms units) and the vertical axis shows the frequency axis from 0 Hz up to the Nyquist frequency with his one half of the sampling rate. For example, the spectrogram of the original waveform "speech recognition is cool stuff" is shown here. In the spectrogram, high energy regions are shown in orange and red.
 
