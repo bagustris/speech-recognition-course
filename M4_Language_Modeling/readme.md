@@ -134,6 +134,7 @@ $$\hat{P}_{\text{bo}}\left(w_k \mid w_1 \ldots w_{k-1}\right)=\left\{
 \right.
 $$
 
+
 $\hat{P}_{\text{bo}}$ is the new back-off estimate for all N-grams. If an N-grams has been observed (count > 0, the first branch) it makes direct use of the discounted estimates $\hat{P}$. If the N-grams is unseen in training, looks up the estimate recursively for the shortened context (leaving out $w_1$) and then scales it by a factor $\alpha$, which is a function of the context, so that the estimates for all $w_k$ again sum to one. ($\alpha$ is the probability of the unseen words in context $w_1 \ldots w_{k-1}$, as discussed earlier, divided by the sum of the same unseen-word probabilities according to the back-off distribution $\hat{P}_{\text{bo}} ( \cdot \vert w_{2} \ldots w_{k-1})$).
 
 The $\alpha$ parameters are called backoff weights, but they are not free parameters of the model. Rather, once the N-gram probabilities $\hat{P}$ have been determined, the backoff weights are completely determined. Computing them is sometimes called (re-)normalizing the model, since they are chosen just so all the probability distributions sum to unity.
