@@ -170,3 +170,5 @@ Add code to read the TRN files for the hypothesis and reference transcriptions, 
 The specific format for outputting this information is up to you. Note that you should not assume that the order of sentences in the reference and hypothesis TRN files is consistent. You should use the utterance name as the key between the two transcriptions.
 
 When you believe your code is working, use it to process `hyp.trn` and `ref.trn` in the `misc` directory, and compare your answers to the solution.
+
+[Next](../M2_Acoustic_Model/readme.md)

@@ -1,4 +1,7 @@
 # Module 6: End-to-End Models
+
+[Previous](../M5_Decoding/readme.md)
+
 ## Table of Contents
 - [6 End-to-End Models](#6-end-to-end-models)
   - [Improved Objective Functions](#improved-objective-functions)

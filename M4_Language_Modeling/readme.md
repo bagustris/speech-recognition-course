@@ -1,5 +1,7 @@
 # Language Modeling
 
+[Previous](../M3_Acoustic_Modeling/readme.md)
+
 ## Table of Contents
 - [Introduction](#introduction)
 - [Vocabulary](#vocabulary)
@@ -597,4 +599,6 @@ SOLUTION: Starting with 1e-5 (= 10-5 in floating point notation), create the pru
 
     ngram -debug 1 -lm librispeech.3bo.gz -prune 1e-5 -write-lm librispeech-pruned.3bo.gz
 
-Then evaluate the librispeech-pruned.3bo.gz model on the entire dev set, as before. The -debug option lets the tool output the number of ngrams pruned and written out. Add the resulting number of bigrams and trigrams to characterize the pruned model size (roughly, the number of model parameters, since the number of unigrams is fixed to the vocabulary, and the backoff weights are determined by the probability parameters).
+Then evaluate the librispeech-pruned.3bo.gz model on the entire dev set, as before. The -debug option lets the tool output the number of ngrams pruned and written out. Add the resulting number of bigrams and trigrams to characterize the pruned model size (roughly, the number of model parameters, since the number of unigrams is fixed to the vocabulary, and the backoff weights are determined by the probability parameters).  
+
+[Next](../M5_Decoding/readme.md)

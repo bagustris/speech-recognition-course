@@ -7,9 +7,8 @@
   <title>{{ page.title }}</title>
   <!-- {% include head-custom.html %} -->
   {% seo %}
-<link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}" 
-    integrity="sha384-[YOUR-HASH-HERE]" 
-    crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ " /assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}"
+    integrity="sha384-[YOUR-HASH-HERE]" crossorigin="anonymous">
   {% include head-custom.html %}
 
 </head>
@@ -24,10 +23,11 @@
 
     {% if site.github.private != true and site.github.license %}
     <div class="footer border-top border-gray-light mt-5 pt-3 text-gray d-flex justify-content-between">
-      <a href="{{ '/' | relative_url }}">Back to top</a>
-      <div>This site is open source. {% github_edit_link "Improve this page" %}.</div>
+      <a href="{{ '/' | relative_url }}" class="me-3">Back to top</a>
+      <div class="ms-3">This site is open source. {% github_edit_link "Improve this page" %}.</div>
     </div>
-    {% endif %}  </div>
+    {% endif %}
+  </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js"
     integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
   <script>anchors.add();</script>

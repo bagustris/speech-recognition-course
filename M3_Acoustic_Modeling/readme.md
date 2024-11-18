@@ -1,6 +1,8 @@
 
 # M3: Acoustic Modeling
 
+[Previous](./M2_Speech_Signal_Processing/readme.md)
+
 ## Table of Contents
 - [Introduction](#introduction)
 - [Hidden Markov Models](#hidden-markov-models)
@@ -389,3 +391,6 @@ The traing the BLSTM model, you can execute the following command.
 Because of the sequential nature of the BLSTM processing, they are inherently less parallelizable, and thus, train much slower than DNNs. On a GTX 965M GPU running on a laptop, the network trained as a rate of 440 seconds per epoch, or 20 times slower than the DNN. Thus, we will only train for 10 epochs to keep processing time reasonable.
 
 Here too, you can use M3_Plot_Training.py to inspect the learning schedule in training. And again, if you are interested, you can vary the hyperparameters to try to find a better solution.
+
+
+[Next](../M4_Language_Modeling/readme.md)
