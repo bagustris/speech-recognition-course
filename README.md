@@ -2,6 +2,9 @@
 
 Material for learning speech recognition, based on Microsoft teaching material on EdX (changed from CNTK to PyTorch). Learning/teaching materials are given in each module/directory.
 
+website:  https://bagustris.github.io/speech-recognition-course  
+repository:  https://github.com/bagustris/speech-recognition-course  
+
 ## Modules
 - [Module 1: Introduction to Speech Recognition](./M1_Introduction/readme.md)
 - [Module 2: Speech Signal Processing](./M2_Speech_Signal_Processing/readme.md)
