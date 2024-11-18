@@ -441,13 +441,13 @@ This outputs nothing, meaning that trigram is not found in the model, and we hav
 
     -2.001953 model was 0.02913048
 
-The first number is the log probability $P(was \vert model)$, which is of no use to use here. The number at the end is the backoff weight associated with the context “model was”. It, too, is encoded as a base-10 logarithm. Next, we need to find the bigram probability we’re backing off to, i.e., $P(born | was)$:
+The first number is the log probability $P(was \vert model)$, which is of no use to use here. The number at the end is the backoff weight associated with the context “model was”. It, too, is encoded as a base-10 logarithm. Next, we need to find the bigram probability we’re backing off to, i.e., $P(born \vert was)$:
 
     zgrep -E “\swas born” librispeech.3bo.gz | head -1
 
     -2.597636 was born -0.4911189
 
-The first number is the bigram probability $P(born \vert was)$. We can now compute the log probability for P(born | model was) as the sum of the backoff weight and the bigram probability:
+The first number is the bigram probability $P(born \vert was)$. We can now compute the log probability for $P(born \vert model was)$ as the sum of the backoff weight and the bigram probability:
 
     0.02913048 + -2.597636 = -2.568506, or as a linear probability 10-2.568506 = 0.002700813.
 
@@ -488,7 +488,7 @@ SOLUTION: We feed the input sentence to the ngram command in a line of standard 
 
     0 zeroprobs, logprob= -11.58567 ppl= 207.555 ppl1= 787.8011
 
-Notice how ngram adds the sentence start and end tags, `<s>` and `</s>`. The final line gives both the log probability and the perplexity of the entire sentence. The line starting $p(born \vert was~ \dots)$ has the conditional word probability that we computed previously. The label “2gram” indicates that a backoff to bigram was used. The final “logprob” value -11.58567 is just the sum of the log probabilities printed for each word token. Let's verify the perplexity value based on it's definition: we divide the logprob by the number of word tokens (including the end-of-sentence), convert to a probability and take the reciprocal (by negating the exponent): 10-\ (-11.58567\ /\ 5) = 207.555. Of course this is not a good estimate of perplexity as it is based on only 5 data points.
+Notice how ngram adds the sentence start and end tags, `<s>` and `</s>`. The final line gives both the log probability and the perplexity of the entire sentence. The line starting $p(born \vert was~ \dots)$ has the conditional word probability that we computed previously. The label ``2gram" indicates that a backoff to bigram was used. The final "logprob" value -11.58567 is just the sum of the log probabilities printed for each word token. Let's verify the perplexity value based on it's definition: we divide the logprob by the number of word tokens (including the end-of-sentence), convert to a probability and take the reciprocal (by negating the exponent): 10-\ (-11.58567\ /\ 5) = 207.555. Of course this is not a good estimate of perplexity as it is based on only 5 data points.
 
 TASK: Compute the perplexity of the model over the entire dev set.
 
