@@ -21,14 +21,14 @@ exclude:
   - ./M4_Language_Modeling/srilm/
   - ./M4_Language_Modeling/data/
   - ./bak/
-  - *.isym
-  - *.osym
-  - *.fst
-  - *.trn
-  - *.?gram
-  - *.docx
-  - *.odt
-  - *.txt.gz
+  - "*.isym"
+  - "*.osym"
+  - "*.fst"
+  - "*.trn"
+  - "*.?gram"
+  - "*.docx"
+  - "*.odt"
+  - "*.txt.gz"
 
 github:
   private: false
