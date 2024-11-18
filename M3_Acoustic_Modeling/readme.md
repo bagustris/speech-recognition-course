@@ -43,7 +43,7 @@ p(X1,X2,X3,X4,X5) &= p(X5|X4)p(X4|X3)p(X3|X2)p(X2|X1)p(X1) \\
 \end{split}
 $$
 
-Thus, the key elements of a Markov chain are the state identities (weather forecast in this case) and the transition probabilities p(X_i|X_{i−1}) that express the probability of moving from one state to another (including back to the same state).
+Thus, the key elements of a Markov chain are the state identities (weather forecast in this case) and the transition probabilities p(X_i \vert X_{i−1}) that express the probability of moving from one state to another (including back to the same state).
 
 For example, a complete (though likely inaccurate) Markov chain for weather prediction can be depicted as
 
@@ -92,7 +92,7 @@ There are three fundamental problems for hidden Markov models, each with well-kn
 
 ## The Evaluation Problem
 
-Given a model with parameters $\Phi$ and a sequence of observations $X = \left \lbrace x_1, x_2, \ldots, x_T\right \rbrace$, how do we compute the probability of the observation sequence, $P(X|\Phi)$? This is known as the evaluation problem. The solution is to use the forward algorithm. 
+Given a model with parameters $\Phi$ and a sequence of observations $X = \left \lbrace x_1, x_2, \ldots, x_T\right \rbrace$, how do we compute the probability of the observation sequence, $P(X \vert \Phi)$? This is known as the evaluation problem. The solution is to use the forward algorithm. 
 
 This Evaluation problem can be solved summing up the probability over all possible values of the hidden state sequence. Implemented naively this can be quite expensive as there are an exponential number of states sequences ($O(N^T)$, where $N$ is the number of states and $T$ the number of time steps).
 
@@ -292,11 +292,11 @@ Using this objective function add significant complexity to the training of acou
 
 ## Decoding with Neural Network Acoustic Models
 
-The neural network acoustic models compute posterior probabilities $p\left(s \right|x_{t}) $ over senone labels ($s$). These state-level posterior probabilities must be converted to state likelihoods $p\left( x_{t} \middle| s \right)$ for decoding using an HMM, as will be discussed in Module 5. This can be done by an application of Bayes’ rule:
+The neural network acoustic models compute posterior probabilities $p\left(s \vert x_{t} \right)$ over senone labels ($s$). These state-level posterior probabilities must be converted to state likelihoods $p\left( x_{t} \vert s \right)$ for decoding using an HMM, as will be discussed in Module 5. This can be done by an application of Bayes’ rule:
 
 $$ p\left( x_{t} \middle| s \right) = \frac{p\left( s \middle| x_{t} \right)p\left( x_{t} \right)}{p(s)} \propto \frac{p\left( s \middle| x_{t} \right)}{p(s)} $$
 
-Note that because the prior over the observations $p\left( x_{t} \right)$ is constant over all senones, it contributes a constant factor to all likelihood scores so it can be dropped. Thus, the likelihood $p\left( x_{t} \middle| s \right)$ is computed by dividing the network’s posterior probabilities by the senone prior $p(s)$. This senone prior probability $p(s)$ can be easily estimated by counting the occurrences of each senone in the training data.
+Note that because the prior over the observations $p\left( x_{t} \right)$ is constant over all senones, it contributes a constant factor to all likelihood scores so it can be dropped. Thus, the likelihood $p\left( x_{t} \vert s \right)$ is computed by dividing the network’s posterior probabilities by the senone prior $p(s)$. This senone prior probability $p(s)$ can be easily estimated by counting the occurrences of each senone in the training data.
 
 This likelihood is known as a scaled likelihood, to reflect the fact that it has been computed by scaling the senone posterior by its prior.
 
