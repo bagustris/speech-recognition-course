@@ -11,7 +11,7 @@ exclude:
 sass:
   style: :compressed
 
-theme: jekyll-theme-primer
+# theme: jekyll-theme-primer
 
 exclude:
   - node_modules
