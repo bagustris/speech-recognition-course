@@ -1,6 +1,9 @@
 # ignore specific dir
 fig
 Experiments/LibriSpeech
+bak/
+
+# ignore specific file
 *.tgz
 *.tar.gz
 *.tar
@@ -22,6 +25,23 @@ Experiments/LibriSpeech
 *.swo
 *.bak?
 
-# ignore specific dir
-bak/
+# ignore virtualenv
+.venv
+venv
+env
+.env
+
+# python generated file
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.py[cod]
+*.ascii
+*.feat
+*.rscp
+*.odt
+*.pdf
+*.pt
+
 
