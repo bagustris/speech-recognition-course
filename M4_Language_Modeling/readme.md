@@ -135,9 +135,7 @@ $$
 \right.
 $$
 
-Note that $`\hat{P}_{bo}`$ 
-
-is the new back-off estimate for all N-grams. If an N-gram has been observed (count $`\gt 0`$, the first branch), it makes direct use of the discounted estimates $`\hat{P}`$. If the N-gram is unseen in training, it looks up the estimate recursively for the shortened context (leaving out $`w_1`$) and then scales it by a factor $`\alpha`$, which is a function of the context, so that the estimates for all $w_k$ again sum to one. ($`\alpha`$ is the probability of the unseen words in context $`w_1 \ldots w_{k-1}`$, as discussed earlier, divided by the sum of the same unseen-word probabilities according to the back-off distribution $`\hat{P}_{bo}(\cdot \mid w_2 \ldots w_{k-1})`$).
+Note that $`\hat{P}_{bo}`$ is the new back-off estimate for all N-grams. If an N-gram has been observed (count $`\gt 0`$, the first branch), it makes direct use of the discounted estimates $`\hat{P}`$. If the N-gram is unseen in training, it looks up the estimate recursively for the shortened context (leaving out $`w_1`$) and then scales it by a factor $`\alpha`$, which is a function of the context, so that the estimates for all $`w_k`$ again sum to one. ($`\alpha`$ is the probability of the unseen words in context $`w_1 \ldots w_{k-1}`$, as discussed earlier, divided by the sum of the same unseen-word probabilities according to the back-off distribution $`\hat{P}_{bo}(\cdot \mid w_2 \ldots w_{k-1})`$).
 
 
 The $\alpha$ parameters are called backoff weights, but they are not free parameters of the model. Rather, once the N-gram probabilities $\hat{P}$ have been determined, the backoff weights are completely determined. Computing them is sometimes called (re-)normalizing the model, since they are chosen just so all the probability distributions sum to unity.
@@ -192,10 +190,10 @@ Assume you have we two existing language models already trained, producing proba
 
 A better approach is to combine the existing models at the probability level, by interpolating their estimates. Interpolation means we compute a weighted average of the two underlying probability estimates:
 
-$$\hat{P}\left( w_{k} \right|w_{1}\ldots w_{k - 1}) = \lambda\ {\hat{P}}_{1}\left( w_{k} \right|w_{1}\ldots w_{k - 1}) + (1 - \lambda)\ {\hat{P}}_{2}\left( w_{k} \right|w_{1}\ldots w_{k - 1})
+$$\hat{P}\left( w_{k} \right \vert w_{1}\ldots w_{k - 1}) = \lambda\ {\hat{P}}_{1}\left( w_{k} \right \vert w_{1}\ldots w_{k - 1}) + (1 - \lambda)\ {\hat{P}}_{2}\left( w_{k} \right \vert w_{1}\ldots w_{k - 1})
 $$
 
-The parameter λ controls the relative influence of the component models. A value close 1 means the first model dominates; a value close to 0 gives most of the weight to the second model. The optimal value of $\lambda$ can be itself estimated using held-out data (i.e., data that is separate from the training data for the component models), by choosing a value that minimizes the perplexity on the held-out data.
+The parameter $\lambda$ controls the relative influence of the component models. A value close 1 means the first model dominates; a value close to 0 gives most of the weight to the second model. The optimal value of $\lambda$ can be itself estimated using held-out data (i.e., data that is separate from the training data for the component models), by choosing a value that minimizes the perplexity on the held-out data.
 
 Model interpolation is easily generalized to more than two models: a weighted combination of $M$ models using weights $\lambda_{1},\ \lambda_{2},\ldots,\ \lambda_{M}$, such that $\lambda_{1} + \ \lambda_{2}, + \ \ldots + \ \lambda_{M} = 1$. The condition that weights sum to 1 is needed to make sure that the interpolated model is again a properly normalized probability distribution over all word strings.
 
