@@ -17,10 +17,10 @@ exclude:
   - node_modules
   - script
   - Experiments/
-  - ./M1_Introduction/misc/
-  - ./M4_Language_Modeling/srilm/
-  - ./M4_Language_Modeling/data/
-  - ./bak/
+  - M1_Introduction/misc/
+  - M4_Language_Modeling/srilm/
+  - M4_Language_Modeling/data/
+  - bak/
   - "*.isym"
   - "*.osym"
   - "*.fst"
