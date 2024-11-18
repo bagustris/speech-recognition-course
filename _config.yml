@@ -7,7 +7,7 @@ kramdown:
 exclude:
   - node_modules
   - script
-  - ./M
+  
 
 sass:
   style: :compressed
