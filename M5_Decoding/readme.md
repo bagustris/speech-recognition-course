@@ -1,5 +1,7 @@
 # Speech Decoding
 
+[Previous: Module 4: Language Modeling ](../M4_Language_Modeling/readme.md)
+
 ## Table of Contents
 - [Overview](#overview)
 - [Weighted Finite State Transducers](#weighted-finite-state-transducers)
@@ -464,6 +466,8 @@ This is a simple Python-based beam decoder. It relies on loading a CNTK acoustic
     
 Supplementary Material:
 
-https://cs.nyu.edu/~mohri/pub/hbka.pdf
+[https://cs.nyu.edu/~mohri/pub/hbka.pdf](https://cs.nyu.edu/~mohri/pub/hbka.pdf)
 
 This chapter from the Springer Handbook on Speech Processing and Speech Communication has more information than you will need to complete the labs, but may be interesting for the motivated student. Section 3 details some standard algorithms, and Section 4 describes how the WFST framework is typically applied for the speech recognition task.
+
+Next: [Module 6: Acoustic Decoding](../M6_End_to_End_Models/readme.md)
