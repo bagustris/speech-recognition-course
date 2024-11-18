@@ -22,5 +22,6 @@ Experiments/LibriSpeech
 *.swo
 *.bak?
 
-# ignore specific file
+# ignore specific dir
+bak/
 
