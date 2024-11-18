@@ -44,14 +44,14 @@ Because we are extracting a chunk from a longer continuous signal is it importan
 If we let m be in the frame index, n is the sample index, and L is the frame size in samples and N is the frame shift in samples, each frame of audio is exacted from the original signal as
 
 $$x_m[n] = w[n] x[m N+n], n=0, 1, \ldots, L-1
-```
+$$
 
 where $w[n]$ is the window function.
 
 We then transform each frame of data into the frequency-domain using a discrete Fourier transform.
 
 $$X_m[k]=\sum_{n=0}^{N-1}x_m[n]e^{-j 2 \pi k n N}
-```
+$$
 
 Note that all modern software packages have routines for efficiently computing the Fast Fourier Transform (FFT), which is an efficient way of computing the discrete Fourier transform.
 
@@ -72,7 +72,7 @@ Observe that the filters are narrow and closely spaced on the left size of the f
 It is typical to represent the mel filterbank as a matrix, where each row corresponds to one filter in the filterbank. Thus, P-dimensional mel filterbank coefficients can be computed from the magnitude spectrum as
 
 $$X_{\tt{mel}}[p] = \sum_k M[p,k] \left|X_m[k]\right|,      p = 0, 1, \ldots, P-1
-```
+$$
 
 A mel filterbank of length $40$ is typical, though state of the art system have been built with fewer or more. Fewer results in more smoothing and more results in less smoothing. 
 
@@ -95,7 +95,7 @@ There are other pre-processing steps that can be applied prior to feature extrac
 **Pre-emphasis**: applying a high pass filter to the signal prior to feature extraction to counteract that fact that typically the voiced speech at the lower frequencies has much high energy than the unvoiced speech at high frequencies. Pre-emphasis is performed with a simple linear filter.
 
 $$y[n] = x[n] - \alpha x[n-1]
-```
+$$
 
 where a value of $\alpha=0.97$ is commonly used.
 
@@ -106,12 +106,12 @@ It is possible that the communication channel will introduce some bias (constant
 Thus, we can model the channel effects as a constant filter
 
 $$X_{t,{\tt obs}}[k] = H[k] X_t[k]
-```
+$$
 
 And the magnitude of the observation as
 
 $$\left|X_{t,{\tt obs}}[k]\right| = \left|H[k]\right|\left|X_t[k]\right|
-```
+$$
 
 If we take the log of both sides and compute the mean of all frames in the utterance, we have
 
@@ -123,12 +123,12 @@ $$\begin{split}
 
 &=\frac{1}{T}\sum_t \log\left(\left|H[k]\right|\right)+\frac{1}{T}\sum_t \log\left(\left|X_t[k]\right|\right) 
 \end{split}
-```
+$$
 
 Now, if we assume that the filter is constant over time and the log magnitude of the underlying speech signal has zero mean, this can be simplified to:
 
 $$\mu_{tt obs}=\log\left(\left|H[k]\right|\right)
-```
+$$
 
 Thus, if we compute the mean of the log magnitude of the observed utterance and subtract it from every frame in the utterance, we’ll remove any constant channel effects from the signal.
 

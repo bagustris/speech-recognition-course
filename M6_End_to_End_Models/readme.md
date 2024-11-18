@@ -16,12 +16,12 @@ Recall from Module 3 that he most common objective function used for training ne
 If we define
 
 $$z\lbrack i,t\rbrack = \left\lbrace \begin{matrix} 1 & z\lbrack t\rbrack = i, \\ 0 & \text{otherwise} \end{matrix} \right.
-```
+$$
 
 then the cross-entropy against the softmax network ouput $y[i,t]$ is as follows.
 
 $$L = - \sum_{t = 1}^{T} \sum_{i = 1}^{M} z\left\lbrack i,t \right\rbrack\log\left( y\left\lbrack i,t \right\rbrack \right)
-```
+$$
 
 Using a frame-based cross entropy objective function implies three
 things that are untrue for the acoustic modeling task.
@@ -44,12 +44,12 @@ Whereas the frame-based cross entropy objective function requires a sequence of 
 The objective function can be improved by moving from a frame-based to a segment-based formulation. Whereas frame-based cross entropy assigns labels to frames, sequence-based cross entropy specifies the sequence of labels to assign, but is ambivalent about which frames are assigned to the labels. Essentially, it allows the labels to drift in time. As the model trains, it finds a segmentation that is easy to model, explains the data, and obeys the constraint that the ground-truth sequence of labels should be unchanged. Instead of using the alignment $z\left\lbrack i,t \right\rbrack$, we produce a pseudo-alignment $\gamma\left\lbrack i,t \right\rbrack$ that has the labels in the same order as the reference, but is also a function of the current network output. It can be either a soft alignment or a hard alignment. It is easily computed by turning the alignment sequence into an HMM and using standard Viterbi (hard alignment) or forward-backward (soft alignment) algorithms.
 
 $$L = \ {P\left( S \middle| \pi \right)P\left( \pi \right)} = {P\left( \pi \right)\prod_{t}^{}{y\left\lbrack \pi\left( t \right),t \right\rbrack}} - \sum_{i}^{}{\gamma\left\lbrack i,t \right\rbrack\log\left( y\left\lbrack i,t \right\rbrack \right)}
-```
+$$
 
 Let $\overset{\overline{}}{z}\left\lbrack k \right\rbrack$ represent the $K$ symbols in the label sequence, after duplicates have been removed. Define a HMM that represents moving through each of these labels in order. It always begins in state zero, always ends in state $K - 1$, and will emit symbol $\overset{\overline{}}{z}\lbrack k\rbrack$ in state $k$. The soft alignment is the product of a forward variable $\alpha$ and a backward variable $\beta$. The nonzero values are given by:
 
 $$\gamma\left\lbrack \overset{\overline{}}{z}\left\lbrack k \right\rbrack,t \right\rbrack = \alpha\left\lbrack k,t \right\rbrack\beta\lbrack k,t\rbrack
-```
+$$
 
 The forward recursion computes the score of state k given the acoustic evidence up to, and including, time t. Its initial state is the model's prediction for the score of the first label in the sequence.
 
@@ -58,12 +58,12 @@ $$\alpha\lbrack k,0\rbrack = \left\{
     y\left\lbrack \overset{\overline{}}{z}\left\lbrack k \right\rbrack,\ 0 \right\rbrack & k = 0, \\ 
     0 & \text{otherwise}
     \end{matrix} \right.
-```
+$$
 
 The recursion moves forward in time by first projecting this score through a transition matrix $T$ with elements $t_{\text{ij}}$, and then applying the model's score for the labels.
 
 $$\alpha\left\lbrack k,t \right\rbrack = y\left\lbrack \overset{\overline{}}{z}\left\lbrack k \right\rbrack,t \right\rbrack\sum_{j}^{}{t_{kj}\alpha\left\lbrack j,\ t - 1 \right\rbrack}
-```
+$$
 
 The transition matrix $T$ simply restricts the model topology to be left-to-right.
 
@@ -71,7 +71,7 @@ $$t_{\text{ij}} = \left\{ \begin{matrix}
 1 & i = j, \\ 
 1 & i = j + 1, \\ 
 0 & \text{otherwise} \end{matrix} \right.
-```
+$$
 
 An example of this forward variable computed on an utterance about 2.6 seconds long, and containing 66 labels, is shown below. Yellow indicates larger values of the forward variable, and purple represents smaller values. Structures depart the main branch, searching possible paths forward in time. Because the alpha computation for a particular time has no information about the future, it is exploring all viable paths with the current information.
 
@@ -80,12 +80,12 @@ An example of this forward variable computed on an utterance about 2.6 seconds l
 The backward recursion computes the score of state k given acoustic evidence from the end of the segment back to, but not including, the current time t. Its initial state at time T - 1 doesn't include any acoustic evidence and is simply the final state of the model.
 
 $$\beta\left\lbrack k,T - 1 \right\rbrack = 1 
-```
+$$
 
 The recursion applies the appropriate acoustic score from the model, and then projects the state backward in time using the transpose of the transition matrix T.
 
 $$\beta_{k}\left\lbrack t \right\rbrack = \sum_{j}^{}{t_{jk}\beta\left\lbrack j,t + 1 \right\rbrack}y\lbrack\overset{\overline{}}{z}\lbrack j\rbrack,t + 1\rbrack\backslash n 
-```
+$$
 
 When the forward and backward variables are combined into the gamma variable, each time slice contains information from the entire utterance, and the branching structures disappear. What is left is a smooth alignment between the label index and time index.
 
@@ -100,7 +100,7 @@ When the forward and backward variables are combined into the $\gamma$ variable,
 Connectionist Temporal Classification (CTC) is a special case of sequential objective functions that alleviates some of the modeling burden that exists cross-entropy. One perceived weakness of the family of cross-entropy objective functions is that it forces the model to explain every frame of input data with a label. CTC modifies the label set to include a “don't care” or “blank” symbol in the alphabet. The correct path through the labels is scored only by the non-blank symbols. If a frame of data doesn't provide any information about the overall labeling of the utterance, a cross-entropy based objective function still forces it to make a choice. The CTC system can output “blank” to indicate that there isn't enough information to discriminate among the meaningful labels.
 
 $$L = \ \sum_{\pi}^{}{P\left( S \middle| \pi \right)P\left( \pi \right) = \sum_{\pi}^{}{P\left( \pi \right)\prod_{t}^{}{y\left\lbrack \pi\left( t \right),t \right\rbrack}}}
-```
+$$
 
 ## Sequence Discriminative Objective Functions
 
@@ -111,7 +111,7 @@ In this module, “sequential objective function” means that the objective fun
 For instance, recall the maximum mutual information objective function:
 
 $$F_{\text{MMI}} = \sum_{u}^{}{\log\frac{p\left( X_{u} \middle| S_{u} \right)p\left( W_{u} \right)}{\sum_{W'}^{}{p\left( X_{u} \middle| S_{W'} \right)p(W^{'})}}} 
-```
+$$
 
 Maximizing the numerator will increase the likelihood of the correct word sequence, and so will minimizing the denominator. If the denominator were not restricted to valid word sequences, then the objective function would simplify to basic frame-based cross entropy.
 

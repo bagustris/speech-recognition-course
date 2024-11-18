@@ -21,7 +21,7 @@
 This module covers the basics of language modeling – the component of a speech recognition that estimates the prior probabilities P(W) of possible spoken utterances. Recall that these prior probabilities are combined with the acoustic model likelihoods P(O | W) in the Fundamental Equation of Speech Recognition to arrive at the overall best hypothesis
 
 $$\hat{W} = \mathrm{arg\,max}_{W} P( O | W) P(W)
-```
+$$
 
 Thus, the language model (or LM) embodies the recognizer’s knowledge of what probable word sequences are, even before it has heard any actual speech sounds. Instead of encoding hard rules of syntax and semantics that allow some utterances and disallow others, the LM should assign high probabilities to likely utterances and low probabilities to unlikely ones, without ruling anything out completely (because one never knows what people might actually say). Furthermore, the assignment of probabilities is not done by linguistic or other types of rules. Instead, just as with the acoustic model, we will estimate a parameterized model from data. Thus, we let the statistics of actually observed training data determine what words are likely to be heard in a language, scenario, or application.
 
@@ -32,7 +32,7 @@ A note on terminology: in language modeling we often talk about sentences as the
 We need to assign a probability to every possible sentence
 
 $$W = w_1 w_2 \ldots w_n
-```
+$$
 
 where n is the number of words, which is unbounded in principle. First, we simplify the problem by limiting the choice of words to a finite set, the vocabulary of the LM. Note the vocabulary of the LM is also the vocabulary of the speech recognizer – we cannot recognize a word that is not considered possible by the LM (i.e., it’s probability would be effectively zero).
 
@@ -46,13 +46,13 @@ We can work around both these problems by using a trick we already discussed in 
 
 $$P(W) = P(w_1) \times P(w_2 |w_1) \times P(w_3 | w_1 w_2)
 \times \ldots \times P(w_n | w_1 \ldots w_{n-1})
-```
+$$
 
 Now let’s assume that the Markov state of the LM (often called the context or history) is limited to just one word. This gives us
 
 $$P(W) = P(w_1) \times P(w_2 |w_1) \times P(w_3 | w_2) \times
 \ldots \times P(w_n | w_{n-1})
-```
+$$
 
 Note how each word is now predicted by only the immediately preceding one, i.e., we’re using a first-order Markov model. However, in language modeling this terminology is not usually used, and instead we call such a model a bigram model, because it uses only statistics of two adjacent words at a time. Correspondingly, a second-order Markov model would be called a trigram model, and predict each word based on the preceding two, and so forth.
 
@@ -68,7 +68,7 @@ The complete sentence probability according to the bigram model is now
 
 $$P(W) = P(w_1 | \lt s \gt ) \times P(w_2 |w_1) \times \ldots
 \times P(w_n | w_{n-1}) \times P(\lt/s\gt | w_n)
-```
+$$
 
 We now turn to the problem of actually estimating these N-gram probabilities.
 
@@ -77,12 +77,12 @@ We now turn to the problem of actually estimating these N-gram probabilities.
 The conditional probabilities based on N-grams can be naively estimated by their relative frequencies. Let $c(w_1 \dots w_k)$ be the number of occurrences (or count) of the k-gram $w_1 \ldots w_k$. For example, the conditional probability of “bites” following “dog” is the ratio
 
 $$P(bites| dog) = { c(dog\ bites) \over c(dog) }
-```
+$$
 
 Exercise for the reader: prove that the conditional probabilities of all bigrams containing the same context part
 
 $$P(bites | dog ) + P(bite | dog) + P(wags | dog) + \cdots
-```
+$$
 
 equals one (so it is a probability over the entire vocabulary).
 
@@ -90,7 +90,7 @@ More generally, k-gram probability estimates are
 
 $$P(w_k | w_1 \ldots w_{k-1}) = { c(w_1 \ldots w_k) \over c(w_1
 \ldots w_{k-1})}
-``` 
+$$ 
 
 ## N-gram smoothing and discounting
 
@@ -101,17 +101,17 @@ So we need a principled way to assign nonzero probability estimates to N-grams t
 The idea behind Witten-Bell smoothing is to treat the advent of a previously unseen word type as an event in itself, to be counted along with the seen words. How many times does an "unseen" word occur in the training data? Once for every unique word type, since the first time we encounter it, it counts as a novel word. For unigram (context-independent) probability estimates this means that
 
 $$\hat{P}(w)={c(w) \over c(.)+V}
-```
+$$
 
 where $c(w)$ is the unigram word count, $c(.)$ is the sum of all word counts (the length of the training text), and $V$ is the count of "first seen" events, i.e., the vocabulary size. The extra term in the denominator lowers all probability estimates compared to the old relative frequencies. For this reason LM smoothing is often called discounting, i.e., the N-gram probabilities are lowered relative to their relative frequencies. In aggregate, this then leaves some probability mass for the occurrence of new unseen words. For Witten-Bell, the exactly the amount of the freed-up probability is
 
 $$P(unseenword)={V \over c(.)+V}
-```
+$$
 
 This is the unigram case. We generalize this to N-grams of length $k$ by treating the first $k−1$ words as the context for the last word, and counting the number of unique word types that occur in that context.
 
 $$\hat{P}(w_k|w_1…w_k−1) = {c(w_1…w_k) \over c(w_1…w_k−1)+V(w_1…w_{k−1}⋅)}
-```
+$$
 
 where $V(w_1…w_{k−1}⋅)$ means the size of the vocabulary observed in the context (i.e., right after) $w_1…w_{k−1}$.  Also, the freed-up probability mass now goes to words that are not previously seen *in that context*. 
 
@@ -120,12 +120,12 @@ where $V(w_1…w_{k−1}⋅)$ means the size of the vocabulary observed in the c
 How should we distribute the discounted probability mass for a given context? One possibility is evenly over the entire vocabulary. Say we are looking at the context "white dog", and in fact the only trigram with that context in the training data is "white dog barked", twice. The trigram probability under Witten-Bell becomes
 
 $$\hat{P}(barked|white\ dog) = {c(white\ dog\ barked) \over c(white\ dog)+V(white\ dog⋅)} = {2\over2+1}  = {2\over3}
-```
+$$
 
 So we now have probability $1/3$ to share with all the other words that might follow "white dog". Distributing it evenly would ignore the fact that some words are just overall more frequent than others. Therefore, we could distribute $1/3$ in proportion to the unigram probabilities of words. However, this would make "white dog the" much more probable than "white dog barks", since "the" much more common than "barks". A better solution is to use reduced context, in this case just "dog" to allocate the probability mass. This means we can draw all occurrences of "dog" to guess what could come next. This method is called back-off, since we are falling back to a shorter (1-word) version of the context when the following word has not been observed in the full (2-word) context. We can write this as
 
 $${\hat{P}}_{\text{bo}}\left( w_{k} \right|w_{1}\ldots w_{k - 1}) = \ \left\{ \begin{matrix} \hat{P}\left( w_{k} \right|w_{1}\ldots w_{k - 1}),\ \ \ c(w_{1}\ldots w_{k}) > 0 \\ {\hat{P}}_{\text{bo}}\left( w_{k} \right|w_{2}\ldots w_{k - 1})\ \alpha(w_{2}\ldots w_{k - 1}),\ \  c\left( w_{1}\ldots w_{k} \right) = 0 \\ \end{matrix} \right.
-```
+$$
 
 $\hat{P}_{bo}$ is the new back-off estimate for all N-grams. If an N-grams has been observed (count > 0, the first branch) it makes direct use of the discounted estimates $\hat{P}$. If the N-grams is unseen in training, looks up the estimate recursively for the shortened context (leaving out $w_1$) and then scales it by a factor α, which is a function of the context, so that the estimates for all w_k again sum to one. ($α$ is the probability of the unseen words in context $w_1…w_{k−1}$, as discussed earlier, divided by the sum of the same unseen-word probabilities according to the back-off distribution $\hat{P}_{bo}(⋅|w_2…w_{k−1}$).
 
@@ -138,17 +138,17 @@ Given two language models A and B, how can we tell which is better? Intuitively,
 according to the model is
 
 $$P\left( w_{1}\ldots w_{n} \right) = P\left( w_{1}| < s > \right) \times P\left( w_{2} \right|\ w_{1}) \times P\left( w_{3} \right|\ w_{2}) \times \ldots \times P( < /s > \ |\ w_{n})
-```
+$$
 
 (where we revert to the case of a bigram model just to keep notation simple). We are now talking about a test set containing multiple sentences, so at sentence boundaries we reset the context to the `<s>` tag. The probabilities get very small very quickly, so it is more practical to carry out this computation with log probabilities:
 
 $$\log{\ P(w_{1}\ldots w_{n})} = \log{P(w_{1}| < s > )} + \log{P\left( w_{2} \right|\ w_{1})} + \ldots + \log{P( < /s > \ |\ w_{n})}
-```
+$$
 
 Viewed as a function of the model, this is sometimes called the log likelihood of the model on the test data. Log likelihoods are always negative because the probabilities are less than one. If we flip the sign, and take the average over all the words in the test data
 
 $$- \frac{1}{n}\log{P(w_{1}\ldots w_{n})}
-```
+$$
 
 we get a metric called entropy, which is a measure of information rate of the word stream. The entropy gives us the average number of bits required to encode the word stream using a code based on the model probabilities (more probable words are encoded with fewer bits, to minimize the overall bit rate).
 
@@ -157,7 +157,7 @@ Yet another metric for model quality (relative to some test data) is the average
 How to compute perplexity: Because probabilities are combined by multiplication, not addition, we must use the geometric average on the product of the word probabilities:
 
 $$\sqrt[n]{\frac{1}{P(w_{1}\ldots w_{n})}} = {P(w_{1}\ldots w_{n})}^{- \frac{1}{n}}
-```
+$$
 
 This means that perplexity is just the anti-logarithm (exponential) of the entropy, which means all the above metrics are equivalent and related as follows:
 
@@ -182,7 +182,7 @@ Assume you have we two existing language models already trained, producing proba
 A better approach is to combine the existing models at the probability level, by interpolating their estimates. Interpolation means we compute a weighted average of the two underlying probability estimates:
 
 $$\hat{P}\left( w_{k} \right|w_{1}\ldots w_{k - 1}) = \lambda\ {\hat{P}}_{1}\left( w_{k} \right|w_{1}\ldots w_{k - 1}) + (1 - \lambda)\ {\hat{P}}_{2}\left( w_{k} \right|w_{1}\ldots w_{k - 1})
-```
+$$
 
 The parameter λ controls the relative influence of the component models. A value close 1 means the first model dominates; a value close to 0 gives most of the weight to the second model. The optimal value of $\lambda$ can be itself estimated using held-out data (i.e., data that is separate from the training data for the component models), by choosing a value that minimizes the perplexity on the held-out data.
 

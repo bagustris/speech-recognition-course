@@ -26,12 +26,12 @@ Before studying HMMs, it will be useful to briefly review Markov chains. Markov 
 Let's consider an example. In a weather prediction application, the states could be "Sunny", "Partly Cloud", "Cloudy", and "Raining". If we wanted to consider the probability of a particular 5 day forecast, e.g. $P(p,p,c,r,s)$, we would employ Bayes' rule to break up this joint probability into a series of conditional probabilities.
 
 $$p(X1,X2,X3,X4,X5)=p(X5|X4,X3,X2,X1)p(X4|X3,X2,X1)p(X3|X2,X1)p(X2|X1)p(X1) 
-```
+$$
 
 This expression can be greatly simplified if we consider the first-order Markov assumption, which states that
 
 $$p(X_i|X_1,\ldots,X_{i-1})=p(X_i|X_{i-1})
-```
+$$
 
 Under this assumption, the joint probability of a 5-day forecast can be written as
 
@@ -41,7 +41,7 @@ p(X1,X2,X3,X4,X5) &= p(X5|X4)p(X4|X3)p(X3|X2)p(X2|X1)p(X1) \\
 
 &=p(X_1)\prod_{i=2}^5p(X_i|X_{i-1})
 \end{split}
-```
+$$
 
 Thus, the key elements of a Markov chain are the state identities (weather forecast in this case) and the transition probabilities p(X_i|X_{i−1}) that express the probability of moving from one state to another (including back to the same state).
 
@@ -52,17 +52,17 @@ For example, a complete (though likely inaccurate) Markov chain for weather pred
 Note that in addition to the conditional probabilities
 
 $$p(X_i|X_{i-1})
-```
+$$
 
 in the equation above, there was also a probability associated with the first element of the sequence,
 
 $$p(X_1).
-```
+$$
 
 So, in addition to the state inventory and the conditional transition probabilities, we also need a set of prior probabilities that indicate the probability of starting the chain in each of the states. Let us assume our prior probabilities are as follows:
 
 $$p(p)=\pi_p, p(c)=\pi_c, p(r)=\pi_r, p(s)=\pi_s
-```
+$$
 
 Now, let us return to the example. We can now compute the probability of $ P(p,p,c,r,s) $ quite simply as
 
@@ -70,7 +70,7 @@ $$\begin{split}
 p(p,p,c,r,s) &= p(s|r,c,p,p) p(r|c,p,p) p(c|p,p) p(p|p) p(p) \\
 &= p(s|r) p(r|c) p(c|p) p(p|p) p(p)
 \end{split}
-```
+$$
 
 ## Hidden Markov Models
 
@@ -211,7 +211,7 @@ The simplest and most common neural network used for acoustic modeling is the co
 Although we are training a DNN to predict the label for each frame of input, it is very beneficial for classification to provide a context window of frames to the network as input. Specifically, for the frame at time t, the input to the network is a symmetric window of the N frames before and N frames after. Thus, if x_t is the feature vector at time t, the input to the network is
 
 $$X_t = [ x_{t-N},  x_{t-N-1},  \ldots,  x_t,  \ldots,  x_{t+N-1},  x_{t+N} ]
-```
+$$
 
 Typical values of N are between 5 and 11, depending on the amount of training data. Larger context windows provide more information but require a larger matrix of parameters in the input layer of the model which can be hard to train without ample data.
 
@@ -251,7 +251,7 @@ $$\begin{split}
 
 h_t^i &= \left[\overrightarrow{h_t^i}, \overleftarrow{h_t^i}\right] 
 \end{split}
-```
+$$
 
 where the subscripts $f$ and $b$ indicate parameters for the forward and backward directions, respectively.
 
