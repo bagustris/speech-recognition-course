@@ -22,11 +22,8 @@
     {{ content }}
 
     {% if site.github.private != true and site.github.license %}
-    <div class="footer border-top border-gray-light mt-5 pt-3 text-gray d-flex justify-content-between">
-      <a href="{{ '/' | relative_url }}" class="flex-grow-0">Back to top</a>
-      <span class="text-right">
-        This site is open source. {% github_edit_link "Improve this page" %}.
-      </span>
+    <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+      This site is open source. {% github_edit_link "Improve this page" %}.
     </div>
     {% endif %}
     <!-- add link to back to top -->
