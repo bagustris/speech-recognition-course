@@ -56,7 +56,7 @@ $$
 
 The forward recursion computes the score of state k given the acoustic evidence up to, and including, time $t$. Its initial state is the model's prediction for the score of the first label in the sequence.
 
-$$\alpha\lbrack k,0\rbrack = \left\{ 
+$$\alpha\lbrack k,0\rbrack = \left\lbrace
     \begin{matrix} 
     y\left\lbrack \overset{\overline{}}{z}\left\lbrack k \right\rbrack,\ 0 \right\rbrack & k = 0, \\ 
     0 & \text{otherwise}
