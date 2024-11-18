@@ -7,9 +7,8 @@
   <title>{{ page.title }}</title>
   <!-- {% include head-custom.html %} -->
   {% seo %}
-<link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}" 
-    integrity="sha384-[YOUR-HASH-HERE]" 
-    crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ " /assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}"
+    integrity="sha384-[YOUR-HASH-HERE]" crossorigin="anonymous">
   {% include head-custom.html %}
 
 </head>
@@ -23,9 +22,11 @@
     {{ content }}
 
     {% if site.github.private != true and site.github.license %}
-    <div class="footer border-top border-gray-light mt-5 pt-3 text-gray d-flex w-100">
+    <div class="footer border-top border-gray-light mt-5 pt-3 text-gray d-flex w-100 justify-content-between">
       <a href="{{ '/' | relative_url }}" class="flex-grow-0">Back to top</a>
-      <div class="flex-grow-1 text-end">This site is open source. {% github_edit_link "Improve this page" %}.</div>
+      <span class="flex-grow-0">
+        This site is open source. <a href="https://github.com/your-repo-url">Improve this page.</a>
+      </span>
     </div>
     {% endif %}
     <!-- add link to back to top -->
