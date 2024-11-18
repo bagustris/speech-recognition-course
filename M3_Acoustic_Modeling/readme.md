@@ -1,7 +1,7 @@
 
 # M3: Acoustic Modeling
 
-[Previous](./M2_Speech_Signal_Processing/readme.md)
+[Previous](../M2_Speech_Signal_Processing/readme.md)
 
 ## Table of Contents
 - [Introduction](#introduction)
