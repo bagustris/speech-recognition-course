@@ -18,12 +18,15 @@
       {{ content }}
 
       {% if site.github.private != true and site.github.license %}
-      <div class="footer border-top border-gray-light mt-5 pt-3 text-gray d-flex justify-content-between">
-        <a href="{{ '/' | relative_url }}" class="flex-grow-0">Back to top</a>
-        <span class="text-right">
-          This site is open source. {% github_edit_link "Improve this page" %}.
-        </span>
-      </div>
+      <div class="footer border-top border-gray-light mt-5 pt-3 d-flex justify-content-between text-gray">
+        <div class="text-left">
+            <a href="{{ '/' | relative_url }}">Back to top</a>
+        </div>
+        <div class="text-right">
+            This site is open source. {% github_edit_link "Improve this page" %}.
+        </div>
+    </div>
+    
       {% endif %}
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
