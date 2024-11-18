@@ -153,7 +153,7 @@ This lab assumes the transcriptions are in a format called the "trn" format (TRN
 
 > sally sells seashells by the seashore (tongue_twister)
 
-Notice that the transcription does not have any punctuation or capitalization, nor any other formatting (e.g. converting "doctor" to "dr.", or "eight" to "8"). This formatting is called "Inverse Text Normalization" and is not part of this course.
+Notice that the transcription does not have any punctuation or capitalization, nor any other formatting (e.g. converting "doctor" to "dr.", or "eight" to "8"). This formatting is called [Inverse Text Normalization](https://developer.nvidia.com/blog/text-normalization-and-inverse-text-normalization-with-nvidia-nemo/) and is not part of this course.
 
 The python code `M1_Score.py` and `wer.py` contain the scaffolding for the first lab. A main function parses the command line arguments and `string_edit_distance()` computes the string edit distance between two strings.
 

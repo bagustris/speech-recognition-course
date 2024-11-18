@@ -212,18 +212,18 @@ Another common way to address the problem of determinizing a non-functional FST 
 
 The HMM state sequence transducer H maps sequences of acoustic model states to sequences of phone labels. As with the pronunciation lexicon, the desired mapping can be described with a table.
 
-| Acoustic Label | Sequence 	| Phone |  
-|----------------|------------|-------|
+| Acoustic Label Sequence 	| Phone |  
+|---------------------------|-------|
 | AH_s2 AH_s3 AH_s4 	| AH |
 | EH_s2 EH_s3 EH_s4 	| EH |
 | IH_s2 IH_s3 IH_s4 	| IH |
 | IY_s2 IY_s3 IY_s4 	| IY |
-| K_s2 K_s3 K_s4 	    | K
-| N_s2 N_s3 N_s4 	    | N
+| K_s2 K_s3 K_s4 	    | K  |
+| N_s2 N_s3 N_s4 	    | N  | 
 | NG_s2 NG_s3 NG_s4 	| NG |
-| S_s2 S_s3 S_s4 	    | S
+| S_s2 S_s3 S_s4 	    | S  |
 | TH_s2 TH_s3 TH_s4 	| TH |
-| M_s2 M_s3 M_s4 	    | M
+| M_s2 M_s3 M_s4 	    | M  |
 | #0 	                | #0 |
 
 The structure of our model is that each phone is associated with a sequence of three acoustic labels. These represent the beginning, middle, and end of the phone's acoustic realization. Larger acoustic models typically have many more acoustic labels, capturing the way each phone's acoustic realization changes depending on its neighboring sounds in the sequences. These context dependent models are beyond the scope of this course.
