@@ -2,7 +2,12 @@
   MathJax = {
     tex: {
       inlineMath: [['$', '$'], ['$`', '`$'], ['\\(', '\\)']],
-      displayMath: [['```math', '```'], ['$$', '$$'], ['\\[', '\\]']]
+      displayMath: [['```math', '```'], ['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true,
+    },
+    options = {
+      ignoreHtmlClass: ".*|",
+      processHtmlClass: "math"
     }
   };
 </script>
