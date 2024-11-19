@@ -34,12 +34,26 @@
   window.MathJax = {
     tex: {
       inlineMath: [['$`', '`$']],
-      displayMath: [['```math', '```']],
-      processEscapes: true
+      displayMath: [['```math', '```']]
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
     }
   };
   </script>
   
   <script id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js">
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
   </script>
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('pre code.language-math').forEach(function(el) {
+      const content = el.textContent.trim();
+      const displayMath = document.createElement('div');
+      displayMath.innerHTML = `\\[${content}\\]`;
+      el.parentNode.replaceWith(displayMath);
+    });
+  });
+  </script>
+  
