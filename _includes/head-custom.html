@@ -32,26 +32,14 @@
 
 <script>
   window.MathJax = {
-    loader: {load: ['[tex]/newcommand']},
     tex: {
-      packages: {'[+]': ['newcommand']},
-      inlineMath: [['$', '$'], ['$`', '`$']],
+      inlineMath: [['$`', '`$']],
+      displayMath: [['```math', '```']],
       processEscapes: true
-    },
-    options: {
-      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
     }
   };
   </script>
   
   <script id="MathJax-script" async
     src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js">
-  </script>
-  
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('pre code.language-math').forEach(function(el) {
-      el.outerHTML = '\\[' + el.textContent + '\\]';
-    });
-  });
   </script>
