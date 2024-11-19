@@ -30,30 +30,17 @@
   }, false);
 </script> -->
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"></script>
 <script>
-  window.MathJax = {
-    tex: {
-      inlineMath: [['$`', '`$']],
-      displayMath: [['```math', '```']]
-    },
-    options: {
-      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-    }
-  };
-  </script>
-  
-  <script id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
-  
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('pre code.language-math').forEach(function(el) {
-      const content = el.textContent.trim();
-      const displayMath = document.createElement('div');
-      displayMath.innerHTML = `\\[${content}\\]`;
-      el.parentNode.replaceWith(displayMath);
+  document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$`", right: "`$", display: false},
+        {left: "```math", right: "```", display: true}
+      ]
     });
   });
-  </script>
+</script>
   
