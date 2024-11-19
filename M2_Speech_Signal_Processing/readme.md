@@ -113,15 +113,13 @@ $$
 
 If we take the log of both sides and compute the mean of all frames in the utterance, we have
 
-$$\begin{split}
-
+```math
+\begin{align}
 \mu_{\tt obs} &=\frac{1}{T}\sum_t \log\left(\left|X_{t,{\tt obs}}[k]\right|\right) \\
-
 &=\frac{1}{T}\sum_t \log\left(\left|H[k]\right|\left|X_t[k]\right|\right) \\
-
-&=\frac{1}{T}\sum_t \log\left(\left|H[k]\right|\right)+\frac{1}{T}\sum_t \log\left(\left|X_t[k]\right|\right) 
-\end{split}
-$$
+&=\frac{1}{T}\sum_t \log\left(\left|H[k]\right|\right)+\frac{1}{T}\sum_t \log\left(\left|X_t[k]\right|\right)
+\end{align}
+```
 
 Now, if we assume that the filter is constant over time and the log magnitude of the underlying speech signal has zero mean, this can be simplified to:
 
@@ -186,7 +184,7 @@ You can compare the figures to the figures below. Once the code is verified to b
 
 This program will use the code you write in the FrontEnd class to compute feature extraction for all the files in the LibriSpeech corpus. You need to call this program 3 times, once each for train, dev, and test sets.
 
-When the training set features are computed (`–set train`) the code will also generate the global mean and precision (inverse standard deviation) of the features in the training set. These quantities will be stored in two ASCII files in the am direction for use by CNTK during acoustic model training in the next module.
+When the training set features are computed (`–set train`) the code will also generate the global mean and precision (inverse standard deviation) of the features in the training set. These quantities will be stored in two ASCII files in the `am` directory during acoustic model training in the next module.
 
 Here are the outputs you should get from plotting:
 
