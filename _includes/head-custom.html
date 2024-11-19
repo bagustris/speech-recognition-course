@@ -7,19 +7,19 @@
   };
 </script>
 
-<script type="text/javascript">
-  document.addEventListener('DOMContentLoaded', function(){
-    document.querySelectorAll("script[type='math/tex']").forEach(function(el){
+<!-- <script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll("script[type='math/tex']").forEach(function (el) {
       el.outerHTML = "$`" + el.textContent + "`$";
     });
-    document.querySelectorAll("script[type='math/tex; mode=display']").forEach(function(el){
+    document.querySelectorAll("script[type='math/tex; mode=display']").forEach(function (el) {
       el.outerHTML = "```math" + el.textContent + "```";
     });
     var script = document.createElement('script');
     script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js";
     document.head.appendChild(script);
   }, false);
-  </script>
+</script> -->
 
 <script type="text/javascript" id="MathJax-script" async
   src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
