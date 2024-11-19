@@ -53,9 +53,9 @@ $$X_m[k]=\sum_{n=0}^{N-1}x_m[n]e^{-j 2 \pi k n N}$$
 
 Note that all modern software packages have routines for efficiently computing the Fast Fourier Transform (FFT), which is an efficient way of computing the discrete Fourier transform.
 
-The Fourier representation $X_M[k]$ is a complex number that represents both the spectral magnitude (absolute amplitude) and phase of each frame and frequency. For feature extraction purposes, we do not use the phase information so only consider the magnitude $\vert X_m[k] \vert$.
+The Fourier representation $X_M[k]$ is a complex number that represents both the spectral magnitude (absolute amplitude) and phase of each frame and frequency. For feature extraction purposes, we do not use the phase information, so we only consider the magnitude $\vert X_m[k] \vert$.
 
-A spectrogram shows a 2D plot log-magnitude (or log-power) of the result of short-time Fourier analysis of a speech signal. The horizontal axis shows the frame index (in 10 ms units), and the vertical axis shows the frequency axis from 0 Hz up to the Nyquist frequency with one-half of the sampling rate. For example, the spectrogram of the original waveform "speech recognition is cool stuff" is shown here. In the spectrogram, high energy regions are shown in orange and red.
+A spectrogram shows a 2D plot log magnitude (or log power) of the result of a short-time Fourier analysis of a speech signal. The horizontal axis shows the frame index (in 10 ms units), and the vertical axis shows the frequency axis from 0 Hz up to the Nyquist frequency with one-half of the sampling rate. For example, the spectrogram of the original waveform "speech recognition is cool stuff" is shown here. In the spectrogram, high-energy regions are shown in orange and red.
 
 ## Mel filtering
 
@@ -65,20 +65,20 @@ To remove variability in the spectrogram caused by the harmonic structure in the
 
 ![](./m2i5.png)
 
-Observe that the filters are narrow and closely spaced on the left size of the figure and wider and farther apart on the right side of the figure.
+Observe that the filters are narrow and closely spaced on the left side of the figure and wider and farther apart on the right side of the figure.
 
 It is typical to represent the mel filterbank as a matrix, where each row corresponds to one filter in the filterbank. Thus, P-dimensional mel filterbank coefficients can be computed from the magnitude spectrum as
 
 $$X_{\tt{mel}}[p] = \sum_k M[p,k] \left|X_m[k]\right|,      p = 0, 1, \ldots, P-1
 $$
 
-A mel filterbank of length $40$ is typical, though state of the art system have been built with fewer or more. Fewer results in more smoothing and more results in less smoothing. 
+A mel filterbank of length $40$ is typical, though state-of-the-art systems have been built with fewer or more. Fewer results in more smoothing, and more results in less smoothing. 
 
 
 ## Logarithmic compression
 The last step of the feature extraction process is to apply a logarithm operation. This helps compress the dynamic range of the signals and also closely models a nonlinear compression operation that occurs in the auditory system. We refer to the output of this logarithm operation as "filterbank" coefficients.
 
-The spectrogram-like view of the filterbank coefficients for the original waveform are shown here for a 40-dimensional filterbank. Compared to the original spectrogram, the filterbank coefficients are a much smoother version along the vertical (frequency) axis of the spectrogram where both the high frequency noise variability and pitch/harmonic structure has been removed. 
+The spectrogram-like view of the filterbank coefficients for the original waveform is shown here for a 40-dimensional filterbank. Compared to the original spectrogram, the filterbank coefficients are a much smoother version along the vertical (frequency) axis of the spectrogram, where both the high-frequency noise variability and pitch/harmonic structure have been removed. 
 
 ![](./m2i6.png)
 
@@ -113,13 +113,13 @@ $$
 
 If we take the log of both sides and compute the mean of all frames in the utterance, we have
 
-```math
-\begin{align}
+$$
+\begin{align*}
 \mu_{\tt obs} &=\frac{1}{T}\sum_t \log\left(\left|X_{t,{\tt obs}}[k]\right|\right) \\\\
 &=\frac{1}{T}\sum_t \log\left(\left|H[k]\right|\left|X_t[k]\right|\right) \\\\
 &=\frac{1}{T}\sum_t \log\left(\left|H[k]\right|\right)+\frac{1}{T}\sum_t \log\left(\left|X_t[k]\right|\right)
-\end{align}
-```
+\end{align*}
+$$
 
 Now, if we assume that the filter is constant over time and the log magnitude of the underlying speech signal has zero mean, this can be simplified to:
 
