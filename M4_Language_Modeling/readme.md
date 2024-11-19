@@ -64,13 +64,14 @@ The generalization of this scheme is the N-gram model, i.e., each word is condit
 
 To let our N-gram model assign probabilities to all possible finite word sequences we are left with one small problem: how will the model predict where to end the sentence? We could devise a separate model component for the sentence length n, but it is far easier to introduce a special end-of-sentence tag `</s>` into the vocabulary that marks the end of a sentence. In other words, the LM generates words left to right, and stops as soon as `</s>` is drawn according to the conditional probability distribution. Importantly, this also ensures that the (infinite) sum of all sentences probabilities is equal to one, as it should be for a probability distribution.
 
-Similarly, we also introduce a start-of-sentence tag `<s>`. It is inserted before the first word $w_1$, and in fact represents the context for the first real word. This is important because we want the first word to be predicted with knowledge that it is occurring first thing in the sentence. Certain words such as “I” and “well” are especially frequent in first position, and using the start-of-sentence tag we can represent this using the bigram probabilities $P(w_1 \vert \lt s \gt)$.
+Similarly, we also introduce a start-of-sentence tag `<s>`. It is inserted before the first word $w_1$, and in fact represents the context for the first real word. This is important because we want the first word to be predicted with knowledge that it is occurring first thing in the sentence. Certain words such as “I” and “well” are especially frequent in first position, and using the start-of-sentence tag we can represent this using the bigram probabilities $`P(w_1 | \text{<s>})`$.
 
 The complete sentence probability according to the bigram model is now
 
-$$P(W) = P(w_1 | \lt s \gt ) \times P(w_2 |w_1) \times \ldots
+```math
+P(W) = P(w_1 | \lt s \gt) \times P(w_2 |w_1) \times \ldots
 \times P(w_n | w_{n-1}) \times P(\lt/s\gt | w_n)
-$$
+```
 
 We now turn to the problem of actually estimating these N-gram probabilities.
 
@@ -78,7 +79,7 @@ We now turn to the problem of actually estimating these N-gram probabilities.
 
 The conditional probabilities based on N-grams can be naively estimated by their relative frequencies. Let $c(w_1 \dots w_k)$ be the number of occurrences (or count) of the k-gram $w_1 \ldots w_k$. For example, the conditional probability of “bites” following “dog” is the ratio
 
-$$P(bites| dog) = { c(dog\ bites) \over c(dog) }
+$$P(bites | dog) = \frac{c(dog\ bites)} {c(dog)}
 $$
 
 Exercise for the reader: prove that the conditional probabilities of all bigrams containing the same context part
@@ -90,7 +91,7 @@ equals one (so it is a probability over the entire vocabulary).
 
 More generally, k-gram probability estimates are
 
-$$P(w_k | w_1 \ldots w_{k-1}) = { c(w_1 \ldots w_k) \over c(w_1
+$$P(w_k | w_1 \ldots w_{k-1}) = \frac{c(w_1 \ldots w_k)} {c(w_1
 \ldots w_{k-1})}
 $$ 
 
@@ -102,26 +103,26 @@ So we need a principled way to assign nonzero probability estimates to N-grams t
 
 The idea behind Witten-Bell smoothing is to treat the advent of a previously unseen word type as an event in itself, to be counted along with the seen words. How many times does an "unseen" word occur in the training data? Once for every unique word type, since the first time we encounter it, it counts as a novel word. For unigram (context-independent) probability estimates this means that
 
-$$\hat{P}(w)={c(w) \over c(.)+V}
+$$\hat{P}(w)=\frac{c(w)} {c(.)+V}
 $$
 
 where $c(w)$ is the unigram word count, $c(.)$ is the sum of all word counts (the length of the training text), and $V$ is the count of "first seen" events, i.e., the vocabulary size. The extra term in the denominator lowers all probability estimates compared to the old relative frequencies. For this reason, LM smoothing is often called discounting, i.e., the N-gram probabilities are lowered relative to their relative frequencies. In aggregate, this then leaves some probability mass for the occurrence of new unseen words. For Witten-Bell, the exact amount of the freed-up probability is
 
-$$P(unseenword)={V \over c(.)+V}
+$$P(unseenword)= \frac {V} {c(.)+V}
 $$
 
-This is the unigram case. We generalize this to N-grams of length $k$ by treating the first $k−1$ words as the context for the last word, and counting the number of unique word types that occur in that context.
+This is the unigram case. We generalize this to N-grams of length $k$ by treating the first $k-1$ words as the context for the last word, and counting the number of unique word types that occur in that context.
 
-$$\hat{P}(w_k|w_1…w_k−1) = {c(w_1…w_k) \over c(w_1…w_k−1)+V(w_1…w_{k−1}⋅)}
+$$\hat{P}(w_k|w_1 \ldots w_k-1) = \frac {c(w_1\ldots w_k)} {c(w_1 \ldots w_k-1)+V(w_1 \ldots w_{k-1}\cdot)}
 $$
 
-where $V(w_1…w_{k−1}⋅)$ means the size of the vocabulary observed in the context (i.e., right after) $w_1…w_{k−1}$. Also, the freed-up probability mass now goes to words that are not previously seen *in that context*. 
+where $V(w_1 \ldots w_{k-1}\cdot)$ means the size of the vocabulary observed in the context (i.e., right after) $w_1 \ldots w_{k-1}$. Also, the freed-up probability mass now goes to words that are not previously seen *in that context*. 
 
 ## Back-off in N-gram models  
 
 How should we distribute the discounted probability mass for a given context? One possibility is evenly over the entire vocabulary. Say we are looking at the context "white dog", and in fact the only trigram with that context in the training data is "white dog barked", twice. The trigram probability under Witten-Bell becomes
 
-$$\hat{P}(barked|white\ dog) = {c(white\ dog\ barked) \over c(white\ dog)+V(white\ dog⋅)} = {2\over2+1}  = {2\over3}
+$$\hat{P}(barked|white\ dog) = \frac{c(white\ dog\ barked)}{c(white\ dog)+V(white\ dog \cdot)} = \frac{2}{2+1}  = \frac {2}{3}
 $$
 
 So we now have a probability of $1/3$ to share with all the other words that might follow "white dog." Distributing it evenly would ignore the fact that some words are just overall more frequent than others. Therefore, we could distribute $1/3$ in proportion to the unigram probabilities of words. However, this would make "white dog the" much more probable than "white dog barks", since "the" much more common than "barks". A better solution is to use reduced context, in this case, just "dog" to allocate the probability mass. This means we can draw all occurrences of "dog" to guess what could come next. This method is called back-off, since we are falling back to a shorter (1-word) version of the context when the following word has not been observed in the full (2-word) context. We can write this as
@@ -135,7 +136,7 @@ So we now have a probability of $1/3$ to share with all the other words that mig
 \right.
 ```
 
-Note that $`\hat{P}_{bo}`$ is the new back-off estimate for all N-grams. If an N-gram has been observed (count $`\gt 0`$, the first branch), it makes direct use of the discounted estimates $`\hat{P}`$. If the N-gram is unseen in training, it looks up the estimate recursively for the shortened context (leaving out $`w_1`$) and then scales it by a factor $`\alpha`$, which is a function of the context so that the estimates for all $`w_k`$ again sum to one. ($`\alpha`$ is the probability of the unseen words in context $`w_1 \ldots w_{k-1}`$, as discussed earlier, divided by the sum of the same unseen-word probabilities according to the back-off distribution $`\hat{P}_{bo}(\cdot \mid w_2 \ldots w_{k-1})`$).
+Note that $`\hat{P}_{bo}`$ is the new back-off estimate for all N-grams. If an N-gram has been observed (count > 0, the first branch), it makes direct use of the discounted estimates $`\hat{P}`$. If the N-gram is unseen in training, it looks up the estimate recursively for the shortened context (leaving out $`w_1`$) and then scales it by a factor $`\alpha`$, which is a function of the context so that the estimates for all $`w_k`$ again sum to one. ($`\alpha`$ is the probability of the unseen words in context $`w_1 \ldots w_{k-1}`$, as discussed earlier, divided by the sum of the same unseen-word probabilities according to the back-off distribution $`\hat{P}_{bo}(\cdot \mid w_2 \ldots w_{k-1})`$).
 
 
 The $\alpha$ parameters are called backoff weights, but they are not free parameters of the model. Rather, once the N-gram probabilities $\hat{P}$ have been determined, the backoff weights are completely determined. Computing them is sometimes called (re-)normalizing the model, since they are chosen just so all the probability distributions sum to unity.
@@ -170,9 +171,9 @@ $$
 
 This means that perplexity is just the anti-logarithm (exponential) of the entropy, which means all the above metrics are equivalent and related as follows:
 
->   HIGH likelihood ↔ LOW entropy ↔ LOW perplexity ↔ GOOD model
+>   HIGH likelihood $\leftrightarrow$ LOW entropy $\leftrightarrow$ LOW perplexity $\leftrightarrow$ GOOD model
 
->   LOW likelihood ↔ HIGH entropy ↔ HIGH perplexity ↔ BAD model
+>   LOW likelihood $\leftrightarrow$ HIGH entropy $\leftrightarrow$ HIGH perplexity $\leftrightarrow$ BAD model
 
 Remember to evaluate model quality (by likelihood, entropy, or perplexity) on a test set that is independent (not part) of the training data to get an unbiased estimate.
 
@@ -206,15 +207,15 @@ Fortunately, in the case of backoff N-gram based LMs we can construct a single c
 
     for k=1,...,N:
 
-       for all ngrams w1…wk
+       for all ngrams w1...wk
 
-            Insert w1…wk into the new model
+            Insert w1...wk into the new model
 
-            Assign probability P^(wk|w1…wk−1 according to equation (\*)
+            Assign probability P^(wk|w1...wk-1 according to equation (\*)
 
        end
 
-       Compute backoff weights for all n-gram contexts of length k−1 in the new model
+       Compute backoff weights for all n-gram contexts of length k-1 in the new model
 
     end
 
@@ -226,7 +227,7 @@ In this section we give a high-level understanding of a couple of the more advan
 
 One of the drawbacks of N-gram models is that all words are treated as completely distinct. Consequently, the model needs to see a word sufficiently many times in the training data to learn N-grams it typically appears in. This is not how humans use language. We know that the words 'Tuesday' and 'Wednesday' share many properties, both syntactically and meaning-wise, and seeing N-grams with one word primes us to expect similar ones using the other (seeing 'store open Tuesday' makes us expect 'store open Wednesday' as a likely N-gram). Word similarity should be exploited to improve generalization in the LM.
 
-Class-based language models therefore group (some) words into word classes, and then collect N-gram statistics involving the class labels instead of the words. So if we had defined a class 'WEEKDAY' with members 'Monday', 'Tuesday', …, 'Friday', the N-gram 'store open Tuesday' would be treated as an instance of 'store open WEEKDAY'. The probability of the pure word string according to the LM is now a product of two components: the probability of the string containing the class labels (computed in the usual way, the class labels being part of the N-gram vocabulary), multiplied by the class membership probabilities, such as $P(Tuesday∨WEEKDAY)$. The membership probabilities can be estimated from data (how many times 'Tuesday' occurs in the training corpus relative to all the weekdays), or set to a uniform distribution (e.g., all equal to 15).
+Class-based language models therefore group (some) words into word classes, and then collect N-gram statistics involving the class labels instead of the words. So if we had defined a class 'WEEKDAY' with members 'Monday', 'Tuesday', ..., 'Friday', the N-gram 'store open Tuesday' would be treated as an instance of 'store open WEEKDAY'. The probability of the pure word string according to the LM is now a product of two components: the probability of the string containing the class labels (computed in the usual way, the class labels being part of the N-gram vocabulary), multiplied by the class membership probabilities, such as $P(Tuesday \vee WEEKDAY)$. The membership probabilities can be estimated from data (how many times 'Tuesday' occurs in the training corpus relative to all the weekdays), or set to a uniform distribution (e.g., all equal to 15).
 
 There are two basic approaches to come up with good word classes. One involves prior knowledge, typically from an application domain. For example, for building a language model for a travel app, we know that entities such as the names of destinations ('Tahiti', 'Oslo'), airlines and days of the week will need to be covered regardless of training data coverage, even though the training data is unlikely to have usage samples of all the possible instantiations. We can ensure coverage by defining an N-gram model in terms of classes such as 'AIRPORT', 'AIRLINE', 'WEEKDAY', etc. This also means we can set class membership probabilities from domain statistics, such as the popularity of certain travel destinations. It also suggests generalizing the concept of word-class membership to word phrases, such as 'Los Angeles' for AIRPORT. The class N-gram modeling framework can accommodate word phrases, with [some modifications](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/Levit_WPELM_Interspeech2014.v3.pdf).
 
@@ -270,7 +271,7 @@ In this lab, we will practice the main techniques for building N-gram based lang
 
 This lab is carried out in a Linux command shell environment. The get started, make sure you know how to invoke the Linux bash shell, either on a native Linux system, using Cygwin on a Windows system, or in the Windows subsystem for Linux. Bash is the default shell on most systems.
 
-Inside bash, change into the M4_Language_Modeling directory:
+Inside bash, change into the `M4_Language_Modeling` directory:
 
     cd M4_Language_Modeling
 
@@ -292,7 +293,7 @@ which should each output a few lines of text without error messages. It will be 
 
 Since language modeling involves a fair amount of text processing it will be useful to have some familiarity with Linux text utilities such as sort, head, wc, sed, gawk or perl, and others, as well as Linux mechanisms for redirecting command standard input/output, and pipelining several commands. We will show you commands that you can copy into the shell to follow along, using this symbol
 
-    command argument1 argument2 …
+    command argument1 argument2 ...
 
 but we encourage you try your own solutions to achieve the stated goals of each exercise, and to explore variants.
 Preparing the data
@@ -462,27 +463,27 @@ SOLUTION: We feed the input sentence to the ngram command in a line of standard 
     p( a | <s> ) =
     2gram
     0.01653415
-    −1.781618
+    -1.781618
 
-    p( model | a …) =
+    p( model | a ...) =
     3gram
     0.0001548981
-    −3.809954
+    -3.809954
 
-    p( was | model …) =
+    p( was | model ...) =
     3gram
     0.002774693
-    −2.556785
+    -2.556785
 
-    p( born | was …) =
+    p( born | was ...) =
     2gram
     0.002700813
-    −2.568506
+    -2.568506
 
-    p( </s> | born …) =
+    p( </s> | born ...) =
     3gram
     0.1352684
-    −0.8688038
+    -0.8688038
 
     1 sentences, 4 words, 0 OOVs
 
@@ -506,7 +507,7 @@ Running the same command on the test set (data/test.txt) yields a perplexity of 
 
 TASK: Vary the size of the training data and observe the effect this has on model size and quality (perplexity).
 
-HINT: The original librispeech-lm-norm.txt.gz has about 40 million lines. Use gunzip and the head command to prepare training data that is ½, ¼, …, of the full size. (This is very easy, but can you think of better ways to pare down the data?)
+HINT: The original librispeech-lm-norm.txt.gz has about 40 million lines. Use gunzip and the head command to prepare training data that is 1/2, 1/4, ..., of the full size. (This is very easy, but can you think of better ways to pare down the data?)
 
 SOLUTION: Rebuild the model (using the original vocabulary), and evaluate perplexity for different amounts of data. Plot model size (number of ngrams in the head of the model file) and perplexity as a function of training data size. Details left to the student, using the steps discussed earlier.
 
