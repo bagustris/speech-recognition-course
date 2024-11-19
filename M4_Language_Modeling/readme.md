@@ -96,16 +96,16 @@ $$
 
 ## N-gram smoothing and discounting
 
-Relative frequencies as estimates for probabilities have one severe problem: they give probability zero to any N-gram that is not observed in the training data (the numerator in the equation becomes zero). Training data is finite, and we should not rule out a combination of words simply because our limited language sample did not contain it. (Another reason is that language is not a static system, and speakers come up with new expression and even words all the time, either because they are being creative or because language production is error-prone.)
+Relative frequencies as estimates for probabilities have one severe problem: they give probability zero to any N-gram that is not observed in the training data (the numerator in the equation becomes zero). Training data is finite, and we should not rule out a combination of words simply because our limited language sample did not contain it. (Another reason is that language is not a static system, and speakers come up with new expressions and even words all the time, either because they are being creative or because language production is error-prone.)
 
-So we need a principled way to assign nonzero probability estimates to N-grams that we have never seen, a process that is often called language model smoothing (we can think of the unobserved N-grams as "holes" in the model, that have to smoothed over). An entire sub-specialty of LM research has looked at this problem and many methods have been proposed, several of which are implemented by the SRILM tools. Here we will discuss one method in detail, known as Witten-Bell smoothing, chosen for two reasons. First, it is relative simple to explain and implement. Second, unlike some of the more sophisticated methods that make additional assumptions about the training data distribution, this method is a very robust.
+So we need a principled way to assign nonzero probability estimates to N-grams that we have never seen, a process that is often called language model smoothing (we can think of the unobserved N-grams as "holes" in the model, that have to smoothed over). An entire sub-specialty of LM research has looked at this problem and many methods have been proposed, several of which are implemented by the SRILM tools. Here, we will discuss one method in detail, known as Witten-Bell smoothing, which was chosen for two reasons. First, it is relatively simple to explain and implement. Second, unlike some of the more sophisticated methods that make additional assumptions about the training data distribution, this method is very robust.
 
 The idea behind Witten-Bell smoothing is to treat the advent of a previously unseen word type as an event in itself, to be counted along with the seen words. How many times does an "unseen" word occur in the training data? Once for every unique word type, since the first time we encounter it, it counts as a novel word. For unigram (context-independent) probability estimates this means that
 
 $$\hat{P}(w)={c(w) \over c(.)+V}
 $$
 
-where $c(w)$ is the unigram word count, $c(.)$ is the sum of all word counts (the length of the training text), and $V$ is the count of "first seen" events, i.e., the vocabulary size. The extra term in the denominator lowers all probability estimates compared to the old relative frequencies. For this reason LM smoothing is often called discounting, i.e., the N-gram probabilities are lowered relative to their relative frequencies. In aggregate, this then leaves some probability mass for the occurrence of new unseen words. For Witten-Bell, the exactly the amount of the freed-up probability is
+where $c(w)$ is the unigram word count, $c(.)$ is the sum of all word counts (the length of the training text), and $V$ is the count of "first seen" events, i.e., the vocabulary size. The extra term in the denominator lowers all probability estimates compared to the old relative frequencies. For this reason, LM smoothing is often called discounting, i.e., the N-gram probabilities are lowered relative to their relative frequencies. In aggregate, this then leaves some probability mass for the occurrence of new unseen words. For Witten-Bell, the exact amount of the freed-up probability is
 
 $$P(unseenword)={V \over c(.)+V}
 $$
@@ -115,7 +115,7 @@ This is the unigram case. We generalize this to N-grams of length $k$ by treatin
 $$\hat{P}(w_k|w_1…w_k−1) = {c(w_1…w_k) \over c(w_1…w_k−1)+V(w_1…w_{k−1}⋅)}
 $$
 
-where $V(w_1…w_{k−1}⋅)$ means the size of the vocabulary observed in the context (i.e., right after) $w_1…w_{k−1}$.  Also, the freed-up probability mass now goes to words that are not previously seen *in that context*. 
+where $V(w_1…w_{k−1}⋅)$ means the size of the vocabulary observed in the context (i.e., right after) $w_1…w_{k−1}$. Also, the freed-up probability mass now goes to words that are not previously seen *in that context*. 
 
 ## Back-off in N-gram models  
 
@@ -124,18 +124,18 @@ How should we distribute the discounted probability mass for a given context? On
 $$\hat{P}(barked|white\ dog) = {c(white\ dog\ barked) \over c(white\ dog)+V(white\ dog⋅)} = {2\over2+1}  = {2\over3}
 $$
 
-So we now have probability $1/3$ to share with all the other words that might follow "white dog". Distributing it evenly would ignore the fact that some words are just overall more frequent than others. Therefore, we could distribute $1/3$ in proportion to the unigram probabilities of words. However, this would make "white dog the" much more probable than "white dog barks", since "the" much more common than "barks". A better solution is to use reduced context, in this case just "dog" to allocate the probability mass. This means we can draw all occurrences of "dog" to guess what could come next. This method is called back-off, since we are falling back to a shorter (1-word) version of the context when the following word has not been observed in the full (2-word) context. We can write this as
+So we now have a probability of $1/3$ to share with all the other words that might follow "white dog." Distributing it evenly would ignore the fact that some words are just overall more frequent than others. Therefore, we could distribute $1/3$ in proportion to the unigram probabilities of words. However, this would make "white dog the" much more probable than "white dog barks", since "the" much more common than "barks". A better solution is to use reduced context, in this case, just "dog" to allocate the probability mass. This means we can draw all occurrences of "dog" to guess what could come next. This method is called back-off, since we are falling back to a shorter (1-word) version of the context when the following word has not been observed in the full (2-word) context. We can write this as
 
-$$
+```math
 \hat{P}_{\text{bo}}\left(w_k \mid w_1 \ldots w_{k-1}\right)=\left\{
 \begin{array}{ll}
 \hat{P}\left(w_k \mid w_1 \ldots w_{k-1}\right), & c\left(w_1 \ldots w_k\right)>0 \\
 \hat{P}_{\text{bo}}\left(w_k \mid w_2 \ldots w_{k-1}\right) \alpha\left(w_2 \ldots w_{k-1}\right), & c\left(w_1 \ldots w_k\right)=0
 \end{array}
 \right.
-$$
+```
 
-Note that $`\hat{P}_{bo}`$ is the new back-off estimate for all N-grams. If an N-gram has been observed (count $`\gt 0`$, the first branch), it makes direct use of the discounted estimates $`\hat{P}`$. If the N-gram is unseen in training, it looks up the estimate recursively for the shortened context (leaving out $`w_1`$) and then scales it by a factor $`\alpha`$, which is a function of the context, so that the estimates for all $`w_k`$ again sum to one. ($`\alpha`$ is the probability of the unseen words in context $`w_1 \ldots w_{k-1}`$, as discussed earlier, divided by the sum of the same unseen-word probabilities according to the back-off distribution $`\hat{P}_{bo}(\cdot \mid w_2 \ldots w_{k-1})`$).
+Note that $`\hat{P}_{bo}`$ is the new back-off estimate for all N-grams. If an N-gram has been observed (count $`\gt 0`$, the first branch), it makes direct use of the discounted estimates $`\hat{P}`$. If the N-gram is unseen in training, it looks up the estimate recursively for the shortened context (leaving out $`w_1`$) and then scales it by a factor $`\alpha`$, which is a function of the context so that the estimates for all $`w_k`$ again sum to one. ($`\alpha`$ is the probability of the unseen words in context $`w_1 \ldots w_{k-1}`$, as discussed earlier, divided by the sum of the same unseen-word probabilities according to the back-off distribution $`\hat{P}_{bo}(\cdot \mid w_2 \ldots w_{k-1})`$).
 
 
 The $\alpha$ parameters are called backoff weights, but they are not free parameters of the model. Rather, once the N-gram probabilities $\hat{P}$ have been determined, the backoff weights are completely determined. Computing them is sometimes called (re-)normalizing the model, since they are chosen just so all the probability distributions sum to unity.
