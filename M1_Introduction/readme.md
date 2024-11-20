@@ -58,9 +58,9 @@ When we build and experiment with speech recognition systems, it is obviously ve
 
 The most common metric for speech recognition accuracy is the Word Error Rate (WER). There are three types of errors a system can make: a substitution, where one word is incorrectly recognized as a different word, a deletion, where no word is hypothesized when the reference transcription has one, and an insertion where the hypothesized transcription inserts extra words not present in the reference. The overall WER can be computed as
 
-$$
+```math
 WER = \frac{N_{\text{sub}} + N_{\text{ins}} + N_{\text{del}}}{N_{\text{ref}}}
-$$
+```
 
 where $N_{\text{sub}}$, $N_{\text{ins}}$, and $N_{\text{del}}$ are the number of substitutions, insertions, and deletions, respectively, and $N_{\text{ref}}$ is the number of words in the reference transcription.
 
@@ -84,8 +84,9 @@ chat	| chat	||
 
 The WER for this example is 4/7 = 0.4444 or 44.44%. It can be calculated as follows:
 
-$$WER = \frac{2 + 1 + 1}{9} = 0.4444 
-$$
+```math
+WER = \frac{2 + 1 + 1}{9} = 0.4444 
+```
 
 In some cases, the cost of the three different types of errors may not be equivalent. In this case, the edit distance computation can be adjusted accordingly.
 
@@ -104,8 +105,9 @@ In this approach, the test set is divided into segments with the assumption that
 
 Besides accuracy, there may be computational requirements that impact performance, such as processing speed or latency. Decoding speed is usually measured with respect to a real-time factor (RTF). An RTF of 1.0 means that the system processes the data in real-time and takes ten seconds to process the audio.
 
-$$RTF = \frac{\text{Total processing time}}{\text{Total audio time}} 
-$$
+```math
+RTF = \frac{\text{Total processing time}}{\text{Total audio time}} 
+```
 
 Factors above 1.0 indicate that the system needs more time to process the data. For some applications, this may be acceptable. For instance, when creating a transcription of a meeting or lecture, it may be more important to take more time and produce accurate transcriptions than to get the transcriptions quickly.
 
@@ -121,8 +123,9 @@ $$\hat{W} = \mathrm{arg\,max}_{W}P(W|O)$$
 
 To solve this expression, we employ the Bayes rule,
 
-$$P\left( W \middle| O \right) = \frac{P\left( O \middle| W \right)P\left( W \right)}{P(O)}.
-$$
+```math
+P\left( W \middle| O \right) = \frac{P\left( O \middle| W \right)P\left( W \right)}{P(O)}.
+```
 
 Because the word sequence does not depend on the marginal probability of the observation $P(O)$, this term can be ignored. Thus, we can rewrite this expression as
 
