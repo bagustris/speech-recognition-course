@@ -193,7 +193,7 @@ A better approach is to combine the existing models at the probability level, by
 
 $$
 \begin{align*}
-\hat{P}( w_k \mid w_1 \ldots w_{k-1}) = \lambda \hat{P}_1( w_k \mid w_1 \ldots w_{k-1}) + (1 - \lambda) \hat{P}_2( w_k \mid w_1 \ldots w_{k-1})
+\hat{P}( w_k \mid w_1 \ldots w_{k-1}) = \lambda \hat{P}_1 ( w_k \mid w_1 \ldots w_{k-1}) + (1 - \lambda) \hat{P}_2 ( w_k \mid w_1 \ldots w_{k-1})
 \end{align*}
 $$
 
