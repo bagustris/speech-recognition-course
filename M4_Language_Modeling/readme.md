@@ -64,7 +64,7 @@ The generalization of this scheme is the N-gram model, i.e., each word is condit
 
 To let our N-gram model assign probabilities to all possible finite word sequences we are left with one small problem: how will the model predict where to end the sentence? We could devise a separate model component for the sentence length n, but it is far easier to introduce a special end-of-sentence tag `</s>` into the vocabulary that marks the end of a sentence. In other words, the LM generates words left to right, and stops as soon as `</s>` is drawn according to the conditional probability distribution. Importantly, this also ensures that the (infinite) sum of all sentences probabilities is equal to one, as it should be for a probability distribution.
 
-Similarly, we also introduce a start-of-sentence tag `<s>`. It is inserted before the first word $w_1$, and in fact represents the context for the first real word. This is important because we want the first word to be predicted with knowledge that it is occurring first thing in the sentence. Certain words such as “I” and “well” are especially frequent in first position, and using the start-of-sentence tag we can represent this using the bigram probabilities $`P(w_1 | \text{<s>})`$.
+Similarly, we also introduce a start-of-sentence tag `<s>`. It is inserted before the first word $w_1$, and in fact represents the context for the first real word. This is important because we want the first word to be predicted with knowledge that it is occurring first thing in the sentence. Certain words such as "I" and "well" are especially frequent in first position, and using the start-of-sentence tag we can represent this using the bigram probabilities $P ( w_1 \mid \text{<s>})'$.
 
 The complete sentence probability according to the bigram model is now
 
@@ -224,7 +224,7 @@ Fortunately, in the case of backoff N-gram based LMs we can construct a single c
 
     end
 
-Note that when we compute the $\hat{P}$ interpolated estimates, one of ${\hat{P}}_{1} and {\hat{P}}_{2}$ (but not both) could be obtained by the back-off mechanism.
+Note that when we compute the $\hat{P}$ interpolated estimates, one of $\hat{P}_1$ and $\hat{P}_2$ (but not both) could be obtained by the back-off mechanism.
 
 ## Class-based Language Models
  
