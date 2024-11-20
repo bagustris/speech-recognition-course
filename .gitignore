@@ -15,6 +15,8 @@ bak/
 *.xz
 *.tar.xz
 *.tar.bz2
+*.html
+*1.*
 
 # copied file
 *(copy).*
