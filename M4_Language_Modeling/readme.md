@@ -66,12 +66,12 @@ To let our N-gram model assign probabilities to all possible finite word sequenc
 
 Similarly, we also introduce a start-of-sentence tag `<s>`. It is inserted before the first word $w_1$, and in fact represents the context for the first real word. This is important because we want the first word to be predicted with knowledge that it is occurring first thing in the sentence. Certain words such as "I" and "well" are especially frequent in first position, and using the start-of-sentence tag we can represent this using the bigram probabilities $P( w_1 \mid \lt s \gt)$.
 
-The complete sentence probability according to the bigram model is now
+The complete sentence probability, according to the bigram model, is now
 
-```math
+$$
 P(W) = P(w_1 | \lt s \gt) \times P(w_2 |w_1) \times \ldots
 \times P(w_n | w_{n-1}) \times P(\lt/s\gt | w_n)
-```
+$$
 
 We now turn to the problem of actually estimating these N-gram probabilities.
 
@@ -101,7 +101,7 @@ Relative frequencies as estimates for probabilities have one severe problem: the
 
 So we need a principled way to assign nonzero probability estimates to N-grams that we have never seen, a process that is often called language model smoothing (we can think of the unobserved N-grams as "holes" in the model, that have to smoothed over). An entire sub-specialty of LM research has looked at this problem and many methods have been proposed, several of which are implemented by the SRILM tools. Here, we will discuss one method in detail, known as Witten-Bell smoothing, which was chosen for two reasons. First, it is relatively simple to explain and implement. Second, unlike some of the more sophisticated methods that make additional assumptions about the training data distribution, this method is very robust.
 
-The idea behind Witten-Bell smoothing is to treat the advent of a previously unseen word type as an event in itself, to be counted along with the seen words. How many times does an "unseen" word occur in the training data? Once for every unique word type, since the first time we encounter it, it counts as a novel word. For unigram (context-independent) probability estimates this means that
+The idea behind Witten-Bell smoothing is to treat the advent of a previously unseen word type as an event in itself, to be counted along with the seen words. How many times does an "unseen" word occur in the training data? Once for every unique word type, since the first time we encounter it, it counts as a novel word. For unigram (context-independent) probability estimates, this means that
 
 $$\hat{P}(w)=\frac{c(w)} {c(.)+V}
 $$
@@ -127,16 +127,15 @@ $$
 
 So we now have a probability of $1/3$ to share with all the other words that might follow "white dog." Distributing it evenly would ignore the fact that some words are just overall more frequent than others. Therefore, we could distribute $1/3$ in proportion to the unigram probabilities of words. However, this would make "white dog the" much more probable than "white dog barks", since "the" much more common than "barks". A better solution is to use reduced context, in this case, just "dog" to allocate the probability mass. This means we can draw all occurrences of "dog" to guess what could come next. This method is called back-off, since we are falling back to a shorter (1-word) version of the context when the following word has not been observed in the full (2-word) context. We can write this as
 
-```math
-\hat{P}_{\text{bo}}\left(w_k \mid w_1 \ldots w_{k-1}\right)=\left\{
-\begin{array}{ll}
-\hat{P}\left(w_k \mid w_1 \ldots w_{k-1}\right), & c\left(w_1 \ldots w_k\right)>0 \\
-\hat{P}_{\text{bo}}\left(w_k \mid w_2 \ldots w_{k-1}\right) \alpha\left(w_2 \ldots w_{k-1}\right), & c\left(w_1 \ldots w_k\right)=0
-\end{array}
-\right.
-```
+$$
+\hat P_{\text{bo}}\left(w_k \mid w_1 \ldots w_{k-1}\right) = 
+\begin{cases} 
+\hat P \left(w_k \mid w_1 \ldots w_{k-1}\right) & \text{if } c\left(w_1 \ldots w_k\right) > 0 \\
+\hat P_{\text{bo}}\left(w_k \mid w_2 \ldots w_{k-1}\right) \alpha\left(w_2 \ldots w_{k-1}\right) & \text{if } c\left(w_1 \ldots w_k\right) = 0 
+\end{cases}
+$$
 
-Note that $`\hat{P}_{bo}`$ is the new back-off estimate for all N-grams. If an N-gram has been observed (count > 0, the first branch), it makes direct use of the discounted estimates $`\hat{P}`$. If the N-gram is unseen in training, it looks up the estimate recursively for the shortened context (leaving out $`w_1`$) and then scales it by a factor $`\alpha`$, which is a function of the context so that the estimates for all $`w_k`$ again sum to one. ($`\alpha`$ is the probability of the unseen words in context $`w_1 \ldots w_{k-1}`$, as discussed earlier, divided by the sum of the same unseen-word probabilities according to the back-off distribution $`\hat{P}_{bo}(\cdot \mid w_2 \ldots w_{k-1})`$).
+Note that $\hat P_{bo}$ is the new back-off estimate for all N-grams. If an N-gram has been observed (count > 0, the first branch), it makes direct use of the discounted estimates $\hat{P}$. If the N-gram is unseen in training, it looks up the estimate recursively for the shortened context (leaving out $w_1$) and then scales it by a factor $\alpha$, which is a function of the context so that the estimates for all $w_k$ again sum to one. ($\alpha$ is the probability of the unseen words in context $w_1 \ldots w_{k-1}$, as discussed earlier, divided by the sum of the same unseen-word probabilities according to the back-off distribution $\hat P_{bo} ( \cdot \mid w_2 \ldots w_{k-1} )$ ).
 
 
 The $\alpha$ parameters are called backoff weights, but they are not free parameters of the model. Rather, once the N-gram probabilities $\hat{P}$ have been determined, the backoff weights are completely determined. Computing them is sometimes called (re-)normalizing the model, since they are chosen just so all the probability distributions sum to unity.
@@ -150,7 +149,7 @@ according to the model is
 $$P\left( w_{1}\ldots w_{n} \right) = P\left( w_{1}| < s > \right) \times P\left( w_{2} \right|\ w_{1}) \times P\left( w_{3} \right|\ w_{2}) \times \ldots \times P( < /s > \ |\ w_{n})
 $$
 
-(where we revert to the case of a bigram model just to keep notation simple). We are now talking about a test set containing multiple sentences, so at sentence boundaries we reset the context to the `<s>` tag. The probabilities get very small very quickly, so it is more practical to carry out this computation with log probabilities:
+(where we revert to the case of a bigram model just to keep the notation simple). We are now talking about a test set containing multiple sentences, so at sentence boundaries we reset the context to the `<s>` tag. The probabilities get very small very quickly, so it is more practical to carry out this computation with log probabilities:
 
 $$\log{\ P(w_{1}\ldots w_{n})} = \log{P(w_{1}| < s > )} + \log{P\left( w_{2} \right|\ w_{1})} + \ldots + \log{P( < /s > \ |\ w_{n})}
 $$
@@ -187,9 +186,9 @@ To make this algorithm practical, we don't need or want to use a separate test s
 
 ## Interpolating Probabilities
 
-Assume you have we two existing language models already trained, producing probability estimates $\hat{P}_1$ and $\hat{P}_2$, respectively. How can we combine these models for a better estimate of N-gram probabilities? If available, we could retrieve the training data for these models, pool it, and train a new model from the combined data. However, this is inconvenient and raises new problems? What to do if one model has vastly more training data than the other? For example, the large model might be trained on newswire text, and the small model on a small data collected for a new application. The large, mismatched corpus would complete swamp the N-gram statistics and the resulting model would be mismatched to the intended application.
+Assume you have two existing language models already trained, producing probability estimates $\hat{P}_1$ and $\hat{P}_2$, respectively. How can we combine these models for a better estimate of N-gram probabilities? If available, we could retrieve the training data for these models, pool it, and train a new model from the combined data. However, this is inconvenient and raises new problems. What can be done if one model has vastly more training data than the other? For example, the large model might be trained on newswire text, and the small model might be trained on small data collected for a new application. The large, mismatched corpus would completely swamp the N-gram statistics, and the resulting model would be mismatched to the intended application.
 
-A better approach is to combine the existing models at the probability level, by interpolating their estimates. Interpolation means we compute a weighted average of the two underlying probability estimates:
+A better approach is to combine the existing models at the probability level by interpolating their estimates. Interpolation means we compute a weighted average of the two underlying probability estimates:
 
 $$
 \hat{P}( w_k \mid w_1 \ldots w_{k-1}) = \lambda \hat P_1 ( w_k \mid w_1 \ldots w_{k-1}) + (1 - \lambda) \hat P_2 ( w_k \mid w_1 \ldots w_{k-1})
@@ -228,7 +227,7 @@ Note that when we compute the $\hat{P}$ interpolated estimates, one of $\hat{P}_
 
 ## Class-based Language Models
  
-In this section we give a high-level understanding of a couple of the more advanced techniques in language modeling that are now widely used in practice. The methods in language modeling are constantly evolving, and research in this area is very active. By [some estimates](https://www.isca-archive.org/interspeech_2017/shen17_interspeech.html), the perplexity of state-of-the-art LMs is still two to three times worse than the predictive powers of humans, so we have a long way to go!
+In this section, we provide a high-level understanding of a couple of the more advanced techniques in language modeling that are now widely used in practice. The methods in language modeling are constantly evolving, and research in this area is very active. By [some estimates](https://www.isca-archive.org/interspeech_2017/shen17_interspeech.html), the perplexity of state-of-the-art LMs is still two to three times worse than the predictive powers of humans, so we have a long way to go!
 
 One of the drawbacks of N-gram models is that all words are treated as completely distinct. Consequently, the model needs to see a word sufficiently many times in the training data to learn N-grams it typically appears in. This is not how humans use language. We know that the words 'Tuesday' and 'Wednesday' share many properties, both syntactically and meaning-wise, and seeing N-grams with one word primes us to expect similar ones using the other (seeing 'store open Tuesday' makes us expect 'store open Wednesday' as a likely N-gram). Word similarity should be exploited to improve generalization in the LM.
 
@@ -242,19 +241,19 @@ The other way to define word classes is in a purely data-driven way, without hum
 
 Neural network-based machine learning methods have taken over in many areas, including in acoustic modeling for speech recognition, as we saw earlier in this course. Similarly, artificial neural networks (ANNs) have also been devised for language modeling, and, given sufficient training data, have been shown to give superior performance compared to N-gram methods.
 
-Much of the success of ANNs in language modeling stems from overcoming two specific limitations of N-gram models. The first limitation is the lack of generalization across words. We saw how word classes tried to address this problem, while introducing a new problem: how to define suitable word classes. The first proposed ANN LM architecture, now known as a feedforward language model, addressed the word generalization problem by including a word embedding layer that maps the discrete word labels upon input to a dense vector space.
+Much of the success of ANNs in language modeling stems from overcoming two specific limitations of N-gram models. The first limitation is the lack of generalization across words. We saw how word classes tried to address this problem while introducing a new problem: how to define suitable word classes. The first proposed ANN LM architecture, now known as a feedforward language model, addressed the word generalization problem by including a word embedding layer that maps the discrete word labels upon input to a dense vector space.
 
 ![Feedforward LM](./m4i1.jpg)
 
-As depicted in the figure (taken from the Bengio et al. paper), the input to the network are unary (one-hot) encodings of the N - 1 words forming the N-gram context. The output is a vector of probabilities of predicted following words. (In both input and outputs, we use vectors of the length of the vocabulary size.) The model is thus a drop-in replacement for the old N-gram-based LM. The key is that the input words are reencoded via a shared matrix into new vectors, which are no longer one-hot, i.e., they live into a dense high-dimensional space. This mapping is shared for all context word positions, and, crucially, is trained concurrently with the next-word predictor. The beauty of this approach is that the learned word embeddings can be tuned to represent word similarity for the purposes of word prediction. In other words, context words that affect the next word similarly, will be encoded as nearby points in space, and the network can then exploit this similarity when encountering the words in novel combinations. This is because all network layers perform smooth mappings, i.e., nearby inputs will generate similar outputs. (It has been shown that words like 'Tuesday' and 'Wednesday' do indeed end up with similar embeddings.)
+As depicted in the figure (taken from the Bengio et al. paper), the input to the network are unary (one-hot) encodings of the N - 1 words forming the N-gram context. The output is a vector of probabilities of predicted following words. (In both input and outputs, we use vectors of the length of the vocabulary size.) The model is thus a drop-in replacement for the old N-gram-based LM. The key is that the input words are reencoded via a shared matrix into new vectors, which are no longer one-hot, i.e., they live into a dense high-dimensional space. This mapping is shared for all context word positions and, crucially, is trained concurrently with the next-word predictor. The beauty of this approach is that the learned word embeddings can be tuned to represent word similarity for the purposes of word prediction. In other words, context words that affect the next word similarly will be encoded as nearby points in space, and the network can then exploit this similarity when encountering the words in novel combinations. This is because all network layers perform smooth mappings, i.e., nearby inputs will generate similar outputs. (It has been shown that words like 'Tuesday' and 'Wednesday' do indeed end up with similar embeddings.)
 
-The second limitation of N-grams that was overcome with ANN methods is the truncation of the context, which so far always was limited to the previous $N - 1$ words. This is a problem because language allows embedded clauses, arbitrarily long lists of adjectives, and other constructs that can put arbitrary distance between related words that would be useful in next-word prediction. Any reasonable value of $N$ would be insufficient to capture all predictive words in a context. The limitation is overcome in recurrent networks, which feed the activations of a hidden layer at time $t - 1$ as extra inputs to the next processing step at time $t$, as shown in this figure:
+The second limitation of N-grams that was overcome with ANN methods is the truncation of the context, which so far always was limited to the previous $N - 1$ words. This is a problem because the language allows embedded clauses, arbitrarily long lists of adjectives, and other constructs that can put arbitrary distance between related words that would be useful in next-word prediction. Any reasonable value of $N$ would be insufficient to capture all predictive words in a context. The limitation is overcome in recurrent networks, which feed the activations of a hidden layer at time $t - 1$ as extra inputs to the next processing step at time $t$, as shown in this figure:
 
 ![Recurrent LM](./m4i2.JPG)
 
-This allows the network to pass information from one word position to the next, repeatedly, without a hard limit on how far back in time information originates that can be used to predict the current next word. There are practical issues with the trainability of such recurrent networks because the mathematical rules governing ANN activations lead to an exponential dilution of information over time. However, these problems can be solved with mechanisms to gate information flow from one time step to the next.
+This allows the network to pass information from one-word position to the next, repeatedly, without a hard limit on how far back in time information originates that can be used to predict the current next word. There are practical issues with the trainability of such recurrent networks because the mathematical rules governing ANN activations lead to an exponential dilution of information over time. However, these problems can be solved with mechanisms to gate information flow from one time step to the next.
 
-Both feed-forward and recurrent network LMs have also benefited from general improvements in ANN technology, such as deeper stacking of network layers ('deep learning') and better training methods. Another trend in neural LMs is to base the model on characters rather than word units. It is clear that the flexibility that ANNs provide for experimenting with model architectures in terms of high-level information flow, rather than having to worry about the detailed design of encodings and probability distributions, have greatly advanced the field, with more still to come.
+Both feed-forward and recurrent network LMs have also benefited from general improvements in ANN technology, such as deeper stacking of network layers ('deep learning') and better training methods. Another trend in neural LMs is to base the model on characters rather than word units. It is clear that the flexibility that ANNs provide for experimenting with model architectures in terms of high-level information flow, rather than having to worry about the detailed design of encodings and probability distributions, has greatly advanced the field, with more still to come.
 
 ## Lab 
 
