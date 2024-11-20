@@ -3,7 +3,7 @@
 
 - [Phonetics](#phonetics)
 - [Words and Syntax](#words-and-syntax)
-- [Sylllable and words](#sylllable-and-words)
+- [Syllables and words](#syllables-and-words)
 - [Syntax and Semantics](#syntax-and-semantics)
 - [Measuring Performance](#measuring-performance)
 - [Significance Testing](#significance-testing)
