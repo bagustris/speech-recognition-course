@@ -191,7 +191,7 @@ Assume you have we two existing language models already trained, producing proba
 
 A better approach is to combine the existing models at the probability level, by interpolating their estimates. Interpolation means we compute a weighted average of the two underlying probability estimates:
 
-$$\hat{P}( w_k \mid w_1 \ldots w_{k - 1}) = \lambda \hat{P}_1( w_k \mid w_1 \ldots w_{k - 1}) + (1 - \lambda) \hat{P}_2( w_k \mid w_1 \ldots w_{k - 1})
+$$\hat{P}( w_k \mid w_1 \ldots w_{k-1}) = \lambda \hat{P}_1( w_k \mid w_1 \ldots w_{k-1}) + (1 - \lambda) \hat{P}_2( w_k \mid w_1 \ldots w_{k-1})
 $$
 
 <!-- $$
