@@ -191,7 +191,7 @@ Assume you have we two existing language models already trained, producing proba
 
 A better approach is to combine the existing models at the probability level, by interpolating their estimates. Interpolation means we compute a weighted average of the two underlying probability estimates:
 
-$$\hat{P}\left( w_{k} \right \vert w_{1}\ldots w_{k - 1}) = \lambda\ {\hat{P}}_{1}\left( w_{k} \right \vert w_{1}\ldots w_{k - 1}) + (1 - \lambda)\ {\hat{P}}_{2}\left( w_{k} \right \vert w_{1}\ldots w_{k - 1})
+$$\hat{P}\left( w_k \right \vert w_1\ldots w_{k - 1}) = \lambda\ \hat{P}_1\left( w_k \right \vert w_1\ldots w_{k - 1}) + (1 - \lambda)\ \hat{P}_2\left( w_k \right \vert w_1\ldots w_{k - 1})
 $$
 
 The parameter $\lambda$ controls the relative influence of the component models. A value close 1 means the first model dominates; a value close to 0 gives most of the weight to the second model. The optimal value of $\lambda$ can be itself estimated using held-out data (i.e., data that is separate from the training data for the component models), by choosing a value that minimizes the perplexity on the held-out data.
