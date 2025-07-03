@@ -1,17 +1,15 @@
 # Site settings
 title: "Speech Recognition Course"
 description: "A comprehensive course on speech recognition technologies and implementation"
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site
+baseurl: "/speech-recognition-course" # the subpath of your site, e.g. /blog
+url: "https://bagustris.github.io" # the base hostname & protocol for your site
 
 markdown: kramdown
 kramdown:
   input: GFM
   math_engine: mathjax
-  highlighter: none
-  syntax_highlighter: false
-  syntax_highlighter_opts:
-      disable: true
+  highlighter: rouge
+  syntax_highlighter: rouge
   parse_block_html: true
   
 sass:
