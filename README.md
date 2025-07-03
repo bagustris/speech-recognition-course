@@ -1,3 +1,10 @@
+---
+layout: default
+title: Speech Recognition Course
+description: Comprehensive learning materials for speech recognition, covering signal processing, acoustic modeling, language modeling, and modern end-to-end approaches
+tags: [speech recognition, machine learning, neural networks, pytorch, acoustic modeling, language modeling]
+---
+
 # Speech Recognition Course
 
 Material for learning speech recognition, based on Microsoft teaching material on EdX (changed from CNTK to PyTorch). Learning/teaching materials are given in each module/directory.

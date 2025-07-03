@@ -1,0 +1,33 @@
+---
+layout: null
+sitemap: false
+---
+
+[
+  {% for page in site.pages %}
+    {% unless page.exclude_from_search == true %}
+    {
+      "title": {{ page.title | default: page.name | jsonify }},
+      "url": {{ page.url | relative_url | jsonify }},
+      "content": {{ page.content | strip_html | strip_newlines | normalize_whitespace | jsonify }},
+      "excerpt": {{ page.excerpt | default: page.content | strip_html | truncatewords: 50 | strip_newlines | normalize_whitespace | jsonify }},
+      "categories": {{ page.categories | default: array | jsonify }},
+      "tags": {{ page.tags | default: array | jsonify }},
+      "type": "page"
+    }{% unless forloop.last and site.posts.size == 0 %},{% endunless %}
+    {% endunless %}
+  {% endfor %}
+  {% if site.pages.size > 0 and site.posts.size > 0 %},{% endif %}
+  {% for post in site.posts %}
+    {
+      "title": {{ post.title | jsonify }},
+      "url": {{ post.url | relative_url | jsonify }},
+      "content": {{ post.content | strip_html | strip_newlines | normalize_whitespace | jsonify }},
+      "excerpt": {{ post.excerpt | default: post.content | strip_html | truncatewords: 50 | strip_newlines | normalize_whitespace | jsonify }},
+      "categories": {{ post.categories | default: array | jsonify }},
+      "tags": {{ post.tags | default: array | jsonify }},
+      "date": {{ post.date | date: "%Y-%m-%d" | jsonify }},
+      "type": "post"
+    }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+]

@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Module 2: Speech Signal Processing"
+description: Speech signal processing fundamentals, MFCC feature extraction, mel filtering, and feature normalization techniques
+tags: [speech signal processing, MFCC, mel filtering, feature extraction, normalization, spectrograms]
+---
+
 # Speech Signal Processing
 
 ## Table of Contents

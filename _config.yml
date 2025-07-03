@@ -1,3 +1,9 @@
+# Site settings
+title: "Speech Recognition Course"
+description: "A comprehensive course on speech recognition technologies and implementation"
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site
+
 markdown: kramdown
 kramdown:
   input: GFM
@@ -11,22 +17,11 @@ kramdown:
 sass:
   style: :compressed
 
-# theme: minima
-
-# minima:
-#   # Minima skin selection.
-#   # Available skins are:
-#   # classic	           Default, light color scheme.
-#   # dark	             Dark variant of the classic skin.
-#   # auto	             Adaptive skin based on the default classic and dark skins.
-#   # solarized-light	   Light variant of solarized color scheme.
-#   # solarized-dark	   Dark variant of solarized color scheme.
-#   # solarized	         Adaptive skin for solarized color scheme skins.
-#   skin: classic
-
-# plugins:
-#   - jekyll-feed
-#   - jekyll-seo-tag
+# Enable plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
 
 
 exclude:

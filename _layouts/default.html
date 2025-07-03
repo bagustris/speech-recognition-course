@@ -8,6 +8,103 @@
 {% seo %}
     <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
     {% include head-custom.html %}
+    <style>
+      .search-wrapper {
+        position: relative;
+        margin-bottom: 1.5rem;
+      }
+      .form-control {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #d1d5da;
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+      .form-control:focus {
+        outline: none;
+        border-color: #0366d6;
+        box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.1);
+      }
+      #search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #d1d5da;
+        border-radius: 6px;
+        box-shadow: 0 8px 24px rgba(140, 149, 159, 0.2);
+        z-index: 1000;
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 16px;
+        margin-top: 4px;
+      }
+      .search-result-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #e1e4e8;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+      }
+      .search-result-item:hover {
+        background-color: #f6f8fa;
+      }
+      .search-result-item:last-child {
+        border-bottom: none !important;
+      }
+      .search-result-item h5 {
+        margin: 0 0 8px 0;
+        color: #0366d6;
+      }
+      .search-result-item h5 a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .search-result-item h5 a:hover {
+        text-decoration: underline;
+      }
+      .search-result-item p {
+        margin: 0 0 4px 0;
+        color: #586069;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+      .search-result-item small {
+        color: #586069;
+        font-size: 12px;
+      }
+      .search-loading {
+        text-align: center;
+        color: #586069;
+        font-style: italic;
+        padding: 20px;
+      }
+      .search-no-results {
+        text-align: center;
+        color: #586069;
+        font-style: italic;
+        padding: 20px;
+      }
+      mark {
+        background-color: #fff3cd;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-weight: bold;
+      }
+      /* Mobile responsiveness */
+      @media (max-width: 768px) {
+        #search-results {
+          left: -16px;
+          right: -16px;
+          margin: 4px 16px 0;
+          border-radius: 6px;
+        }
+        .search-wrapper {
+          margin-bottom: 1rem;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="container-lg px-3 my-5 markdown-body">
@@ -15,15 +112,237 @@
       <h1><a href="{{ "/" | absolute_url }}" aria-label="Return to homepage">{{ site.title }}</a></h1>
       {% endif %}
 
+      <!-- Search functionality -->
+      <div class="search-wrapper">
+        <div class="form-group">
+          <input type="text" id="search-input" placeholder="Loading search..." class="form-control" aria-label="Search course content" disabled />
+        </div>
+        <div id="search-results" style="display: none;" role="listbox" aria-label="Search results">
+          <div id="search-results-list"></div>
+        </div>
+      </div>
+
       {{ content }}
 
       {% if site.github.private != true and site.github.license %}
       <div class="footer border-top border-gray-light mt-5 pt-3 justify-content-between text-gray">
-        <a href="{{ '/' | relative_url }}">Back to top </a> | This site is open source. {% github_edit_link "Improve this page" %}.
+        <a href="{{ '/' | relative_url }}">Back to top </a> | This site is open source. <a href="{{ site.github.repository_url }}/edit/{{ site.github.source.branch }}/{{ page.path }}">Improve this page</a>.
       </div>
       {% endif %}
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
     <script>anchors.add();</script>
+    
+    <!-- Lunr.js for search -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/2.3.9/lunr.min.js" integrity="sha512-4xUl/d6D6THrAnXAwGajXkoWaeMNwEKK4iNfq5DotEbLPAfk6FSxSP3ydNxqDgCw1c/0Z1Jg6L8h2j+++9BZmg==" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Search functionality
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+        const searchResultsList = document.getElementById('search-results-list');
+        
+        let searchIndex;
+        let searchData;
+        
+        // Load search data
+        fetch('{{ "/assets/search.json" | relative_url }}')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to load search data');
+            }
+            return response.json();
+          })
+          .then(data => {
+            searchData = data;
+            
+            // Build search index
+            searchIndex = lunr(function() {
+              this.ref('id');
+              this.field('title', { boost: 10 });
+              this.field('content', { boost: 1 });
+              this.field('excerpt', { boost: 5 });
+              this.field('categories', { boost: 3 });
+              this.field('tags', { boost: 3 });
+              this.field('type');
+              
+              data.forEach(function(doc, idx) {
+                doc.id = idx;
+                this.add(doc);
+              }, this);
+            });
+            
+            // Enable search input
+            searchInput.removeAttribute('disabled');
+            searchInput.placeholder = 'Search the course content... (Press \'/\' to focus)';
+          })
+          .catch(error => {
+            console.error('Error loading search data:', error);
+            searchInput.placeholder = 'Search unavailable';
+            searchInput.disabled = true;
+          });
+        
+        // Search functionality
+        searchInput.addEventListener('input', function() {
+          const query = this.value.trim();
+          
+          if (query.length < 2) {
+            searchResults.style.display = 'none';
+            return;
+          }
+          
+          if (!searchIndex) {
+            searchResultsList.innerHTML = '<div class="search-loading">Search index is loading...</div>';
+            searchResults.style.display = 'block';
+            return;
+          }
+          
+          try {
+            const results = searchIndex.search(query);
+            resetSelection();
+            displaySearchResults(results, query);
+          } catch (error) {
+            console.error('Search error:', error);
+            searchResultsList.innerHTML = '<div class="search-no-results">Search error occurred. Please try a different query.</div>';
+            searchResults.style.display = 'block';
+          }
+        });
+        
+        function displaySearchResults(results, query) {
+          if (results.length === 0) {
+            searchResultsList.innerHTML = '<div class="search-no-results">No results found for "' + escapeHtml(query) + '"</div>';
+          } else {
+            let html = '';
+            results.slice(0, 10).forEach(function(result) {
+              const item = searchData[result.ref];
+              html += '<div class="search-result-item">';
+              html += '<h5><a href="' + item.url + '">' + escapeHtml(item.title) + '</a>';
+              // Add type indicator
+              if (item.type) {
+                const typeColor = item.type === 'post' ? '#28a745' : '#6f42c1';
+                html += ' <span style="background: ' + typeColor + '; color: white; padding: 1px 4px; border-radius: 2px; font-size: 10px; text-transform: uppercase; margin-left: 4px;">' + item.type + '</span>';
+              }
+              html += '</h5>';
+              if (item.excerpt) {
+                // Highlight search terms in excerpt
+                let excerpt = escapeHtml(item.excerpt);
+                const words = query.toLowerCase().split(/\s+/).filter(word => word.length > 1);
+                words.forEach(word => {
+                  const regex = new RegExp('(' + escapeRegex(word) + ')', 'gi');
+                  excerpt = excerpt.replace(regex, '<mark>$1</mark>');
+                });
+                html += '<p>' + excerpt + '</p>';
+              }
+              // Add categories and tags if available
+              if (item.categories && item.categories.length > 0) {
+                html += '<div style="margin-top: 4px;">';
+                item.categories.forEach(function(category) {
+                  html += '<span style="background: #e1f5fe; color: #0277bd; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-right: 4px;">' + escapeHtml(category) + '</span>';
+                });
+                html += '</div>';
+              }
+              if (item.tags && item.tags.length > 0) {
+                html += '<div style="margin-top: 4px;">';
+                item.tags.forEach(function(tag) {
+                  html += '<span style="background: #f3e5f5; color: #7b1fa2; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-right: 4px;">' + escapeHtml(tag) + '</span>';
+                });
+                html += '</div>';
+              }
+              // Add date for posts
+              if (item.type === 'post' && item.date) {
+                html += '<small style="color: #586069; margin-right: 8px;">📅 ' + item.date + '</small>';
+              }
+              html += '<small>Score: ' + result.score.toFixed(2) + '</small>';
+              html += '</div>';
+            });
+            searchResultsList.innerHTML = html;
+          }
+          searchResults.style.display = 'block';
+        }
+        
+        // Helper function to escape HTML
+        function escapeHtml(unsafe) {
+          return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+        
+        // Helper function to escape regex special characters
+        function escapeRegex(string) {
+          return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        
+        // Hide search results when clicking outside
+        document.addEventListener('click', function(event) {
+          if (!searchResults.contains(event.target) && event.target !== searchInput) {
+            searchResults.style.display = 'none';
+          }
+        });
+        
+        // Show search results when input is focused and has content
+        searchInput.addEventListener('focus', function() {
+          if (this.value.trim().length >= 2) {
+            searchResults.style.display = 'block';
+          }
+        });
+        
+        // Handle keyboard navigation
+        let currentSelection = -1;
+        
+        searchInput.addEventListener('keydown', function(event) {
+          const resultItems = searchResults.querySelectorAll('.search-result-item');
+          
+          if (event.key === 'Escape') {
+            searchResults.style.display = 'none';
+            this.blur();
+            currentSelection = -1;
+          } else if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            currentSelection = Math.min(currentSelection + 1, resultItems.length - 1);
+            updateSelection(resultItems);
+          } else if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            currentSelection = Math.max(currentSelection - 1, -1);
+            updateSelection(resultItems);
+          } else if (event.key === 'Enter') {
+            event.preventDefault();
+            if (currentSelection >= 0 && resultItems[currentSelection]) {
+              const link = resultItems[currentSelection].querySelector('a');
+              if (link) {
+                window.location.href = link.href;
+              }
+            }
+          }
+        });
+        
+        function updateSelection(resultItems) {
+          resultItems.forEach((item, index) => {
+            if (index === currentSelection) {
+              item.style.backgroundColor = '#f6f8fa';
+              item.scrollIntoView({ block: 'nearest' });
+            } else {
+              item.style.backgroundColor = '';
+            }
+          });
+        }
+        
+        // Reset selection when results change
+        function resetSelection() {
+          currentSelection = -1;
+        }
+        
+        // Global keyboard shortcut to focus search
+        document.addEventListener('keydown', function(event) {
+          // Focus search input when '/' is pressed (not in input fields)
+          if (event.key === '/' && !['INPUT', 'TEXTAREA'].includes(event.target.tagName)) {
+            event.preventDefault();
+            searchInput.focus();
+          }
+        });
+      });
+    </script>
   </body>
 </html>
