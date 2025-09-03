@@ -2,6 +2,7 @@
 fig
 Experiments/LibriSpeech
 bak/
+_site/
 
 # ignore specific file
 *.tgz
