@@ -1,6 +1,13 @@
+---
+layout: default
+title: "Module 5: Speech Decoding"
+description: Speech decoding fundamentals, Weighted Finite State Transducers, decoding algorithms, and grammar integration
+tags: [speech decoding, WFST, finite state transducers, grammar, decoding algorithms, speech recognition]
+---
+
 # Speech Decoding
 
-[Previous](../M4_Language_Modeling/readme.md)
+[Previous](../M4_Language_Modeling/)
 
 ## Table of Contents
 - [Overview](#overview)

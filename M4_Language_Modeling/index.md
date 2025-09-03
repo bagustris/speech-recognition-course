@@ -1,6 +1,13 @@
+---
+layout: default
+title: "Module 4: Language Modeling"
+description: Language modeling fundamentals, vocabulary, N-grams, probability estimation, smoothing and discounting techniques
+tags: [language modeling, n-grams, vocabulary, smoothing, probability estimation, speech recognition]
+---
+
 # Language Modeling
 
-[Previous](../M3_Acoustic_Modeling/readme.md)
+[Previous](../M3_Acoustic_Modeling/)
 
 ## Table of Contents
 - [Introduction](#introduction)
