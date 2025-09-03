@@ -1,10 +1,3 @@
----
-layout: default
-title: "Module 1: Introduction to Speech Recognition"
-description: Introduction to speech recognition fundamentals, phonetics, measuring performance with WER, and significance testing
-tags: [speech recognition, introduction, phonetics, WER, word error rate, performance measurement]
----
-
 # Module 1: Introduction
 ## Table of Contents
 
