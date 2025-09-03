@@ -1,10 +1,3 @@
----
-layout: default
-title: "Module 3: Acoustic Modeling"
-description: Acoustic modeling fundamentals, Hidden Markov Models, evaluation, decoding, learning problems, and implementation
-tags: [acoustic modeling, HMM, hidden markov models, evaluation, decoding, learning, speech recognition]
----
-
 # M3: Acoustic Modeling
 
 [Previous](../M2_Speech_Signal_Processing/)

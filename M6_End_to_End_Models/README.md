@@ -1,10 +1,3 @@
----
-layout: default
-title: "Module 6: End-to-End Models"
-description: End-to-end speech recognition models, improved objective functions, CTC, sequence discriminative training
-tags: [end-to-end, CTC, connectionist temporal classification, sequence discriminative, objective functions, speech recognition]
----
-
 # Module 6: End-to-End Models
 
 [Previous](../M5_Decoding/)
