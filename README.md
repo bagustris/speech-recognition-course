@@ -6,12 +6,12 @@ Github Pages:  [https://bagustris.github.io/speech-recognition-course](https://b
 Repository: [https://github.com/bagustris/speech-recognition-course](https://github.com/bagustris/speech-recognition-course)  
 
 ## Modules
-- [Module 1: Introduction to Speech Recognition](./M1_Introduction/readme.md)
-- [Module 2: Speech Signal Processing](./M2_Speech_Signal_Processing/readme.md)
-- [Module 3: Acoustic Modeling](./M3_Acoustic_Modeling/readme.md)
-- [Module 4: Language Modeling](./M4_Language_Modeling/readme.md)
-- [Module 5: Decoding](./M5_Decoding/readme.md)
-- [Module 6: End-to-End Models](./M6_End_to_End_Models/readme.md)
+- [Module 1: Introduction to Speech Recognition](./M1_Introduction/)
+- [Module 2: Speech Signal Processing](./M2_Speech_Signal_Processing/)
+- [Module 3: Acoustic Modeling](./M3_Acoustic_Modeling/)
+- [Module 4: Language Modeling](./M4_Language_Modeling/)
+- [Module 5: Decoding](./M5_Decoding/)
+- [Module 6: End-to-End Models](./M6_End_to_End_Models/)
 
 Convert from markdown to pdf with pandoc in each module:
 
