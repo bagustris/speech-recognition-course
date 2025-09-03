@@ -620,4 +620,4 @@ SOLUTION: Starting with 1e-5 (= 10-5 in floating point notation), create the pru
 
 Then evaluate the librispeech-pruned.3bo.gz model on the entire dev set, as before. The -debug option lets the tool output the number of ngrams pruned and written out. Add the resulting number of bigrams and trigrams to characterize the pruned model size (roughly, the number of model parameters, since the number of unigrams is fixed to the vocabulary, and the backoff weights are determined by the probability parameters).  
 
-[Next](../M5_Decoding/readme.md)
+[Next](../M5_Decoding/)

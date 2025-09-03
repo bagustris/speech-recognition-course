@@ -399,4 +399,4 @@ Because of the sequential nature of the BLSTM processing, they are inherently le
 Here too, you can use M3_Plot_Training.py to inspect the learning schedule in training. And again, if you are interested, you can vary the hyperparameters to try to find a better solution.
 
 
-[Next](../M4_Language_Modeling/readme.md)
+[Next](../M4_Language_Modeling/)

@@ -201,4 +201,4 @@ Here are the outputs you should get from plotting:
 
 ![](L2c.png)
 
-[Next](../M3_Acoustic_Modeling/readme.md)
+[Next](../M3_Acoustic_Modeling/)

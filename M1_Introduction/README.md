@@ -179,4 +179,4 @@ The specific format for outputting this information is up to you. Note that you 
 
 When you believe your code is working, use it to process `hyp.trn` and `ref.trn` in the `misc` directory and compare your answers to the solution.
 
-[Next](../M2_Speech_Signal_Processing/readme.md)
+[Next](../M2_Speech_Signal_Processing/)
