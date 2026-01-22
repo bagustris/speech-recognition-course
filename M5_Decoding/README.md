@@ -323,7 +323,7 @@ Which of these can most compactly represent a set of strings? (Choose one)
 - [ ] Weighted Finite State Acceptor  
 - [ ] Finite State Transducer  
 - [ ] Finite State Acceptor  
-- [ ] None of the Above  
+- [ ] None of the above  
 
 
 
@@ -334,7 +334,7 @@ Which component of the decoding graph represents valid sequences of words? (Choo
 - [ ] The Grammar
 - [ ] The HMM State Transducer
 - [ ] The Pronunciation Lexicon
-- [ ] None of the Above
+- [ ] None of the above
 
 
 Question 3
@@ -354,7 +354,7 @@ Which component of the decoding graph generally needs disambiguation symbols to 
 - [ ] The Grammar
 - [ ] The HMM State Transducer
 - [ ] The Pronunciation Lexicon
-- [ ] None of the Above
+- [ ] None of the above
 
 
 Question 5
@@ -364,7 +364,7 @@ Which component of the decoding graph describes the HMM structures of the acoust
 - [ ] The Grammar
 - [ ] The HMM State Transducer
 - [ ] The Pronunciation Lexicon
-- [ ] None of the Above
+- [ ] None of the above
 
 
 Question 6
@@ -374,7 +374,7 @@ When successfully applied, which of these algorithms tend to make the resulting 
 - [ ] Minimization  
 - [ ] Determinization   
 - [ ] Composition  
-- [ ] None of the Above  
+- [ ] None of the above  
 
 
 Question 7
@@ -384,7 +384,7 @@ When successfully applied, which of these algorithms tend to make the resulting 
 - [ ] Minimization
 - [ ] Determinization
 - [ ] Composition
-- [ ] None of the Above
+- [ ] None of the above
 
 
 Question 8
@@ -395,7 +395,7 @@ During beam search decoding, hypotheses may be discarded if which of the followi
 - [ ] There are too many tokens, and this token isn’t one of the N best.
 - [ ] The token enters a determinized state.
 - [ ] The token enters a minimized state.
-- [ ] None of the Above
+- [ ] None of the above
 
 
 Question 9
@@ -405,7 +405,7 @@ Which of these are standard conventions for WFST? (Choose all that apply)
 - [ ] The initial state in the first line of a WFST description is assumed to be the initial state of the graph.
 - [ ] Weights are assumed to be zero unless otherwise specified.
 - [ ] The final state of the final line of a WFST description is assumed to be the final state of the graph.
-- [ ] None of the Above
+- [ ] None of the above
 
 
 Question 10
@@ -415,7 +415,7 @@ When a path traverses an arc with an epsilon symbol, what does this indicate? (C
 - [ ] The path's string is appended with an epsilon.
 - [ ] The path's string is unaffected by this arc.
 - [ ] The path's weight is reset to zero.
-- [ ] None of the Above
+- [ ] None of the above
 
 
 ## Lab 
@@ -426,39 +426,38 @@ Required files:
 
 1. [`HCL.fst`](./HCL.fst)
 
-This is a finite state transducer that maps sequences of context independent phone states (acoustic model labels) to sequences of words. The lexicon has 200,000 words.
-
-HCL.fst has not been determinized. Instead, it has been prepared to make composition with a language model WFST as efficient as possible.
-
-This FST has disambiguation symbols on its input side. They ensure that every unique input sequence has a unique output sequences, regardless of homonyms. This preserves the functional nature of the transducer, which makes determinization possible.
-
-It is expected that the language model contains "<gamma>" symbols on its input side, which represent the backoff transitions of the language model. This HCL.fst contains arcs with "<gamma>" labels on the input and output so these transitions will also be present on the input side of the fully composed graph. If it did not, then the composed graph would not be functional, and determinization would be impossible.
+  This is a finite state transducer that maps sequences of context independent phone states (acoustic model labels) to sequences of words. The lexicon has 200,000 words.
+  
+  HCL.fst has not been determinized. Instead, it has been prepared to make composition with a language model WFST as efficient as possible.
+  
+  This FST has disambiguation symbols on its input side. They ensure that every unique input sequence has a unique output sequences, regardless of homonyms. This preserves the functional nature of the transducer, which makes determinization possible.
+  
+  It is expected that the language model contains "<gamma>" symbols on its input side, which represent the backoff transitions of the language model. This HCL.fst contains arcs with "<gamma>" labels on the input and output so these transitions will also be present on the input side of the fully composed graph. If it did not, then the composed graph would not be functional, and determinization would be impossible.
 
 2. `DecodingGraph.fst`
 
-This is the result of compiling HCL.fst with a trigram language model, and applying a series of transformations to remove both disambiguation and language model backoff symbols, as well as to compact the structure into fewer arcs.
+  This is the result of compiling HCL.fst with a trigram language model, and applying a series of transformations to remove both disambiguation and language model backoff symbols, as well as to compact the structure into fewer arcs.
 
 3. `H.FST.isym` and `L.fst.osym`
 
-These are the input and output symbol tables that should cover the input and output of HCL.fst, DecodingGraph.fst, and any other decoding graph you build in this lab.
+  These are the input and output symbol tables that should cover the input and output of HCL.fst, DecodingGraph.fst, and any other decoding graph you build in this lab.
 
 3. `StaticDecoder.py`
 
-This is a simple Python-based beam decoder. It relies on loading a CNTK acoustic model, a WFST decoding graph, and pre-processed acoustic features.
-
+  This is a simple Python-based beam decoder. It relies on loading a CNTK acoustic model, a WFST decoding graph, and pre-processed acoustic features.
 
 #### Instructions:
 
-1. Run the StaticDecoder.py to decode the test data using the provided DecodingGraph.fst and the Experiments/lists/feat_test.rscp generated in lab 2.
-    - The provided DecodingGraph.fst is in OpenFst format, but the decoder expects it to be in text format. Create DecodingGraph.fst.txt using the OpenFST fstprint tool.
+1. Run the StaticDecoder.py to decode the test data using the provided `DecodingGraph.fst` and the Experiments/lists/feat_test.rscp generated in lab 2.
+    - The provided `DecodingGraph.fst` is in OpenFst format, but the decoder expects it to be in text format. Create `DecodingGraph.fst.txt` using the OpenFST fstprint tool.
     - Run the provided decoder with default parameters on the test data, using any acoustic model built in Section 3 of this class.
     - Measure the word error rate of the decoder's output with respect to the given reference text, using the word error rate module from Section 1 of this class.
 
 2. Create a new decoding graph using a language model you have trained in Module 4 of this class.
-    - Convert the ARPA format language model to its FST approximation. The arpa2fst.py tool is provided for this purpose.
-    - Compose your new G.fst with the given HCL.fst.
+    - Convert the ARPA format language model to its FST approximation. The `arpa2fst.py` tool is provided for this purpose.
+    - Compose your new `G.fst` with the given HCL.fst.
     - Process the graph using a mixture of label pushing, encoding, decoding, minimization, and determinization. As part of this process, all disambiguation symbols and language model backoff symbols should be manually converted into "<eps>".
-    - Use the resulting HCLG.fst in place of DecodingGraph.fst to repeat Assignment 2 above.
+    - Use the resulting `HCLG.fst` in place of `DecodingGraph.fst` to repeat Assignment 2 above.
 
 3. Measure the time-accuracy tradeoff of the decoder.
     - Run the decoder with the provided DecodingGraph.fst two more times: once with the beam width decreased by a factor of ten, and once with the beam width increased by a factor of ten.
