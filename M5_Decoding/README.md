@@ -426,25 +426,25 @@ Required files:
 
 1. [`HCL.fst`](./HCL.fst)
 
-  This is a finite state transducer that maps sequences of context independent phone states (acoustic model labels) to sequences of words. The lexicon has 200,000 words.
-  
-  HCL.fst has not been determinized. Instead, it has been prepared to make composition with a language model WFST as efficient as possible.
-  
-  This FST has disambiguation symbols on its input side. They ensure that every unique input sequence has a unique output sequences, regardless of homonyms. This preserves the functional nature of the transducer, which makes determinization possible.
-  
-  It is expected that the language model contains "<gamma>" symbols on its input side, which represent the backoff transitions of the language model. This HCL.fst contains arcs with "<gamma>" labels on the input and output so these transitions will also be present on the input side of the fully composed graph. If it did not, then the composed graph would not be functional, and determinization would be impossible.
-
+   This is a finite state transducer that maps sequences of context independent phone states (acoustic model labels) to sequences of words. The lexicon has 200,000 words.
+   
+   HCL.fst has not been determinized. Instead, it has been prepared to make composition with a language model WFST as efficient as possible.
+   
+   This FST has disambiguation symbols on its input side. They ensure that every unique input sequence has a unique output sequences, regardless of homonyms. This preserves the functional nature of the transducer, which makes determinization possible.
+   
+   It is expected that the language model contains "<gamma>" symbols on its input side, which represent the backoff transitions of the language model. This HCL.fst contains arcs with "<gamma>" labels on the input and output so these transitions will also be present on the input side of the fully composed graph. If it did not, then the composed graph would not be functional, and determinization would be impossible.
+ 
 2. `DecodingGraph.fst`
 
-  This is the result of compiling HCL.fst with a trigram language model, and applying a series of transformations to remove both disambiguation and language model backoff symbols, as well as to compact the structure into fewer arcs.
+   This is the result of compiling HCL.fst with a trigram language model, and applying a series of transformations to remove both disambiguation and language model backoff symbols, as well as to compact the structure into fewer arcs.
 
 3. `H.FST.isym` and `L.fst.osym`
 
-  These are the input and output symbol tables that should cover the input and output of HCL.fst, DecodingGraph.fst, and any other decoding graph you build in this lab.
+   These are the input and output symbol tables that should cover the input and output of HCL.fst, DecodingGraph.fst, and any other decoding graph you build in this lab.
 
 3. `StaticDecoder.py`
 
-  This is a simple Python-based beam decoder. It relies on loading a CNTK acoustic model, a WFST decoding graph, and pre-processed acoustic features.
+   This is a simple Python-based beam decoder. It relies on loading a CNTK acoustic model, a WFST decoding graph, and pre-processed acoustic features.
 
 #### Instructions:
 
