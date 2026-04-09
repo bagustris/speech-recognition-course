@@ -1,8 +1,9 @@
 # Site settings
+remote_theme: bagustris/primer2-theme
 title: "Speech Recognition Course"
 description: "A comprehensive course on speech recognition technologies and implementation"
-baseurl: "/speech-recognition-course" # the subpath of your site, e.g. /blog
-url: "https://bagustris.github.io" # the base hostname & protocol for your site
+baseurl: "/speech-recognition-course"
+url: "https://bagustris.github.io"
 
 markdown: kramdown
 kramdown:
@@ -11,16 +12,24 @@ kramdown:
   highlighter: rouge
   syntax_highlighter: rouge
   parse_block_html: true
-  
+
 sass:
   style: :compressed
 
 # Enable plugins
 plugins:
+  - jekyll-remote-theme
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
 
+# Default front matter
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+      mathjax: true
 
 exclude:
   - node_modules
@@ -38,6 +47,7 @@ exclude:
   - "*.docx"
   - "*.odt"
   - "*.txt.gz"
+  - CLAUDE.md
 
 github:
   private: false
@@ -47,6 +57,3 @@ github:
     branch: "master"
     path: "/"
   repository_url: "https://github.com/bagustris/speech-recognition-course"
-  
-title: Speech Recognition Course
-description: A course on speech recognition
