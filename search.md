@@ -2,7 +2,7 @@
 layout: default
 title: Search
 permalink: /search/
-nav_exclude: true
+nav_exclude: True
 ---
 
 # Search the Course
