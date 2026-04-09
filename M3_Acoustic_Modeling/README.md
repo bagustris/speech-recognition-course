@@ -275,7 +275,7 @@ An LSTM uses the concept of a cell, which is like a memory that stores state inf
 
 ![](./m3i7.png)
 
-There are many details of LSTMs that can be found online. For example, this blog post does a good job explaining the operation of LSTMs. http://colah.github.io/posts/2015-08-Understanding-LSTMs/
+There are many details of LSTMs that can be found online. For example, this blog post does a good job explaining the operation of LSTMs: [https://colah.github.io/posts/2015-08-Understanding-LSTMs/](https://colah.github.io/posts/2015-08-Understanding-LSTMs/).
 
 Other variants of the LSTM have been proposed, such as the Gated Recurrent Unit (GRU), which is a simplified version of the LSTM. On some tasks, GRUs have shown similar performance to LSTMs with fewer parameters.
 
@@ -287,7 +287,7 @@ There are several sequence discriminative objective functions. One of the most w
 
 $$ F_{MMI}= \sum_u \log \frac {p(X_u|S_u)p(W_u)} {\sum_{W'}p(X_u|S_{W'})p(W')} $$
 
-where $u$ is an index over utterances in the training set, $W_u$ is the reference word sequence for utterance $u$, and $S_u$ is the corresponding state sequence. The denominator is a sum over all possible word sequences. $S_{W′}$ would represent the state sequence corresponding to the alternative word sequence  $W′$. This summation penalizes the model by considering competing hypotheses $W′$ that could explain the observed features $X_u$. This is typically approximated by a word lattice, which is a graph over possible hypothesis encountered in decoding.
+where $u$ is an index over utterances in the training set, $W_u$ is the reference word sequence for utterance $u$, and $S_u$ is the corresponding state sequence. The denominator is a sum over all possible word sequences. $S_{W'}$ would represent the state sequence corresponding to the alternative word sequence  $W'$. This summation penalizes the model by considering competing hypotheses $W'$ that could explain the observed features $X_u$. This is typically approximated by a word lattice, which is a graph over possible hypothesis encountered in decoding.
 
 Using this objective function add significant complexity to the training of acoustic models but typically result in improved performance and is a component of most state of the art systems. There are also many variations on this such as Minimum Phone Error (MPE) training, and state-level Minimum Bayes Risk (sMBR) training.  
 
