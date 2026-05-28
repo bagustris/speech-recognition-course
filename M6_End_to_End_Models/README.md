@@ -3,13 +3,13 @@
 [Previous](../M5_Decoding/)
 
 ## Table of Contents
-- [6 End-to-End Models](#6-end-to-end-models)
-  - [Improved Objective Functions](#improved-objective-functions)
-  - [Sequential Objective Function](#sequential-objective-function)
-  - [Connectionist Temporal Classification](#connectionist-temporal-classification)
-  - [Sequence Discriminative Objective Functions](#sequence-discriminative-objective-functions)
-  - [Grapheme or Word Labels](#grapheme-or-word-labels)
-  - [Encoder-Decoder Networks](#encoder-decoder-networks)
+- [End-to-End Models](#6-end-to-end-models)
+- [Improved Objective Functions](#improved-objective-functions)
+- [Sequential Objective Function](#sequential-objective-function)
+- [Connectionist Temporal Classification](#connectionist-temporal-classification)
+- [Sequence Discriminative Objective Functions](#sequence-discriminative-objective-functions)
+- [Grapheme or Word Labels](#grapheme-or-word-labels)
+- [Encoder-Decoder Networks](#encoder-decoder-networks)
 
 ## Improved Objective Functions  
 
