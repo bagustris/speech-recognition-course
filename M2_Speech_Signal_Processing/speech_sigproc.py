@@ -89,7 +89,7 @@ class FrontEnd:
     # replace this with proper pre-emphasis filtering, using the self.preemphasis coefficient
     def pre_emphasize(self, wav):
         # apply pre-emphasis filtering on waveform
-        preemph_wav = self.preemphasis * wav[1:] - wav[:-1]
+        preemph_wav = wav[1:] - self.preemphasis * wav[:-1]
         return preemph_wav
 
     def wav_to_frames(self, wav):

@@ -4,6 +4,7 @@ import cntk as C
 from cntk.train.training_session import *
 from cntk.logging import *
 import argparse
+import os
 
 #model_type = "" # or "blstm"
 data_dir = "../Experiments"

@@ -29,7 +29,7 @@ def feature_stacker(x, context_frames=11):
         (1 + 2 * context_frames).
     """
     return np.column_stack([
-        x[np.minimum(len(x) - 1, np.maximum(0, np.arange(len(x), dtype=np.int) + d))]
+        x[np.minimum(len(x) - 1, np.maximum(0, np.arange(len(x), dtype=int) + d))]
         for d in range(-context_frames, context_frames + 1)
     ])
 
@@ -210,7 +210,7 @@ class token_manager:
         v = np.array([x.am_score + x.lm_score for x in tok_list], dtype=np.float32)
         v = np.exp(v - np.max(v))
         # make a column vector; row index is arc number
-        r = np.array([x.arc_number for x in tok_list], dtype=np.int)
+        r = np.array([x.arc_number for x in tok_list], dtype=int)
         c = np.zeros(r.shape)
         score = scipy.sparse.csc_matrix(
             (v, (r, c)),
@@ -299,7 +299,7 @@ class FST:
         It also scales the acoustic model scores. This scaling is common and is necessary to balance the
         information provided by the acoustic model and language model.
 
-        :param act: The raw score output from the acouatic model.
+        :param act: The raw score output from the acoustic model.
         :return: Renormalized activations.
         """
         return (act - np.max(act, axis=1).reshape((act.shape[0], 1)))
@@ -347,10 +347,10 @@ class FST:
             # Project the tokens forward through the given transition matrix. Note that this is not
             # a matrix multiplication, but an application of the previous tokens to the columns of the
             # transition matrix. The (i,j) element in the resulting two-dimensional structure represents
-            # the score assocaited with creating a new token on arc i, from an old token on arc j.
+            # the score associated with creating a new token on arc i, from an old token on arc j.
             trans = transition_matrix.multiply(src_score.T)
 
-            # Convert the sparse trans matrix into two obects: row_to_column, which for every row of
+            # Convert the sparse trans matrix into two objects: row_to_column, which for every row of
             # trans, indicates which column had the best score, and active_rows, which is the set
             # of rows in trans with non-zero entries. This tells us which tokens will be created
             # (active_rows), and who their best predecessor is (row_to_column).
@@ -431,8 +431,8 @@ class FST:
     def _load_map(self, filename):
         """Read the label mapping file from disc.
 
-        This mapping is used to associate strings of the deconding graph's input label with the index into
-        acosutic model score vectors.
+        This mapping is used to associate strings of the decoding graph's input label with the index into
+        acoustic model score vectors.
         """
         with open(filename) as f:
             self._index2label = [

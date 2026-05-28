@@ -4,7 +4,7 @@ import numpy as np
 def string_edit_distance(ref=None, hyp=None):
 
     if ref is None or hyp is None:
-        RuntimeError("ref and hyp are required, cannot be None")
+        raise RuntimeError("ref and hyp are required, cannot be None")
 
     x = ref
     y = hyp
@@ -13,12 +13,12 @@ def string_edit_distance(ref=None, hyp=None):
         return (tokens, tokens, tokens, 0, 0)
 
     # p[ix,iy] consumed ix tokens from x, iy tokens from y
-    p = np.PINF * np.ones((len(x) + 1, len(y) + 1)) # track total errors
+    p = np.inf * np.ones((len(x) + 1, len(y) + 1)) # track total errors
     e = np.zeros((len(x)+1, len(y) + 1, 3)) # track deletions, insertions, substitutions
     p[0] = 0
     for ix in range(len(x) + 1):
         for iy in range(len(y) + 1):
-            cst = np.PINF*np.ones([3])
+            cst = np.inf*np.ones([3])
             s = 0
             if ix > 0:
                 cst[0] = p[ix - 1, iy] + 1 # deletion cost

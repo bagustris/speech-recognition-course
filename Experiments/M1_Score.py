@@ -61,7 +61,7 @@ if __name__=='__main__':
     args = parser.parse_args()
 
     if args.reftrn is None or args.hyptrn is None:
-        RuntimeError("Must specify reference trn and hypothesis trn files.")
+        raise RuntimeError("Must specify reference trn and hypothesis trn files.")
 
     score(ref_trn=args.reftrn, hyp_trn=args.hyptrn)
 

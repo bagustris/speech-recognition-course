@@ -80,4 +80,4 @@ if __name__ == "__main__":
         htk.write_ascii_stats(m, mean_file)
         print("Wrote global mean to", mean_file)
         htk.write_ascii_stats(p, invstddev_file)
-        print("Word global inv stddev to ", invstddev_file)
+        print("Wrote global inv stddev to ", invstddev_file)
