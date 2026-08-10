@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import os
 import re
 import argparse
 
@@ -45,6 +46,7 @@ def plot_log_info(filename):
     ax[1].set_ylabel("Frame Error Rate (%)")
     ax[1].legend()
     ax[1].grid(True)
+    os.makedirs("fig", exist_ok=True)
     plt.savefig("fig/log.png", bbox_inches="tight")
     plt.show()
 
@@ -52,7 +54,7 @@ def plot_log_info(filename):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-l", "--log", help="CNTK log file", required=True, default=None
+        "-l", "--log", help="training log file written by M3_Train_AM.py", required=True, default=None
     )
     args = parser.parse_args()
     plot_log_info(args.log)

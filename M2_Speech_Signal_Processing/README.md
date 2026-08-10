@@ -150,10 +150,10 @@ To compute features for speech recognition from a speech signal, we are interest
 
 ### Feature extraction for speech recognition
 #### Required files:
-- [M2_Wav2Feat_Single.py](../Experiments/M2_Wav2Feat_Single.py)
-- [M2_Wav2Feat_Batch.py](../Experiments/M2_Wav2Feat_Batch.py)
-- [speech_sigproc.py](../Experiments/speech_sigproc.py)
-- [htk_featio.py](../Experiments/htk_featio.py)
+- [M2_Wav2Feat_Single.py](https://github.com/bagustris/speech-recognition-course/blob/master/Experiments/M2_Wav2Feat_Single.py)
+- [M2_Wav2Feat_Batch.py](https://github.com/bagustris/speech-recognition-course/blob/master/Experiments/M2_Wav2Feat_Batch.py)
+- [speech_sigproc.py](https://github.com/bagustris/speech-recognition-course/blob/master/Experiments/speech_sigproc.py)
+- [htk_featio.py](https://github.com/bagustris/speech-recognition-course/blob/master/Experiments/htk_featio.py)
 
 #### Instructions:
 In this lab, you will write the core functions necessary to perform feature extraction on audio waveforms. Your program will convert an audio file to a sequence of log mel frequency filterbank ("FBANK") coefficients.
@@ -178,13 +178,13 @@ In the first part of this lab, you are to complete the missing code in the Front
 2. Mel frequency filterbank  
 3. Log mel filterbank coefficients  
 
-You can compare the figures to the figures below. Once the code is verified to be working, the feature extraction program should be used to create feature vector files for the training, development, and test sets. This will be done using M2_Wav2Feat_Batch.py. This program takes a command line argument `–-set` (or `-s`) which takes as an argument either `train` , `dev` , or `test`. For example  
+You can compare the figures to the figures below. Once the code is verified to be working, the feature extraction program should be used to create feature vector files for the training, development, and test sets. This will be done using M2_Wav2Feat_Batch.py. This program takes a command line argument `--set` (or `-s`) which takes as an argument either `train` , `dev` , or `test`. For example  
 
-    $ python M2_Wav2Feat_Batch.py –set train
+    $ python M2_Wav2Feat_Batch.py --set train
 
 This program will use the code you write in the FrontEnd class to compute feature extraction for all the files in the LibriSpeech corpus. You need to call this program 3 times, once each for train, dev, and test sets.
 
-When the training set features are computed (`–set train`) the code will also generate the global mean and precision (inverse standard deviation) of the features in the training set. These quantities will be stored in two ASCII files in the `am` directory during acoustic model training in the next module.
+When the training set features are computed (`--set train`) the code will also generate the global mean and precision (inverse standard deviation) of the features in the training set. These quantities will be stored in two ASCII files in the `am` directory during acoustic model training in the next module.
 
 Here are the outputs you should get from plotting:
 

@@ -42,7 +42,7 @@ def string_edit_distance(ref=None, hyp=None):
                     e[ix, iy, 2] += s
 
     edits = int(p[-1,-1])
-    deletions, insertions, substitutions = e[-1, -1, :]
+    deletions, insertions, substitutions = (int(v) for v in e[-1, -1, :])
     return (tokens, edits, deletions, insertions, substitutions)
 
 
