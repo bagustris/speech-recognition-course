@@ -150,10 +150,10 @@ To compute features for speech recognition from a speech signal, we are interest
 
 ### Feature extraction for speech recognition
 #### Required files:
-- [M2_Wav2Feat_Single.py](../Experiments/M2_Wav2Feat_Single.py)
-- [M2_Wav2Feat_Batch.py](../Experiments/M2_Wav2Feat_Batch.py)
-- [speech_sigproc.py](../Experiments/speech_sigproc.py)
-- [htk_featio.py](../Experiments/htk_featio.py)
+- [M2_Wav2Feat_Single.py](https://github.com/bagustris/speech-recognition-course/blob/master/Experiments/M2_Wav2Feat_Single.py)
+- [M2_Wav2Feat_Batch.py](https://github.com/bagustris/speech-recognition-course/blob/master/Experiments/M2_Wav2Feat_Batch.py)
+- [speech_sigproc.py](https://github.com/bagustris/speech-recognition-course/blob/master/Experiments/speech_sigproc.py)
+- [htk_featio.py](https://github.com/bagustris/speech-recognition-course/blob/master/Experiments/htk_featio.py)
 
 #### Instructions:
 In this lab, you will write the core functions necessary to perform feature extraction on audio waveforms. Your program will convert an audio file to a sequence of log mel frequency filterbank ("FBANK") coefficients.

@@ -144,8 +144,8 @@ For a variety of reasons, building a speech recognition engine is much more comp
 
 ### Lab for Module 1: Create a speech recognition scoring program   
 ##### Required files:  
- - [wer.py](../Experiments/wer.py)  
- - [M1_Score.py](../Experiments/M1_Score.py)  
+ - [wer.py](https://github.com/bagustris/speech-recognition-course/blob/master/Experiments/wer.py)  
+ - [M1_Score.py](https://github.com/bagustris/speech-recognition-course/blob/master/Experiments/M1_Score.py)  
 
 ### Instructions:  
 In this lab, you will write a program in Python to compute the word error rate (WER) and sentence error rate (SER) for a test corpus. A set of hypothesized transcriptions from a speech recognition system and a set of reference transcriptions with the correct word sequences will be provided for you.
