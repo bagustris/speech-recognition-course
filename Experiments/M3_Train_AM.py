@@ -123,21 +123,21 @@ def train_model(model_type, train_loader, val_loader, device, num_epochs):
 
         train_loss = 0
         total_samples = 0
-        correct = 0
+        total_errors = 0
 
         for batch_features, batch_labels, lengths in train_loader:
             batch_features = batch_features.to(device)
             batch_labels = batch_labels.to(device)
-            
+
             optimizer.zero_grad()
             outputs = model(batch_features)
             loss = criterion(outputs.view(-1, globals["num_classes"]), batch_labels.view(-1))
             loss.backward()
             optimizer.step()
-            
+
             train_loss += loss.item() * batch_labels.numel()
             pred = outputs.argmax(dim=-1)
-            errors = (pred != batch_labels).sum().item()  # Count misclassified frames
+            total_errors += (pred != batch_labels).sum().item()  # Count misclassified frames
             total_samples += batch_labels.numel()
 
         if torch.cuda.is_available():
@@ -148,7 +148,7 @@ def train_model(model_type, train_loader, val_loader, device, num_epochs):
             epoch_time = time.time() - start
 
         samples_per_sec = total_samples / epoch_time
-        error_rate = 100.0 * errors / total_samples  # Frame Error Rate percentage
+        error_rate = 100.0 * total_errors / total_samples  # Frame Error Rate percentage
 
         print(f"Finished Epoch[{epoch+1} of {num_epochs}]: [CE_Training] loss = {train_loss/total_samples:.6f} * {total_samples}, "
               f"metric = {error_rate:.2f}% * {total_samples} {epoch_time:.3f}s ({samples_per_sec:.1f} samples/s);")

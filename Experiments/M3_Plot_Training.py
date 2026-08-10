@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import os
 import re
 import argparse
 
@@ -45,6 +46,7 @@ def plot_log_info(filename):
     ax[1].set_ylabel("Frame Error Rate (%)")
     ax[1].legend()
     ax[1].grid(True)
+    os.makedirs("fig", exist_ok=True)
     plt.savefig("fig/log.png", bbox_inches="tight")
     plt.show()
 

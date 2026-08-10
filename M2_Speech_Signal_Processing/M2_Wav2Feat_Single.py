@@ -59,5 +59,5 @@ print("Wrote {0} frames to {1}".format(feat.shape[1], feat_file))
 
 # if you want to verify, that the file was written correctly:
 feat2 = htk.read_htk_user_feat(name=feat_file)
-print("Read {0} frames from {1}".format(feat2.shape[1], feat_file))
+print("Read {0} frames from {1}".format(feat2.shape[0], feat_file))
 print("Per-element absolute error is {0}".format(np.linalg.norm(feat.T-feat2)/(feat2.shape[0]*feat2.shape[1])))
