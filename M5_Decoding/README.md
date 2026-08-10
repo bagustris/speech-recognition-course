@@ -313,110 +313,171 @@ The important parameters for a pruned search are beam width B and maximum token 
 It is possible that the best overall path has a very low score for some time t, and is discarded by the pruning process. In this case, the beam search algorithm will result in a sub-optimal path. When this happens, we say that the algorithm has produced a search error. It is possible to reduce these errors arbitrarially close to zero by increasing the beam width and maximum token count.
 
 
-## Quiz  
+## Quiz
 
-Question 1
+Test your understanding of decoding and weighted finite-state transducers. Select your answers and press **Check answers** &mdash; correct options are highlighted and a short explanation appears for each question.
 
-Which of these can most compactly represent a set of strings? (Choose one)
-
-- [ ] Weighted Finite State Transducer   
-- [ ] Weighted Finite State Acceptor  
-- [ ] Finite State Transducer  
-- [ ] Finite State Acceptor  
-- [ ] None of the above  
-
-
-
-Question 2
-
-Which component of the decoding graph represents valid sequences of words? (Choose one) 
-
-- [ ] The Grammar
-- [ ] The HMM State Transducer
-- [ ] The Pronunciation Lexicon
-- [ ] None of the above
-
-
-Question 3
-
-Which one of the following properties will cause a FST to be non-functional? (Choose one)
-
-- [ ] More than one input string maps to the same output string
-- [ ] For at least one path, the path score is negative
-- [ ] One input string maps to more than one output string
-- [ ] For at least one path, the input string and output string are identical
-
-
-Question 4
-
-Which component of the decoding graph generally needs disambiguation symbols to prevent non-functionality? (Choose one)
-
-- [ ] The Grammar
-- [ ] The HMM State Transducer
-- [ ] The Pronunciation Lexicon
-- [ ] None of the above
-
-
-Question 5
-
-Which component of the decoding graph describes the HMM structures of the acoustic model? (Choose one)
-
-- [ ] The Grammar
-- [ ] The HMM State Transducer
-- [ ] The Pronunciation Lexicon
-- [ ] None of the above
-
-
-Question 6
-
-When successfully applied, which of these algorithms tend to make the resulting structure larger? (Choose all that apply)
-
-- [ ] Minimization  
-- [ ] Determinization   
-- [ ] Composition  
-- [ ] None of the above  
-
-
-Question 7
-
-When successfully applied, which of these algorithms tend to make the resulting structure smaller? (Choose all that apply)
-
-- [ ] Minimization
-- [ ] Determinization
-- [ ] Composition
-- [ ] None of the above
-
-
-Question 8
-
-During beam search decoding, hypotheses may be discarded if which of the following conditions exist? (Choose all that apply)
-
-- [ ] The token's score falls outside the beam width.
-- [ ] There are too many tokens, and this token isn’t one of the N best.
-- [ ] The token enters a determinized state.
-- [ ] The token enters a minimized state.
-- [ ] None of the above
-
-
-Question 9
-
-Which of these are standard conventions for WFST? (Choose all that apply)
-
-- [ ] The initial state in the first line of a WFST description is assumed to be the initial state of the graph.
-- [ ] Weights are assumed to be zero unless otherwise specified.
-- [ ] The final state of the final line of a WFST description is assumed to be the final state of the graph.
-- [ ] None of the above
-
-
-Question 10
-
-When a path traverses an arc with an epsilon symbol, what does this indicate? (Choose one)
-
-- [ ] The path's string is appended with an epsilon.
-- [ ] The path's string is unaffected by this arc.
-- [ ] The path's weight is reset to zero.
-- [ ] None of the above
-
+<div class="srq" markdown="0">
+<style>
+.srq{max-width:780px;margin:1rem 0;}
+.srq *{box-sizing:border-box;}
+.srq-q{border:1px solid #d0d7de;border-radius:8px;padding:.6rem 1rem .8rem;margin:0 0 1.1rem;transition:border-color .15s;}
+.srq-q legend{font-weight:700;padding:0 .4rem;font-size:.95em;letter-spacing:.02em;}
+.srq-prompt{margin:.2rem 0 .7rem;font-weight:600;}
+.srq-prompt .srq-hint{font-weight:400;opacity:.7;font-size:.9em;}
+.srq label{display:flex;align-items:flex-start;gap:.55rem;padding:.4rem .55rem;border-radius:6px;cursor:pointer;border:1px solid transparent;}
+.srq label:hover{background:rgba(127,127,127,.12);}
+.srq label input{margin-top:.2rem;flex:0 0 auto;}
+.srq-exp{display:none;margin:.65rem 0 .1rem;padding:.55rem .7rem;border-left:3px solid #0969da;background:rgba(9,105,218,.08);font-size:.92em;border-radius:0 4px 4px 0;}
+.srq-q.srq-correct{border-color:#1a7f37;}
+.srq-q.srq-incorrect{border-color:#cf222e;}
+.srq-q.srq-correct .srq-exp,.srq-q.srq-incorrect .srq-exp{display:block;}
+.srq label.opt-correct{background:rgba(26,127,55,.16);border-color:rgba(26,127,55,.5);font-weight:600;}
+.srq label.opt-wrong{background:rgba(207,34,46,.14);border-color:rgba(207,34,46,.45);text-decoration:line-through;}
+.srq-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.75rem;margin:.3rem 0 .5rem;}
+.srq-actions button{cursor:pointer;padding:.5rem 1rem;border-radius:6px;border:1px solid #d0d7de;background:#f6f8fa;font-weight:600;font-size:.95em;}
+.srq-actions button:hover{filter:brightness(.97);}
+#srq-check{background:#1f883d;color:#fff;border-color:#1f883d;}
+.srq-score{font-weight:700;font-size:1.05em;}
+.srq-score.pass{color:#1a7f37;}
+.srq-score.part{color:#9a6700;}
+</style>
+<form id="srq-form" onsubmit="return false;">
+<fieldset class="srq-q" data-type="single" data-correct="3">
+  <legend>Question 1</legend>
+  <p class="srq-prompt">Which of these can most compactly represent a set of strings? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q1" value="0"> <span>Weighted Finite State Transducer</span></label>
+  <label><input type="radio" name="q1" value="1"> <span>Weighted Finite State Acceptor</span></label>
+  <label><input type="radio" name="q1" value="2"> <span>Finite State Transducer</span></label>
+  <label><input type="radio" name="q1" value="3"> <span>Finite State Acceptor</span></label>
+  <label><input type="radio" name="q1" value="4"> <span>None of the above</span></label>
+  <p class="srq-exp">A plain <strong>Finite State Acceptor</strong> represents a set of strings (a language). Transducers encode input&rarr;output relations and weights add cost information &mdash; neither is needed simply to represent a set of strings.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 2</legend>
+  <p class="srq-prompt">Which component of the decoding graph represents valid sequences of words? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q2" value="0"> <span>The Grammar</span></label>
+  <label><input type="radio" name="q2" value="1"> <span>The HMM State Transducer</span></label>
+  <label><input type="radio" name="q2" value="2"> <span>The Pronunciation Lexicon</span></label>
+  <label><input type="radio" name="q2" value="3"> <span>None of the above</span></label>
+  <p class="srq-exp">The <strong>Grammar</strong> (the language model, G) defines which word sequences are valid.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="2">
+  <legend>Question 3</legend>
+  <p class="srq-prompt">Which one of the following properties will cause a FST to be non-functional? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q3" value="0"> <span>More than one input string maps to the same output string</span></label>
+  <label><input type="radio" name="q3" value="1"> <span>For at least one path, the path score is negative</span></label>
+  <label><input type="radio" name="q3" value="2"> <span>One input string maps to more than one output string</span></label>
+  <label><input type="radio" name="q3" value="3"> <span>For at least one path, the input string and output string are identical</span></label>
+  <p class="srq-exp">A transducer is <em>functional</em> when each input string maps to at most one output string. So <strong>one input mapping to more than one output</strong> makes it non-functional (several inputs sharing one output is fine).</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="2">
+  <legend>Question 4</legend>
+  <p class="srq-prompt">Which component of the decoding graph generally needs disambiguation symbols to prevent non-functionality? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q4" value="0"> <span>The Grammar</span></label>
+  <label><input type="radio" name="q4" value="1"> <span>The HMM State Transducer</span></label>
+  <label><input type="radio" name="q4" value="2"> <span>The Pronunciation Lexicon</span></label>
+  <label><input type="radio" name="q4" value="3"> <span>None of the above</span></label>
+  <p class="srq-exp">The <strong>Pronunciation Lexicon</strong> (L) maps phone sequences to words; homophones make one input map to several words, so disambiguation symbols are added to keep it functional (and determinizable).</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 5</legend>
+  <p class="srq-prompt">Which component of the decoding graph describes the HMM structures of the acoustic model? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q5" value="0"> <span>The Grammar</span></label>
+  <label><input type="radio" name="q5" value="1"> <span>The HMM State Transducer</span></label>
+  <label><input type="radio" name="q5" value="2"> <span>The Pronunciation Lexicon</span></label>
+  <label><input type="radio" name="q5" value="3"> <span>None of the above</span></label>
+  <p class="srq-exp">The <strong>HMM State Transducer</strong> (H) encodes the HMM state topology of the acoustic model.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="multi" data-correct="1,2">
+  <legend>Question 6</legend>
+  <p class="srq-prompt">When successfully applied, which of these algorithms tend to make the resulting structure larger? <span class="srq-hint">(Choose all that apply)</span></p>
+  <label><input type="checkbox" name="q6" value="0"> <span>Minimization</span></label>
+  <label><input type="checkbox" name="q6" value="1"> <span>Determinization</span></label>
+  <label><input type="checkbox" name="q6" value="2"> <span>Composition</span></label>
+  <label><input type="checkbox" name="q6" value="3"> <span>None of the above</span></label>
+  <p class="srq-exp"><strong>Determinization</strong> can blow up in the worst case, and <strong>composition</strong> forms a product of two machines &mdash; both tend to grow the graph. Minimization shrinks it.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="multi" data-correct="0">
+  <legend>Question 7</legend>
+  <p class="srq-prompt">When successfully applied, which of these algorithms tend to make the resulting structure smaller? <span class="srq-hint">(Choose all that apply)</span></p>
+  <label><input type="checkbox" name="q7" value="0"> <span>Minimization</span></label>
+  <label><input type="checkbox" name="q7" value="1"> <span>Determinization</span></label>
+  <label><input type="checkbox" name="q7" value="2"> <span>Composition</span></label>
+  <label><input type="checkbox" name="q7" value="3"> <span>None of the above</span></label>
+  <p class="srq-exp"><strong>Minimization</strong> merges equivalent states to reduce size. Determinization and composition tend to enlarge the graph.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="multi" data-correct="0,1">
+  <legend>Question 8</legend>
+  <p class="srq-prompt">During beam search decoding, hypotheses may be discarded if which of the following conditions exist? <span class="srq-hint">(Choose all that apply)</span></p>
+  <label><input type="checkbox" name="q8" value="0"> <span>The token&rsquo;s score falls outside the beam width.</span></label>
+  <label><input type="checkbox" name="q8" value="1"> <span>There are too many tokens, and this token isn&rsquo;t one of the N best.</span></label>
+  <label><input type="checkbox" name="q8" value="2"> <span>The token enters a determinized state.</span></label>
+  <label><input type="checkbox" name="q8" value="3"> <span>The token enters a minimized state.</span></label>
+  <label><input type="checkbox" name="q8" value="4"> <span>None of the above</span></label>
+  <p class="srq-exp">Beam search prunes by <strong>score (beam width)</strong> and by <strong>keeping only the N best tokens</strong>. Determinized/minimized states are graph-construction properties, not pruning criteria.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="multi" data-correct="0,1">
+  <legend>Question 9</legend>
+  <p class="srq-prompt">Which of these are standard conventions for WFST? <span class="srq-hint">(Choose all that apply)</span></p>
+  <label><input type="checkbox" name="q9" value="0"> <span>The initial state in the first line of a WFST description is assumed to be the initial state of the graph.</span></label>
+  <label><input type="checkbox" name="q9" value="1"> <span>Weights are assumed to be zero unless otherwise specified.</span></label>
+  <label><input type="checkbox" name="q9" value="2"> <span>The final state of the final line of a WFST description is assumed to be the final state of the graph.</span></label>
+  <label><input type="checkbox" name="q9" value="3"> <span>None of the above</span></label>
+  <p class="srq-exp">By convention the <strong>start state</strong> comes from the first line, and <strong>unspecified weights are zero</strong>. Final states are marked explicitly (a line with a state number and optional weight), not inferred from the last line.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 10</legend>
+  <p class="srq-prompt">When a path traverses an arc with an epsilon symbol, what does this indicate? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q10" value="0"> <span>The path&rsquo;s string is appended with an epsilon.</span></label>
+  <label><input type="radio" name="q10" value="1"> <span>The path&rsquo;s string is unaffected by this arc.</span></label>
+  <label><input type="radio" name="q10" value="2"> <span>The path&rsquo;s weight is reset to zero.</span></label>
+  <label><input type="radio" name="q10" value="3"> <span>None of the above</span></label>
+  <p class="srq-exp">Epsilon (&epsilon;) is the empty symbol: the arc contributes no symbol, so the <strong>path string is unaffected</strong> (weights still combine as usual).</p>
+</fieldset>
+<div class="srq-actions">
+  <button type="button" id="srq-check">Check answers</button>
+  <button type="button" id="srq-reset">Reset</button>
+  <span id="srq-score" class="srq-score" role="status" aria-live="polite"></span>
+</div>
+</form>
+<script>
+(function(){
+  var form=document.getElementById('srq-form');
+  if(!form)return;
+  function want(fs){return (fs.getAttribute('data-correct')||'').split(',').filter(Boolean).map(Number).sort(function(a,b){return a-b;});}
+  function got(fs){return Array.prototype.slice.call(fs.querySelectorAll('input:checked')).map(function(i){return Number(i.value);}).sort(function(a,b){return a-b;});}
+  function same(a,b){return a.length===b.length&&a.every(function(v,i){return v===b[i];});}
+  document.getElementById('srq-check').addEventListener('click',function(){
+    var qs=form.querySelectorAll('.srq-q'),correct=0;
+    Array.prototype.forEach.call(qs,function(fs){
+      var w=want(fs),g=got(fs),ok=same(w,g);
+      fs.classList.remove('srq-correct','srq-incorrect');
+      fs.classList.add(ok?'srq-correct':'srq-incorrect');
+      Array.prototype.forEach.call(fs.querySelectorAll('label'),function(l){
+        var inp=l.querySelector('input'),v=Number(inp.value);
+        l.classList.remove('opt-correct','opt-wrong');
+        if(w.indexOf(v)>-1)l.classList.add('opt-correct');
+        else if(inp.checked)l.classList.add('opt-wrong');
+      });
+      if(ok)correct++;
+    });
+    var s=document.getElementById('srq-score');
+    s.textContent='Score: '+correct+' / '+qs.length;
+    s.className='srq-score '+(correct===qs.length?'pass':(correct>0?'part':''));
+    form.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  document.getElementById('srq-reset').addEventListener('click',function(){
+    form.reset();
+    Array.prototype.forEach.call(form.querySelectorAll('.srq-q'),function(fs){
+      fs.classList.remove('srq-correct','srq-incorrect');
+      Array.prototype.forEach.call(fs.querySelectorAll('label'),function(l){l.classList.remove('opt-correct','opt-wrong');});
+    });
+    document.getElementById('srq-score').textContent='';
+  });
+})();
+</script>
+</div>
 
 ## Lab 
 
