@@ -76,7 +76,6 @@ def create_network(
     num_classes=256,
     feature_mean_file=None,
     feature_inv_stddev_file=None,
-    feature_norm_files=None,
     label_prior_file=None,
     context=(0, 0),
     model_type=None,
@@ -139,7 +138,9 @@ def create_network(
         feature_var
     )
     label_prior = load_ascii_vector(label_prior_file, "label_prior")
-    log_prior = C.log(label_prior)
+    # clamp priors away from zero so log() cannot produce -inf (matches the
+    # np.maximum(prior, 1e-10) guard in the PyTorch M3_Train_AM.py)
+    log_prior = C.log(C.element_max(label_prior, C.constant(1e-10)))
 
     if model_type == "DNN":
         net = MyDNNLayer(512, 4)(feature_norm)

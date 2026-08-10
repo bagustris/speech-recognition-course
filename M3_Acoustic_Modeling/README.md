@@ -343,7 +343,7 @@ Thus, the training set has a cross entropy of 1.04 per sample, and a 32.74% fram
 
 After training is complete, you can visualize the training progress using M3_Plot_Training.py. It takes a training log file as input (the log written by M3_Train_AM.py, which prints one `Finished Epoch ...` line per epoch) and will plot epoch vs. cross-entropy of the training set on one figure and epoch vs. frame error rate of the training and development sets on another figure.
 
-    $ python M3_Plot_Training.py -–log <logfile>
+    $ python M3_Plot_Training.py --log <logfile>
 
 For this experiment, <logfile> would be `../am/dnn/log`
 
@@ -385,7 +385,7 @@ The code calls MyBLSTMLayer when the model_type is BLSTM. We've reduced the numb
 For utterance based processing, entire utterance needs to be processed during training. Thus the minibatch size specifies the total number of frames to process but will pack multiple utterances together if possible. Setting the minibatch size to a larger number will allow for efficient processing with multiple utterances in each minibatch size. We have set the minibatch size to 4096.
 The traing the BLSTM model, you can execute the following command.
 
-    $ python M3_Train_AM.py –-type BLSTM
+    $ python M3_Train_AM.py --type BLSTM
 
 Because of the sequential nature of the BLSTM processing, they are inherently less parallelizable, and thus, train much slower than DNNs. On a GTX 965M GPU running on a laptop, the network trained as a rate of 440 seconds per epoch, or 20 times slower than the DNN. Thus, we will only train for 10 epochs to keep processing time reasonable.
 
