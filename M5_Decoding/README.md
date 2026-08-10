@@ -444,7 +444,7 @@ Required files:
 
 3. `StaticDecoder.py`
 
-   This is a simple Python-based beam decoder. It relies on loading a CNTK acoustic model, a WFST decoding graph, and pre-processed acoustic features.
+   This is a simple Python-based beam decoder. It relies on loading a PyTorch acoustic model (the checkpoint saved by `M3_Train_AM.py`), a WFST decoding graph, and pre-processed acoustic features.
 
 #### Instructions:
 

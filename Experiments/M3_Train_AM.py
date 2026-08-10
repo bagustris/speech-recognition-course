@@ -264,6 +264,10 @@ def main():
     label_map = load_label_map(globals["label_mapping_file"])
     feature_mean = np.loadtxt(globals["feature_mean_file"]).astype(np.float32)
     feature_invstd = np.loadtxt(globals["feature_invstddev_file"]).astype(np.float32)
+    # log priors, baked into the saved model so the decoder can form scaled
+    # log-likelihoods log p(x|s) = log p(s|x) - log p(s) (see StaticDecoder.py).
+    prior = np.loadtxt(globals["label_priors"]).astype(np.float32)
+    log_prior = np.log(np.maximum(prior, 1e-10)).astype(np.float32)
 
     context = (11, 11) if model_type == "DNN" else (0, 0)
     batch_size = 256 if model_type == "DNN" else 4096
@@ -283,9 +287,25 @@ def main():
     model = train_model(model_type, train_loader, val_loader, device, max_epochs,
                         globals["feature_dim"], globals["num_classes"], context)
 
+    # Save a self-contained checkpoint: weights plus everything the decoder
+    # needs to reproduce the acoustic scores (architecture, normalization
+    # stats, and log priors). This is the PyTorch analogue of the CNTK model
+    # that exposed a "ScaledLogLikelihood" output.
     model_path = os.path.join(am_path, model_type)
     os.makedirs(model_path, exist_ok=True)
-    torch.save(model.state_dict(), os.path.join(model_path, f"{model_type}_CE.pt"))
+    torch.save(
+        {
+            "model_type": model_type,
+            "feature_dim": globals["feature_dim"],
+            "num_classes": globals["num_classes"],
+            "context": list(context),
+            "state_dict": model.state_dict(),
+            "feature_mean": feature_mean,
+            "feature_invstd": feature_invstd,
+            "log_prior": log_prior,
+        },
+        os.path.join(model_path, f"{model_type}_CE.pt"),
+    )
 
 
 if __name__ == "__main__":

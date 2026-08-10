@@ -1,10 +1,9 @@
 import sys
-sys.path.append("../M2_Speech_Signal_Processing")
 import os.path
-import cntk
+# make the co-located modules (htk_featio, M3_Train_AM) importable regardless of cwd
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 import scipy.sparse
-import scipy.misc
 import re
 import time
 import itertools
@@ -87,7 +86,7 @@ def load_parameters(script_line: str, script_path: str):
 
 def main():
     parser = argparse.ArgumentParser(description="Decode speech from parameter files.")
-    parser.add_argument('-am', '--am', help='CNTK trained acoustic model', required=True, default=None)
+    parser.add_argument('-am', '--am', help='PyTorch trained acoustic model checkpoint (saved by M3_Train_AM.py)', required=True, default=None)
     parser.add_argument('-decoding_graph', '--decoding_graph', help="Text-format openfst decoding graph", required=True, default=None)
     parser.add_argument('-label_map', '--label_map', help="Text files containing acoustic model state labels in the same order used when training the acoustic model", required=True, default=None)
     parser.add_argument('-scp', '--scp', help='Script file pointing to speech parameter files', required=True, default=None)
@@ -108,8 +107,9 @@ def main():
             with open(args.trn, 'w', buffering=1) as ftrn:
                 for line in fscp:
                     feats, utterance_name = load_parameters(line.rstrip(), script_path)
-                    #feats = feature_stacker(feats)
-                    activations = z.eval(feats.astype('f'))[0]
+                    # z.eval applies the model's own mean/variance normalization
+                    # and context splicing, then returns (T, num_classes) scores.
+                    activations = z.eval(feats)
                     hypothesis = fst.decode(activations, beam_width=args.beam_width, lmweight=args.lmweight)
                     words = [
                         x for x in
@@ -128,31 +128,77 @@ def main():
     print('{:.1f} seconds, {:.2f} frames per second'.format(time_end-time_start, frames_processed / (time_end-time_start)))
 
 
-def load_model(model_filename:str):
-    """A helper function to load the acoustic model from disc.
+class TorchAcousticModel:
+    """Loads a PyTorch acoustic model checkpoint and produces scaled log-likelihoods.
+
+    This is the PyTorch replacement for the old CNTK "ScaledLogLikelihood" model.
+    The checkpoint (written by M3_Train_AM.py) carries the architecture, the
+    feature mean/inv-stddev, and the log priors, so this class can reproduce the
+    full acoustic front-end that used to be baked into the CNTK graph:
+
+        1. mean/variance normalize the raw features,
+        2. splice in left/right context frames (for the DNN),
+        3. run the network to get per-frame log-posteriors, and
+        4. subtract the log prior to obtain scaled log-likelihoods
+           log p(x|s) = log p(s|x) - log p(s).
+    """
+
+    def __init__(self, checkpoint_filename: str):
+        # Import torch lazily so the FST/decoder logic in this module can be
+        # used (and tested) without a torch installation.
+        import torch
+        from M3_Train_AM import DNNModel, BLSTMModel
+
+        self._torch = torch
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        ckpt = torch.load(checkpoint_filename, map_location=self.device, weights_only=False)
+        self.model_type = ckpt["model_type"]
+        self.feature_dim = int(ckpt["feature_dim"])
+        self.num_classes = int(ckpt["num_classes"])
+        self.context = tuple(ckpt["context"])
+        self.feature_mean = np.asarray(ckpt["feature_mean"], dtype=np.float32)
+        self.feature_invstd = np.asarray(ckpt["feature_invstd"], dtype=np.float32)
+        self.log_prior = np.asarray(ckpt["log_prior"], dtype=np.float32)
+
+        num_context_frames = 1 + self.context[0] + self.context[1]
+        if self.model_type == "DNN":
+            self.model = DNNModel(self.feature_dim * num_context_frames, 512, self.num_classes)
+        else:
+            self.model = BLSTMModel(self.feature_dim, 512, self.num_classes)
+        self.model.load_state_dict(ckpt["state_dict"])
+        self.model.to(self.device).eval()
+
+    def eval(self, feats):
+        """Return (num_frames, num_classes) scaled log-likelihoods for raw features."""
+        torch = self._torch
+        feats = np.asarray(feats, dtype=np.float32)
+        feats = (feats - self.feature_mean) * self.feature_invstd
+
+        left, right = self.context
+        if (left, right) != (0, 0):
+            # feature_stacker uses a symmetric one-sided window; the DNN is
+            # trained with a symmetric context, so left == right here.
+            feats = feature_stacker(feats, context_frames=left)
+
+        x = torch.from_numpy(np.ascontiguousarray(feats)).to(self.device)
+        with torch.no_grad():
+            if self.model_type == "DNN":
+                logits = self.model(x)                            # (T, C)
+            else:
+                logits = self.model(x.unsqueeze(0)).squeeze(0)    # (T, C)
+            log_post = torch.log_softmax(logits, dim=-1).cpu().numpy()
+
+        return (log_post - self.log_prior).astype(np.float32)
+
+
+def load_model(model_filename: str):
+    """Load the PyTorch acoustic model checkpoint from disc.
 
     Args:
-        model_filename (str): The file path to the acoustic model.
-        """
-    cntk_model = cntk.load_model(model_filename)
-
-    #  First try and find output by name
-    model_output = cntk_model.find_by_name('ScaledLogLikelihood')
-
-
-    #  Fall back to first defined output
-    if model_output is None:
-        model_output = cntk_model.outputs[0]
-
-    #  Create an object restricted to the desired output.
-    cntk_model = cntk.combine(model_output)
-
-
-    #  Optimized RNN models won't run on CPU without conversion.
-    if 0 == cntk.use_default_device().type():
-        cntk_model = cntk.misc.convert_optimized_rnnstack(cntk_model)
-
-    return cntk_model
+        model_filename (str): The file path to the acoustic model checkpoint.
+    """
+    return TorchAcousticModel(model_filename)
 
 
 Token = namedtuple('token', 'id prev_id arc_number am_score lm_score')
@@ -477,7 +523,10 @@ class FST:
                     process_normal_arc(parts)
 
         # Pre-index all arcs coming out of a state to speed up transition-matrix creation.
-        arcout = [() for _ in range(1 + max(x.source_state for x in self._arcs))]
+        # Size by the largest state seen as either a source OR a target, so that a
+        # final "sink" state with no outgoing arcs (a valid graph) does not overflow.
+        max_state = max(max(a.source_state, a.target_state) for a in self._arcs)
+        arcout = [() for _ in range(1 + max_state)]
         for source_state, arcs in itertools.groupby(
                 sorted(self._arcs, key=lambda arc: arc.source_state),
                 key= lambda arc: arc.source_state):

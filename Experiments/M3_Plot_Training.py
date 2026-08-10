@@ -54,7 +54,7 @@ def plot_log_info(filename):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-l", "--log", help="CNTK log file", required=True, default=None
+        "-l", "--log", help="training log file written by M3_Train_AM.py", required=True, default=None
     )
     args = parser.parse_args()
     plot_log_info(args.log)
