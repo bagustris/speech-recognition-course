@@ -114,8 +114,11 @@ class FrontEnd:
     # for each frame(column of 2D array 'magspec'), compute the log mel spectrum, by applying the mel filterbank to the magnitude spectrum
     def magspec_to_fbank(self, magspec):
         # apply the mel filterbank, then apply the log operation (see README:
-        # "Logarithmic compression") to produce log mel filterbank features
-        fbank = np.log(np.dot(self.mel_filterbank, magspec))
+        # "Logarithmic compression") to produce log mel filterbank features.
+        # Floor the energies before the log to avoid -inf on (near-)zero bins;
+        # np.maximum only clamps values below eps, so real energies are unchanged.
+        fbank = np.dot(self.mel_filterbank, magspec)
+        fbank = np.log(np.maximum(fbank, 1e-10))
         return fbank
 
     # compute the mean vector of fbank coefficients in the utterance and subtract it from all frames of fbank coefficients

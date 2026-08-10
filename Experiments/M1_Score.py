@@ -43,11 +43,6 @@ def score(ref_trn=None, hyp_trn=None):
     ref = read_trn(ref_trn)
     hyp = read_trn(hyp_trn)
 
-    # index the hypotheses by utterance id so scoring is robust to ordering
-    hyp_by_id = {utt_id: words for utt_id, words in hyp}
-    if len(hyp_by_id) != len(hyp):
-        raise RuntimeError("Duplicate utterance ids found in hypothesis file.")
-
     # initialize the total error counters
     total_tokens = 0
     total_errors = 0
@@ -56,14 +51,22 @@ def score(ref_trn=None, hyp_trn=None):
     total_substitutions = 0
     sentence_errors = 0
 
-    # if the files have no ids, fall back to positional alignment (which
-    # requires equal line counts); otherwise match strictly by utterance id
-    positional = any(utt_id is None for utt_id, _ in ref)
-    if positional and len(ref) != len(hyp):
-        raise RuntimeError(
-            "Files without utterance ids must have the same number of lines "
-            "(ref={}, hyp={}).".format(len(ref), len(hyp))
-        )
+    # if either file lacks utterance ids, fall back to positional alignment
+    # (which requires equal line counts); otherwise match strictly by id
+    positional = (any(utt_id is None for utt_id, _ in ref)
+                  or any(utt_id is None for utt_id, _ in hyp))
+    if positional:
+        if len(ref) != len(hyp):
+            raise RuntimeError(
+                "Files without utterance ids must have the same number of lines "
+                "(ref={}, hyp={}).".format(len(ref), len(hyp))
+            )
+        hyp_by_id = {}
+    else:
+        # index the hypotheses by utterance id so scoring is robust to ordering
+        hyp_by_id = {utt_id: words for utt_id, words in hyp}
+        if len(hyp_by_id) != len(hyp):
+            raise RuntimeError("Duplicate utterance ids found in hypothesis file.")
 
     # loop over the reference transcriptions, matching hypotheses by id
     for i, (utt_id, ref_words) in enumerate(ref):

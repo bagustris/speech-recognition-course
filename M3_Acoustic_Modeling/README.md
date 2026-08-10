@@ -341,7 +341,7 @@ After 100 epochs, the result of training, obtained from the end of the log file,
 
 Thus, the training set has a cross entropy of 1.04 per sample, and a 32.74% frame error rate, while the held-out dev set has a frame error rate of 44.3%
 
-After training is complete, you can visualize the training progress using M3_Plot_Training.py. It takes a CNTK log file as input and will plot epoch vs. cross-entropy of the training set on one figure and epoch vs. frame error rate of the training and development sets on another figure.
+After training is complete, you can visualize the training progress using M3_Plot_Training.py. It takes a training log file as input (the log written by M3_Train_AM.py, which prints one `Finished Epoch ...` line per epoch) and will plot epoch vs. cross-entropy of the training set on one figure and epoch vs. frame error rate of the training and development sets on another figure.
 
     $ python M3_Plot_Training.py -–log <logfile>
 
