@@ -9,6 +9,7 @@
 - [Significance Testing](#significance-testing)
 - [Real-time Factor](#real-time-factor)
 - [The Fundamental Equation](#the-fundamental-equation)
+- [Quiz](#quiz)
 - [Lab](#lab) 
 
 Developing and understanding Automatic Speech Recognition systems is an interdisciplinary activity, taking expertise in linguistics, computer science, and electrical engineering.
@@ -139,6 +140,169 @@ The equation has a component $P(O\vert W)$ known as an acoustic model that descr
 The equation has a component $P(W)$ called a language model based solely on the word sequence $W$. The language model assigns a probability to every possible word sequence. It is trained on sequences of words that are expected to be like those the final system will encounter in everyday use. A language model trained on English text will probably assign a high value to the word sequence “I like turtles” and a low value to “Turtles sing table.” The language model steers the search towards word sequences that follow the same patterns as in the training data. Language models can also be seen in purely text-based applications, such as the autocomplete field in modern web browsers. Module 4 of this course is dedicated to language modeling.
 
 For a variety of reasons, building a speech recognition engine is much more complicated than this simple equation implies. In this course, we will describe how these models are constructed and used together in modern speech recognition systems.
+
+## Quiz
+
+Test your understanding of the fundamentals of speech recognition. Select your answers and press **Check answers** &mdash; correct options are highlighted and a short explanation appears for each question.
+
+<div class="srq" markdown="0">
+<style>
+.srq{max-width:780px;margin:1rem 0;color:var(--fgColor-default,var(--color-fg-default,#1f2328));}
+.srq *{box-sizing:border-box;}
+.srq-q{border:1px solid var(--borderColor-default,var(--color-border-default,#d0d7de));border-radius:var(--borderRadius-medium,6px);padding:.55rem 1rem .8rem;margin:0 0 1.1rem;background:var(--bgColor-default,var(--color-canvas-default,#fff));}
+.srq-q legend{font-weight:var(--base-text-weight-semibold,600);padding:0 .4rem;}
+.srq-prompt{margin:.2rem 0 .7rem;font-weight:var(--base-text-weight-semibold,600);}
+.srq-hint{font-weight:400;color:var(--fgColor-muted,var(--color-fg-muted,#59636e));font-size:.9em;}
+.srq label{display:flex;align-items:flex-start;gap:.55rem;padding:.4rem .55rem;border-radius:var(--borderRadius-medium,6px);cursor:pointer;border:1px solid transparent;}
+.srq label:hover{background:var(--bgColor-neutral-muted,var(--color-neutral-muted,rgba(175,184,193,.2)));}
+.srq label input{margin-top:.25rem;flex:0 0 auto;}
+.srq-exp{display:none;margin:.65rem 0 .1rem;padding:.55rem .7rem;border-left:3px solid var(--fgColor-accent,var(--color-accent-fg,#0969da));background:var(--bgColor-accent-muted,var(--color-accent-subtle,#ddf4ff));border-radius:0 var(--borderRadius-medium,6px) var(--borderRadius-medium,6px) 0;font-size:.92em;}
+.srq-q.srq-correct{border-color:var(--borderColor-success-emphasis,var(--color-success-emphasis,#1a7f37));}
+.srq-q.srq-incorrect{border-color:var(--borderColor-danger-emphasis,var(--color-danger-emphasis,#cf222e));}
+.srq-q.srq-correct .srq-exp,.srq-q.srq-incorrect .srq-exp{display:block;}
+.srq label.opt-correct{background:var(--bgColor-success-muted,var(--color-success-subtle,#dafbe1));border-color:var(--borderColor-success-emphasis,var(--color-success-emphasis,#1a7f37));font-weight:var(--base-text-weight-semibold,600);}
+.srq label.opt-wrong{background:var(--bgColor-danger-muted,var(--color-danger-subtle,#ffebe9));border-color:var(--borderColor-danger-emphasis,var(--color-danger-emphasis,#cf222e));text-decoration:line-through;}
+.srq-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.75rem;margin:.3rem 0 .5rem;}
+.srq-actions button{cursor:pointer;padding:.5rem 1rem;border-radius:var(--borderRadius-medium,6px);font-weight:var(--base-text-weight-semibold,600);border:1px solid var(--button-default-borderColor-rest,var(--color-btn-border,rgba(31,35,40,.15)));background:var(--button-default-bgColor-rest,var(--color-btn-bg,#f6f8fa));color:var(--fgColor-default,var(--color-fg-default,#1f2328));}
+#srq-check{background:var(--button-primary-bgColor-rest,var(--color-btn-primary-bg,#1f883d));color:var(--button-primary-fgColor-rest,#fff);border-color:var(--button-primary-borderColor-rest,var(--color-btn-primary-border,rgba(31,35,40,.15)));}
+.srq-score{font-weight:var(--base-text-weight-bold,700);font-size:1.05em;}
+.srq-score.pass{color:var(--fgColor-success,var(--color-success-fg,#1a7f37));}
+.srq-score.part{color:var(--fgColor-attention,var(--color-attention-fg,#9a6700));}
+</style>
+<form id="srq-form" onsubmit="return false;">
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 1</legend>
+  <p class="srq-prompt">The atomic unit of a speech sound is the phoneme. What is the acoustic realization of a phoneme called? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q1" value="0"> <span>A phone</span></label>
+  <label><input type="radio" name="q1" value="1"> <span>An allophone</span></label>
+  <label><input type="radio" name="q1" value="2"> <span>A syllable</span></label>
+  <label><input type="radio" name="q1" value="3"> <span>A formant</span></label>
+  <p class="srq-exp">The <strong>phone</strong> is the acoustic realization of a phoneme; context-dependent variants caused by coarticulation are called allophones.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 2</legend>
+  <p class="srq-prompt">Which statement best characterizes vowels? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q2" value="0"> <span>They are unvoiced and constrict the airflow</span></label>
+  <label><input type="radio" name="q2" value="1"> <span>They are voiced and produced without constricting the airflow</span></label>
+  <label><input type="radio" name="q2" value="2"> <span>They never have a fundamental frequency</span></label>
+  <label><input type="radio" name="q2" value="3"> <span>They are produced with full closure of the vocal tract</span></label>
+  <p class="srq-exp">Vowels are <strong>voiced</strong> (vocal-cord vibration) and produced <strong>without a constriction</strong> of airflow; tongue/lip/jaw position sets the formants.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 3</legend>
+  <p class="srq-prompt">The sounds /b/ and /p/ have identical articulation but differ in what respect? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q3" value="0"> <span>Place of articulation</span></label>
+  <label><input type="radio" name="q3" value="1"> <span>One is voiced, the other is unvoiced</span></label>
+  <label><input type="radio" name="q3" value="2"> <span>One is a vowel, the other a consonant</span></label>
+  <label><input type="radio" name="q3" value="3"> <span>Nothing &mdash; they are identical</span></label>
+  <p class="srq-exp">/b/ is voiced and /p/ is unvoiced; the same holds for the /d/&ndash;/t/ pair.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="multi" data-correct="0,1,2">
+  <legend>Question 4</legend>
+  <p class="srq-prompt">Word Error Rate (WER) counts which kinds of errors? <span class="srq-hint">(Choose all that apply)</span></p>
+  <label><input type="checkbox" name="q4" value="0"> <span>Substitutions</span></label>
+  <label><input type="checkbox" name="q4" value="1"> <span>Insertions</span></label>
+  <label><input type="checkbox" name="q4" value="2"> <span>Deletions</span></label>
+  <label><input type="checkbox" name="q4" value="3"> <span>Transpositions</span></label>
+  <p class="srq-exp">WER = (N<sub>sub</sub> + N<sub>ins</sub> + N<sub>del</sub>) / N<sub>ref</sub>. Transpositions are not a separate WER error type.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 5</legend>
+  <p class="srq-prompt">How is WER computed between the reference and the hypothesis? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q5" value="0"> <span>Using a string edit distance computed with dynamic programming</span></label>
+  <label><input type="radio" name="q5" value="1"> <span>Using the Fast Fourier Transform</span></label>
+  <label><input type="radio" name="q5" value="2"> <span>Using Viterbi beam search</span></label>
+  <label><input type="radio" name="q5" value="3"> <span>Using k-means clustering</span></label>
+  <p class="srq-exp">WER uses a <strong>string edit distance</strong>, efficiently computed with dynamic programming, accumulated per sentence.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 6</legend>
+  <p class="srq-prompt">When is a sentence counted as incorrect for Sentence Error Rate (SER)? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q6" value="0"> <span>Only if every word is wrong</span></label>
+  <label><input type="radio" name="q6" value="1"> <span>If any single word is hypothesized incorrectly</span></label>
+  <label><input type="radio" name="q6" value="2"> <span>If more than half the words are wrong</span></label>
+  <label><input type="radio" name="q6" value="3"> <span>If the sentence length differs from the reference</span></label>
+  <p class="srq-exp">SER treats a sentence as wrong if <strong>any</strong> word is incorrect; it is the fraction of incorrect sentences.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 7</legend>
+  <p class="srq-prompt">A Real-Time Factor (RTF) below 1.0 indicates that the system&hellip; <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q7" value="0"> <span>Processes audio slower than real time</span></label>
+  <label><input type="radio" name="q7" value="1"> <span>Processes the audio faster than it arrives</span></label>
+  <label><input type="radio" name="q7" value="2"> <span>Cannot process streaming audio</span></label>
+  <label><input type="radio" name="q7" value="3"> <span>Requires the audio to be under one second</span></label>
+  <p class="srq-exp">RTF = processing time / audio time. Below 1.0 means the recognizer runs <strong>faster than real time</strong>, so it can catch up to streaming input.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 8</legend>
+  <p class="srq-prompt">In the fundamental equation W&#770; = argmax<sub>W</sub> P(O|W)P(W), which term is the acoustic model? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q8" value="0"> <span>P(W)</span></label>
+  <label><input type="radio" name="q8" value="1"> <span>P(O|W)</span></label>
+  <label><input type="radio" name="q8" value="2"> <span>P(O)</span></label>
+  <label><input type="radio" name="q8" value="3"> <span>P(W|O)</span></label>
+  <p class="srq-exp"><strong>P(O|W)</strong> is the acoustic model (observations given words); P(W) is the language model.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 9</legend>
+  <p class="srq-prompt">In the same equation, which term is the language model? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q9" value="0"> <span>P(O|W)</span></label>
+  <label><input type="radio" name="q9" value="1"> <span>P(W)</span></label>
+  <label><input type="radio" name="q9" value="2"> <span>P(O)</span></label>
+  <label><input type="radio" name="q9" value="3"> <span>P(W|O)</span></label>
+  <p class="srq-exp"><strong>P(W)</strong> is the language model &mdash; the prior probability of the word sequence, independent of the acoustics.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 10</legend>
+  <p class="srq-prompt">Which test is most commonly used to compare two ASR systems for statistical significance? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q10" value="0"> <span>The Matched Pairs Sentence-Segment Word Error (MAPSSWE) test</span></label>
+  <label><input type="radio" name="q10" value="1"> <span>A paired t-test on raw audio samples</span></label>
+  <label><input type="radio" name="q10" value="2"> <span>A chi-squared test on FFT bins</span></label>
+  <label><input type="radio" name="q10" value="3"> <span>K-fold cross-validation</span></label>
+  <p class="srq-exp">The <strong>Matched Pairs (MAPSSWE)</strong> test, which assumes errors in different segments are independent, is the standard significance test for ASR.</p>
+</fieldset>
+<div class="srq-actions">
+  <button type="button" id="srq-check">Check answers</button>
+  <button type="button" id="srq-reset">Reset</button>
+  <span id="srq-score" class="srq-score" role="status" aria-live="polite"></span>
+</div>
+</form>
+<script>
+(function(){
+  var form=document.getElementById('srq-form');
+  if(!form)return;
+  function want(fs){return (fs.getAttribute('data-correct')||'').split(',').filter(Boolean).map(Number).sort(function(a,b){return a-b;});}
+  function got(fs){return Array.prototype.slice.call(fs.querySelectorAll('input:checked')).map(function(i){return Number(i.value);}).sort(function(a,b){return a-b;});}
+  function same(a,b){return a.length===b.length&&a.every(function(v,i){return v===b[i];});}
+  document.getElementById('srq-check').addEventListener('click',function(){
+    var qs=form.querySelectorAll('.srq-q'),correct=0;
+    Array.prototype.forEach.call(qs,function(fs){
+      var w=want(fs),g=got(fs),ok=same(w,g);
+      fs.classList.remove('srq-correct','srq-incorrect');
+      fs.classList.add(ok?'srq-correct':'srq-incorrect');
+      Array.prototype.forEach.call(fs.querySelectorAll('label'),function(l){
+        var inp=l.querySelector('input'),v=Number(inp.value);
+        l.classList.remove('opt-correct','opt-wrong');
+        if(w.indexOf(v)>-1)l.classList.add('opt-correct');
+        else if(inp.checked)l.classList.add('opt-wrong');
+      });
+      if(ok)correct++;
+    });
+    var s=document.getElementById('srq-score');
+    s.textContent='Score: '+correct+' / '+qs.length;
+    s.className='srq-score '+(correct===qs.length?'pass':(correct>0?'part':''));
+    form.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  document.getElementById('srq-reset').addEventListener('click',function(){
+    form.reset();
+    Array.prototype.forEach.call(form.querySelectorAll('.srq-q'),function(fs){
+      fs.classList.remove('srq-correct','srq-incorrect');
+      Array.prototype.forEach.call(fs.querySelectorAll('label'),function(l){l.classList.remove('opt-correct','opt-wrong');});
+    });
+    document.getElementById('srq-score').textContent='';
+  });
+})();
+</script>
+</div>
 
 ## Lab
 

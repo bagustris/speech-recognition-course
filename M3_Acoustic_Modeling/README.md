@@ -17,6 +17,7 @@
 - [Long Short-Term Memory Networks](#long-short-term-memory-networks)
 - [Using a Sequence-based Objective Function](#using-a-sequence-based-objective-function)
 - [Decoding with Neural Network Acoustic Models](#decoding-with-neural-network-acoustic-models)
+- [Quiz](#quiz)
 - [Lab](#lab)
 
 ## Introduction
@@ -301,6 +302,169 @@ Note that because the prior over the observations $p\left( x_{t} \right)$ is con
 
 This likelihood is known as a scaled likelihood, to reflect the fact that it has been computed by scaling the senone posterior by its prior.
 
+
+## Quiz
+
+Test your understanding of acoustic modeling with HMMs and neural networks. Select your answers and press **Check answers** &mdash; correct options are highlighted and a short explanation appears for each question.
+
+<div class="srq" markdown="0">
+<style>
+.srq{max-width:780px;margin:1rem 0;color:var(--fgColor-default,var(--color-fg-default,#1f2328));}
+.srq *{box-sizing:border-box;}
+.srq-q{border:1px solid var(--borderColor-default,var(--color-border-default,#d0d7de));border-radius:var(--borderRadius-medium,6px);padding:.55rem 1rem .8rem;margin:0 0 1.1rem;background:var(--bgColor-default,var(--color-canvas-default,#fff));}
+.srq-q legend{font-weight:var(--base-text-weight-semibold,600);padding:0 .4rem;}
+.srq-prompt{margin:.2rem 0 .7rem;font-weight:var(--base-text-weight-semibold,600);}
+.srq-hint{font-weight:400;color:var(--fgColor-muted,var(--color-fg-muted,#59636e));font-size:.9em;}
+.srq label{display:flex;align-items:flex-start;gap:.55rem;padding:.4rem .55rem;border-radius:var(--borderRadius-medium,6px);cursor:pointer;border:1px solid transparent;}
+.srq label:hover{background:var(--bgColor-neutral-muted,var(--color-neutral-muted,rgba(175,184,193,.2)));}
+.srq label input{margin-top:.25rem;flex:0 0 auto;}
+.srq-exp{display:none;margin:.65rem 0 .1rem;padding:.55rem .7rem;border-left:3px solid var(--fgColor-accent,var(--color-accent-fg,#0969da));background:var(--bgColor-accent-muted,var(--color-accent-subtle,#ddf4ff));border-radius:0 var(--borderRadius-medium,6px) var(--borderRadius-medium,6px) 0;font-size:.92em;}
+.srq-q.srq-correct{border-color:var(--borderColor-success-emphasis,var(--color-success-emphasis,#1a7f37));}
+.srq-q.srq-incorrect{border-color:var(--borderColor-danger-emphasis,var(--color-danger-emphasis,#cf222e));}
+.srq-q.srq-correct .srq-exp,.srq-q.srq-incorrect .srq-exp{display:block;}
+.srq label.opt-correct{background:var(--bgColor-success-muted,var(--color-success-subtle,#dafbe1));border-color:var(--borderColor-success-emphasis,var(--color-success-emphasis,#1a7f37));font-weight:var(--base-text-weight-semibold,600);}
+.srq label.opt-wrong{background:var(--bgColor-danger-muted,var(--color-danger-subtle,#ffebe9));border-color:var(--borderColor-danger-emphasis,var(--color-danger-emphasis,#cf222e));text-decoration:line-through;}
+.srq-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.75rem;margin:.3rem 0 .5rem;}
+.srq-actions button{cursor:pointer;padding:.5rem 1rem;border-radius:var(--borderRadius-medium,6px);font-weight:var(--base-text-weight-semibold,600);border:1px solid var(--button-default-borderColor-rest,var(--color-btn-border,rgba(31,35,40,.15)));background:var(--button-default-bgColor-rest,var(--color-btn-bg,#f6f8fa));color:var(--fgColor-default,var(--color-fg-default,#1f2328));}
+#srq-check{background:var(--button-primary-bgColor-rest,var(--color-btn-primary-bg,#1f883d));color:var(--button-primary-fgColor-rest,#fff);border-color:var(--button-primary-borderColor-rest,var(--color-btn-primary-border,rgba(31,35,40,.15)));}
+.srq-score{font-weight:var(--base-text-weight-bold,700);font-size:1.05em;}
+.srq-score.pass{color:var(--fgColor-success,var(--color-success-fg,#1a7f37));}
+.srq-score.part{color:var(--fgColor-attention,var(--color-attention-fg,#9a6700));}
+</style>
+<form id="srq-form" onsubmit="return false;">
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 1</legend>
+  <p class="srq-prompt">In a modern hybrid acoustic model, a DNN makes frame-level predictions and what turns them into a sequential prediction? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q1" value="0"> <span>A hidden Markov model (HMM)</span></label>
+  <label><input type="radio" name="q1" value="1"> <span>A language model</span></label>
+  <label><input type="radio" name="q1" value="2"> <span>A Fourier transform</span></label>
+  <label><input type="radio" name="q1" value="3"> <span>A finite state acceptor</span></label>
+  <p class="srq-exp">Hybrid systems pair a <strong>DNN</strong> (frame posteriors) with an <strong>HMM</strong> that models the sequence.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 2</legend>
+  <p class="srq-prompt">The HMM Evaluation problem &mdash; computing P(X|&Phi;) &mdash; is solved efficiently by: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q2" value="0"> <span>The forward algorithm</span></label>
+  <label><input type="radio" name="q2" value="1"> <span>The Viterbi algorithm</span></label>
+  <label><input type="radio" name="q2" value="2"> <span>The Baum-Welch algorithm</span></label>
+  <label><input type="radio" name="q2" value="3"> <span>Gradient descent</span></label>
+  <p class="srq-exp">The <strong>forward algorithm</strong> sums over hidden state sequences in O(N&sup2;T) time.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 3</legend>
+  <p class="srq-prompt">The HMM Decoding problem &mdash; the most likely hidden state sequence &mdash; is solved by: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q3" value="0"> <span>The forward algorithm</span></label>
+  <label><input type="radio" name="q3" value="1"> <span>The Viterbi algorithm</span></label>
+  <label><input type="radio" name="q3" value="2"> <span>The Baum-Welch algorithm</span></label>
+  <label><input type="radio" name="q3" value="3"> <span>K-means</span></label>
+  <p class="srq-exp">The <strong>Viterbi algorithm</strong> finds the single most likely state sequence.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 4</legend>
+  <p class="srq-prompt">The HMM Training problem &mdash; adjusting parameters to maximize the observation probability &mdash; is solved by: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q4" value="0"> <span>The Baum-Welch (forward-backward) algorithm</span></label>
+  <label><input type="radio" name="q4" value="1"> <span>The Viterbi algorithm</span></label>
+  <label><input type="radio" name="q4" value="2"> <span>The forward algorithm</span></label>
+  <label><input type="radio" name="q4" value="3"> <span>Beam search</span></label>
+  <p class="srq-exp"><strong>Baum-Welch</strong> (an EM method using forward-backward) re-estimates the HMM parameters.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="multi" data-correct="0,1,2">
+  <legend>Question 5</legend>
+  <p class="srq-prompt">An HMM is characterized by which parameters? <span class="srq-hint">(Choose all that apply)</span></p>
+  <label><input type="checkbox" name="q5" value="0"> <span>The state transition probabilities (A)</span></label>
+  <label><input type="checkbox" name="q5" value="1"> <span>The per-state output/emission distributions (B)</span></label>
+  <label><input type="checkbox" name="q5" value="2"> <span>The initial/prior state distribution (&pi;)</span></label>
+  <label><input type="checkbox" name="q5" value="3"> <span>The neural-network learning rate</span></label>
+  <p class="srq-exp">An HMM is &Phi; = {A, B, &pi;}: transitions, emission distributions, and initial-state priors.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 6</legend>
+  <p class="srq-prompt">Compared with a Markov chain, in an HMM the state is: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q6" value="0"> <span>Directly observable</span></label>
+  <label><input type="radio" name="q6" value="1"> <span>Hidden &mdash; only the emitted data is observed</span></label>
+  <label><input type="radio" name="q6" value="2"> <span>Always deterministic</span></label>
+  <label><input type="radio" name="q6" value="3"> <span>Identical to the observation</span></label>
+  <p class="srq-exp">In an HMM the state is <strong>hidden</strong>; only the outputs (data) are seen, making it doubly stochastic.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 7</legend>
+  <p class="srq-prompt">Frame-level training of the DNN acoustic model most commonly uses which objective function? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q7" value="0"> <span>Cross entropy against the softmax output</span></label>
+  <label><input type="radio" name="q7" value="1"> <span>Mean squared error on the waveform</span></label>
+  <label><input type="radio" name="q7" value="2"> <span>Perplexity</span></label>
+  <label><input type="radio" name="q7" value="3"> <span>Only the CTC loss</span></label>
+  <p class="srq-exp">Hybrid DNN acoustic models are typically trained with frame-based <strong>cross entropy</strong> against a one-hot state label.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 8</legend>
+  <p class="srq-prompt">DNN acoustic models often take a window of several adjacent frames as input because: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q8" value="0"> <span>It lowers the sampling rate</span></label>
+  <label><input type="radio" name="q8" value="1"> <span>Neighboring frames supply useful acoustic context</span></label>
+  <label><input type="radio" name="q8" value="2"> <span>It removes the need for an HMM</span></label>
+  <label><input type="radio" name="q8" value="3"> <span>The FFT requires it</span></label>
+  <p class="srq-exp">Stacking adjacent frames gives the network <strong>acoustic context</strong>, which improves frame classification.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 9</legend>
+  <p class="srq-prompt">Modeling phones in context (e.g. tied triphone states / senones) is motivated by which phenomenon? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q9" value="0"> <span>Coarticulation &mdash; a phone's realization depends on its neighbors</span></label>
+  <label><input type="radio" name="q9" value="1"> <span>The Nyquist theorem</span></label>
+  <label><input type="radio" name="q9" value="2"> <span>Beam pruning</span></label>
+  <label><input type="radio" name="q9" value="3"> <span>Backoff smoothing</span></label>
+  <p class="srq-exp"><strong>Coarticulation</strong> makes a phone's realization depend on surrounding phones, motivating context-dependent (senone) models.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 10</legend>
+  <p class="srq-prompt">To use DNN outputs as HMM emission scores for decoding, the posteriors are converted to scaled likelihoods by: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q10" value="0"> <span>Subtracting the log prior of each state</span></label>
+  <label><input type="radio" name="q10" value="1"> <span>Adding the language-model score</span></label>
+  <label><input type="radio" name="q10" value="2"> <span>Applying pre-emphasis</span></label>
+  <label><input type="radio" name="q10" value="3"> <span>Taking the FFT</span></label>
+  <p class="srq-exp">Scaled log-likelihood = log posterior &minus; log prior, i.e. dividing the DNN posterior by the state prior (Bayes' rule).</p>
+</fieldset>
+<div class="srq-actions">
+  <button type="button" id="srq-check">Check answers</button>
+  <button type="button" id="srq-reset">Reset</button>
+  <span id="srq-score" class="srq-score" role="status" aria-live="polite"></span>
+</div>
+</form>
+<script>
+(function(){
+  var form=document.getElementById('srq-form');
+  if(!form)return;
+  function want(fs){return (fs.getAttribute('data-correct')||'').split(',').filter(Boolean).map(Number).sort(function(a,b){return a-b;});}
+  function got(fs){return Array.prototype.slice.call(fs.querySelectorAll('input:checked')).map(function(i){return Number(i.value);}).sort(function(a,b){return a-b;});}
+  function same(a,b){return a.length===b.length&&a.every(function(v,i){return v===b[i];});}
+  document.getElementById('srq-check').addEventListener('click',function(){
+    var qs=form.querySelectorAll('.srq-q'),correct=0;
+    Array.prototype.forEach.call(qs,function(fs){
+      var w=want(fs),g=got(fs),ok=same(w,g);
+      fs.classList.remove('srq-correct','srq-incorrect');
+      fs.classList.add(ok?'srq-correct':'srq-incorrect');
+      Array.prototype.forEach.call(fs.querySelectorAll('label'),function(l){
+        var inp=l.querySelector('input'),v=Number(inp.value);
+        l.classList.remove('opt-correct','opt-wrong');
+        if(w.indexOf(v)>-1)l.classList.add('opt-correct');
+        else if(inp.checked)l.classList.add('opt-wrong');
+      });
+      if(ok)correct++;
+    });
+    var s=document.getElementById('srq-score');
+    s.textContent='Score: '+correct+' / '+qs.length;
+    s.className='srq-score '+(correct===qs.length?'pass':(correct>0?'part':''));
+    form.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  document.getElementById('srq-reset').addEventListener('click',function(){
+    form.reset();
+    Array.prototype.forEach.call(form.querySelectorAll('.srq-q'),function(fs){
+      fs.classList.remove('srq-correct','srq-incorrect');
+      Array.prototype.forEach.call(fs.querySelectorAll('label'),function(l){l.classList.remove('opt-correct','opt-wrong');});
+    });
+    document.getElementById('srq-score').textContent='';
+  });
+})();
+</script>
+</div>
 
 ## Lab 
 

@@ -10,6 +10,7 @@
 - [Sequence Discriminative Objective Functions](#sequence-discriminative-objective-functions)
 - [Grapheme or Word Labels](#grapheme-or-word-labels)
 - [Encoder-Decoder Networks](#encoder-decoder-networks)
+- [Quiz](#quiz)
 
 ## Improved Objective Functions  
 
@@ -170,4 +171,167 @@ Unlike the translation application, the speech recognition task is both a monoto
 In its basic form, the encoder part of the network summarizes an entire segment as one vector, passing a single vector to the decoder part of the network, which should stimulate it to recursively produce the correct output. Because this sort of long-term memory and summarization is at the limit of what we can achieve with recurrent networks today, the structure is often supplemented with a feature known as an attention mechanism. The attention mechanism is an auxiliary input to each recurrent step of the decoder, where the decoder can essentially query, based on its internal state, some states of the encoder network.
 
 The decoder network is trained to recursively emit symbols and update its state, much like a RNN language model. The most likely output given the states of the encoder network is typically found using a beam search algorithm against the tree of possible decoder network states.
+
+## Quiz
+
+Test your understanding of end-to-end and sequence models. Select your answers and press **Check answers** &mdash; correct options are highlighted and a short explanation appears for each question.
+
+<div class="srq" markdown="0">
+<style>
+.srq{max-width:780px;margin:1rem 0;color:var(--fgColor-default,var(--color-fg-default,#1f2328));}
+.srq *{box-sizing:border-box;}
+.srq-q{border:1px solid var(--borderColor-default,var(--color-border-default,#d0d7de));border-radius:var(--borderRadius-medium,6px);padding:.55rem 1rem .8rem;margin:0 0 1.1rem;background:var(--bgColor-default,var(--color-canvas-default,#fff));}
+.srq-q legend{font-weight:var(--base-text-weight-semibold,600);padding:0 .4rem;}
+.srq-prompt{margin:.2rem 0 .7rem;font-weight:var(--base-text-weight-semibold,600);}
+.srq-hint{font-weight:400;color:var(--fgColor-muted,var(--color-fg-muted,#59636e));font-size:.9em;}
+.srq label{display:flex;align-items:flex-start;gap:.55rem;padding:.4rem .55rem;border-radius:var(--borderRadius-medium,6px);cursor:pointer;border:1px solid transparent;}
+.srq label:hover{background:var(--bgColor-neutral-muted,var(--color-neutral-muted,rgba(175,184,193,.2)));}
+.srq label input{margin-top:.25rem;flex:0 0 auto;}
+.srq-exp{display:none;margin:.65rem 0 .1rem;padding:.55rem .7rem;border-left:3px solid var(--fgColor-accent,var(--color-accent-fg,#0969da));background:var(--bgColor-accent-muted,var(--color-accent-subtle,#ddf4ff));border-radius:0 var(--borderRadius-medium,6px) var(--borderRadius-medium,6px) 0;font-size:.92em;}
+.srq-q.srq-correct{border-color:var(--borderColor-success-emphasis,var(--color-success-emphasis,#1a7f37));}
+.srq-q.srq-incorrect{border-color:var(--borderColor-danger-emphasis,var(--color-danger-emphasis,#cf222e));}
+.srq-q.srq-correct .srq-exp,.srq-q.srq-incorrect .srq-exp{display:block;}
+.srq label.opt-correct{background:var(--bgColor-success-muted,var(--color-success-subtle,#dafbe1));border-color:var(--borderColor-success-emphasis,var(--color-success-emphasis,#1a7f37));font-weight:var(--base-text-weight-semibold,600);}
+.srq label.opt-wrong{background:var(--bgColor-danger-muted,var(--color-danger-subtle,#ffebe9));border-color:var(--borderColor-danger-emphasis,var(--color-danger-emphasis,#cf222e));text-decoration:line-through;}
+.srq-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.75rem;margin:.3rem 0 .5rem;}
+.srq-actions button{cursor:pointer;padding:.5rem 1rem;border-radius:var(--borderRadius-medium,6px);font-weight:var(--base-text-weight-semibold,600);border:1px solid var(--button-default-borderColor-rest,var(--color-btn-border,rgba(31,35,40,.15)));background:var(--button-default-bgColor-rest,var(--color-btn-bg,#f6f8fa));color:var(--fgColor-default,var(--color-fg-default,#1f2328));}
+#srq-check{background:var(--button-primary-bgColor-rest,var(--color-btn-primary-bg,#1f883d));color:var(--button-primary-fgColor-rest,#fff);border-color:var(--button-primary-borderColor-rest,var(--color-btn-primary-border,rgba(31,35,40,.15)));}
+.srq-score{font-weight:var(--base-text-weight-bold,700);font-size:1.05em;}
+.srq-score.pass{color:var(--fgColor-success,var(--color-success-fg,#1a7f37));}
+.srq-score.part{color:var(--fgColor-attention,var(--color-attention-fg,#9a6700));}
+</style>
+<form id="srq-form" onsubmit="return false;">
+<fieldset class="srq-q" data-type="multi" data-correct="0,1,2">
+  <legend>Question 1</legend>
+  <p class="srq-prompt">Frame-based cross-entropy training implicitly assumes which things that are untrue for acoustic modeling? <span class="srq-hint">(Choose all that apply)</span></p>
+  <label><input type="checkbox" name="q1" value="0"> <span>Every frame of data has exactly one correct label</span></label>
+  <label><input type="checkbox" name="q1" value="1"> <span>Each label is predicted independently of the other frames</span></label>
+  <label><input type="checkbox" name="q1" value="2"> <span>All frames of data are equally important</span></label>
+  <label><input type="checkbox" name="q1" value="3"> <span>The model must emit a blank symbol</span></label>
+  <p class="srq-exp">Frame cross entropy assumes each frame has one label, predicted independently, with all frames equally important &mdash; all three are untrue for speech.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 2</legend>
+  <p class="srq-prompt">CTC modifies the label set by adding which special symbol? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q2" value="0"> <span>A &ldquo;blank&rdquo; / &ldquo;don't care&rdquo; symbol</span></label>
+  <label><input type="radio" name="q2" value="1"> <span>A start-of-sentence tag</span></label>
+  <label><input type="radio" name="q2" value="2"> <span>A disambiguation symbol</span></label>
+  <label><input type="radio" name="q2" value="3"> <span>An epsilon weight</span></label>
+  <p class="srq-exp">CTC adds a <strong>blank</strong> symbol so a frame that carries no discriminative information need not commit to a real label.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 3</legend>
+  <p class="srq-prompt">How do sequential objective functions differ from frame-based cross entropy? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q3" value="0"> <span>They require an exact frame-to-label alignment</span></label>
+  <label><input type="radio" name="q3" value="1"> <span>They score the correct label sequence regardless of alignment (labels may drift in time)</span></label>
+  <label><input type="radio" name="q3" value="2"> <span>They only apply to images</span></label>
+  <label><input type="radio" name="q3" value="3"> <span>They ignore the acoustic model</span></label>
+  <p class="srq-exp">Sequential objectives care about the <strong>sequence</strong> of labels, letting the alignment drift, rather than fixing a label per frame.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 4</legend>
+  <p class="srq-prompt">Grapheme acoustic targets are based on what? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q4" value="0"> <span>The written form (letters) of words</span></label>
+  <label><input type="radio" name="q4" value="1"> <span>The acoustic realization (senones)</span></label>
+  <label><input type="radio" name="q4" value="2"> <span>The language model probabilities</span></label>
+  <label><input type="radio" name="q4" value="3"> <span>The FFT bins</span></label>
+  <p class="srq-exp"><strong>Graphemes</strong> relate to the written form of words, so they need no phonetic lexicon &mdash; but the letter-to-sound rules must then be learned from data.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 5</legend>
+  <p class="srq-prompt">Compared with senone systems trained on the same amount of data, grapheme systems tend to: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q5" value="0"> <span>Produce better accuracy</span></label>
+  <label><input type="radio" name="q5" value="1"> <span>Produce worse recognition accuracy</span></label>
+  <label><input type="radio" name="q5" value="2"> <span>Require no training</span></label>
+  <label><input type="radio" name="q5" value="3"> <span>Remove the need for a language model</span></label>
+  <p class="srq-exp">Grapheme systems generally give <strong>worse accuracy</strong> for the same data, because the model must learn spelling-to-sound rules itself.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 6</legend>
+  <p class="srq-prompt">In sequence training, the soft alignment &gamma; is formed from the product of which two quantities? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q6" value="0"> <span>The forward (&alpha;) and backward (&beta;) variables</span></label>
+  <label><input type="radio" name="q6" value="1"> <span>The mean and the variance</span></label>
+  <label><input type="radio" name="q6" value="2"> <span>The prior and the posterior</span></label>
+  <label><input type="radio" name="q6" value="3"> <span>The gain and the bias</span></label>
+  <p class="srq-exp">&gamma;[k,t] = &alpha;[k,t]&beta;[k,t] &mdash; the product of the forward and backward variables, as in forward-backward.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 7</legend>
+  <p class="srq-prompt">An encoder-decoder ASR network is often augmented with which mechanism so the decoder can query encoder states? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q7" value="0"> <span>An attention mechanism</span></label>
+  <label><input type="radio" name="q7" value="1"> <span>A mel filterbank</span></label>
+  <label><input type="radio" name="q7" value="2"> <span>Backoff weights</span></label>
+  <label><input type="radio" name="q7" value="3"> <span>Dithering</span></label>
+  <p class="srq-exp">An <strong>attention</strong> mechanism lets each decoder step query relevant encoder states, easing the summarization burden on the encoder.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 8</legend>
+  <p class="srq-prompt">The encoder-decoder decoder typically finds its most likely output using: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q8" value="0"> <span>Beam search over the tree of decoder states</span></label>
+  <label><input type="radio" name="q8" value="1"> <span>The FFT</span></label>
+  <label><input type="radio" name="q8" value="2"> <span>K-means clustering</span></label>
+  <label><input type="radio" name="q8" value="3"> <span>Witten-Bell smoothing</span></label>
+  <p class="srq-exp">The decoder emits symbols recursively; the most likely output is usually found with <strong>beam search</strong> over decoder states.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 9</legend>
+  <p class="srq-prompt">A key practical drawback of whole-word CTC systems is: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q9" value="0"> <span>They cannot be trained at all</span></label>
+  <label><input type="radio" name="q9" value="1"> <span>A severe out-of-vocabulary problem (a closed word set; retraining is needed to add words)</span></label>
+  <label><input type="radio" name="q9" value="2"> <span>They require senone labels</span></label>
+  <label><input type="radio" name="q9" value="3"> <span>They ignore the acoustic signal</span></label>
+  <p class="srq-exp">Whole-word models have a <strong>severe OOV problem</strong>: they recognize only a closed set of words and must be retrained to grow the vocabulary.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 10</legend>
+  <p class="srq-prompt">Maximum Mutual Information (MMI), introduced in Module 3, is an example of a: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q10" value="0"> <span>Frame-based generative objective</span></label>
+  <label><input type="radio" name="q10" value="1"> <span>Sequence discriminative objective function</span></label>
+  <label><input type="radio" name="q10" value="2"> <span>Feature-extraction step</span></label>
+  <label><input type="radio" name="q10" value="3"> <span>Backoff smoothing scheme</span></label>
+  <p class="srq-exp">MMI restricts the denominator to likely competing word sequences, making it a <strong>sequence discriminative</strong> objective.</p>
+</fieldset>
+<div class="srq-actions">
+  <button type="button" id="srq-check">Check answers</button>
+  <button type="button" id="srq-reset">Reset</button>
+  <span id="srq-score" class="srq-score" role="status" aria-live="polite"></span>
+</div>
+</form>
+<script>
+(function(){
+  var form=document.getElementById('srq-form');
+  if(!form)return;
+  function want(fs){return (fs.getAttribute('data-correct')||'').split(',').filter(Boolean).map(Number).sort(function(a,b){return a-b;});}
+  function got(fs){return Array.prototype.slice.call(fs.querySelectorAll('input:checked')).map(function(i){return Number(i.value);}).sort(function(a,b){return a-b;});}
+  function same(a,b){return a.length===b.length&&a.every(function(v,i){return v===b[i];});}
+  document.getElementById('srq-check').addEventListener('click',function(){
+    var qs=form.querySelectorAll('.srq-q'),correct=0;
+    Array.prototype.forEach.call(qs,function(fs){
+      var w=want(fs),g=got(fs),ok=same(w,g);
+      fs.classList.remove('srq-correct','srq-incorrect');
+      fs.classList.add(ok?'srq-correct':'srq-incorrect');
+      Array.prototype.forEach.call(fs.querySelectorAll('label'),function(l){
+        var inp=l.querySelector('input'),v=Number(inp.value);
+        l.classList.remove('opt-correct','opt-wrong');
+        if(w.indexOf(v)>-1)l.classList.add('opt-correct');
+        else if(inp.checked)l.classList.add('opt-wrong');
+      });
+      if(ok)correct++;
+    });
+    var s=document.getElementById('srq-score');
+    s.textContent='Score: '+correct+' / '+qs.length;
+    s.className='srq-score '+(correct===qs.length?'pass':(correct>0?'part':''));
+    form.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  document.getElementById('srq-reset').addEventListener('click',function(){
+    form.reset();
+    Array.prototype.forEach.call(form.querySelectorAll('.srq-q'),function(fs){
+      fs.classList.remove('srq-correct','srq-incorrect');
+      Array.prototype.forEach.call(fs.querySelectorAll('label'),function(l){l.classList.remove('opt-correct','opt-wrong');});
+    });
+    document.getElementById('srq-score').textContent='';
+  });
+})();
+</script>
+</div>
 

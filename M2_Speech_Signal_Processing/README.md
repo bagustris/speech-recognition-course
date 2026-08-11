@@ -8,6 +8,7 @@
 - [Other considerations](#other-considerations)
 - [Feature Normalization](#feature-normalization)
 - [Summary](#summary)
+- [Quiz](#quiz)
 - [Lab](#lab)
 
 
@@ -145,6 +146,169 @@ To compute features for speech recognition from a speech signal, we are interest
     - Apply the mel filterbank  
     - Apply the log operation  
 4. If channel compensation is desired, apply mean normalize the frames of filterbank coefficients.  
+
+## Quiz
+
+Test your understanding of speech signal processing and feature extraction. Select your answers and press **Check answers** &mdash; correct options are highlighted and a short explanation appears for each question.
+
+<div class="srq" markdown="0">
+<style>
+.srq{max-width:780px;margin:1rem 0;color:var(--fgColor-default,var(--color-fg-default,#1f2328));}
+.srq *{box-sizing:border-box;}
+.srq-q{border:1px solid var(--borderColor-default,var(--color-border-default,#d0d7de));border-radius:var(--borderRadius-medium,6px);padding:.55rem 1rem .8rem;margin:0 0 1.1rem;background:var(--bgColor-default,var(--color-canvas-default,#fff));}
+.srq-q legend{font-weight:var(--base-text-weight-semibold,600);padding:0 .4rem;}
+.srq-prompt{margin:.2rem 0 .7rem;font-weight:var(--base-text-weight-semibold,600);}
+.srq-hint{font-weight:400;color:var(--fgColor-muted,var(--color-fg-muted,#59636e));font-size:.9em;}
+.srq label{display:flex;align-items:flex-start;gap:.55rem;padding:.4rem .55rem;border-radius:var(--borderRadius-medium,6px);cursor:pointer;border:1px solid transparent;}
+.srq label:hover{background:var(--bgColor-neutral-muted,var(--color-neutral-muted,rgba(175,184,193,.2)));}
+.srq label input{margin-top:.25rem;flex:0 0 auto;}
+.srq-exp{display:none;margin:.65rem 0 .1rem;padding:.55rem .7rem;border-left:3px solid var(--fgColor-accent,var(--color-accent-fg,#0969da));background:var(--bgColor-accent-muted,var(--color-accent-subtle,#ddf4ff));border-radius:0 var(--borderRadius-medium,6px) var(--borderRadius-medium,6px) 0;font-size:.92em;}
+.srq-q.srq-correct{border-color:var(--borderColor-success-emphasis,var(--color-success-emphasis,#1a7f37));}
+.srq-q.srq-incorrect{border-color:var(--borderColor-danger-emphasis,var(--color-danger-emphasis,#cf222e));}
+.srq-q.srq-correct .srq-exp,.srq-q.srq-incorrect .srq-exp{display:block;}
+.srq label.opt-correct{background:var(--bgColor-success-muted,var(--color-success-subtle,#dafbe1));border-color:var(--borderColor-success-emphasis,var(--color-success-emphasis,#1a7f37));font-weight:var(--base-text-weight-semibold,600);}
+.srq label.opt-wrong{background:var(--bgColor-danger-muted,var(--color-danger-subtle,#ffebe9));border-color:var(--borderColor-danger-emphasis,var(--color-danger-emphasis,#cf222e));text-decoration:line-through;}
+.srq-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.75rem;margin:.3rem 0 .5rem;}
+.srq-actions button{cursor:pointer;padding:.5rem 1rem;border-radius:var(--borderRadius-medium,6px);font-weight:var(--base-text-weight-semibold,600);border:1px solid var(--button-default-borderColor-rest,var(--color-btn-border,rgba(31,35,40,.15)));background:var(--button-default-bgColor-rest,var(--color-btn-bg,#f6f8fa));color:var(--fgColor-default,var(--color-fg-default,#1f2328));}
+#srq-check{background:var(--button-primary-bgColor-rest,var(--color-btn-primary-bg,#1f883d));color:var(--button-primary-fgColor-rest,#fff);border-color:var(--button-primary-borderColor-rest,var(--color-btn-primary-border,rgba(31,35,40,.15)));}
+.srq-score{font-weight:var(--base-text-weight-bold,700);font-size:1.05em;}
+.srq-score.pass{color:var(--fgColor-success,var(--color-success-fg,#1a7f37));}
+.srq-score.part{color:var(--fgColor-attention,var(--color-attention-fg,#9a6700));}
+</style>
+<form id="srq-form" onsubmit="return false;">
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 1</legend>
+  <p class="srq-prompt">Speech signals carry information up to about 8 kHz, so they are typically sampled at: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q1" value="0"> <span>8,000 Hz</span></label>
+  <label><input type="radio" name="q1" value="1"> <span>16,000 Hz</span></label>
+  <label><input type="radio" name="q1" value="2"> <span>22,050 Hz</span></label>
+  <label><input type="radio" name="q1" value="3"> <span>44,100 Hz</span></label>
+  <p class="srq-exp">Speech is typically sampled at <strong>16,000 Hz</strong>; telephone speech (band-limited to ~3.4 kHz) uses 8,000 Hz, and music uses 44,100 Hz.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 2</legend>
+  <p class="srq-prompt">By the Nyquist theorem, a 16,000 Hz sampling rate can faithfully capture frequencies up to: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q2" value="0"> <span>4,000 Hz</span></label>
+  <label><input type="radio" name="q2" value="1"> <span>8,000 Hz</span></label>
+  <label><input type="radio" name="q2" value="2"> <span>16,000 Hz</span></label>
+  <label><input type="radio" name="q2" value="3"> <span>32,000 Hz</span></label>
+  <p class="srq-exp">Nyquist: the highest faithfully captured frequency is half the sampling rate, i.e. <strong>8,000 Hz</strong>.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 3</legend>
+  <p class="srq-prompt">What are typical short-time analysis settings for speech? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q3" value="0"> <span>A 25 ms window with a 10 ms shift</span></label>
+  <label><input type="radio" name="q3" value="1"> <span>A 10 ms window with a 25 ms shift</span></label>
+  <label><input type="radio" name="q3" value="2"> <span>A 1 s window with a 100 ms shift</span></label>
+  <label><input type="radio" name="q3" value="3"> <span>A 25 ms window with a 25 ms shift</span></label>
+  <p class="srq-exp">A <strong>25 ms window with a 10 ms shift</strong> gives 100 frames per second, the usual choice for ASR.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 4</legend>
+  <p class="srq-prompt">Why is a window function such as a Hamming window applied to each frame? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q4" value="0"> <span>To increase the sampling rate</span></label>
+  <label><input type="radio" name="q4" value="1"> <span>To reduce edge effects from extracting a chunk of a continuous signal</span></label>
+  <label><input type="radio" name="q4" value="2"> <span>To discard the magnitude spectrum</span></label>
+  <label><input type="radio" name="q4" value="3"> <span>To add dithering noise</span></label>
+  <p class="srq-exp">Because each frame is cut from a longer signal, a window (e.g. Hamming) is applied to <strong>reduce edge effects</strong>.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 5</legend>
+  <p class="srq-prompt">Which part of the Fourier representation is used for feature extraction? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q5" value="0"> <span>The phase only</span></label>
+  <label><input type="radio" name="q5" value="1"> <span>The magnitude only</span></label>
+  <label><input type="radio" name="q5" value="2"> <span>Both magnitude and phase</span></label>
+  <label><input type="radio" name="q5" value="3"> <span>Neither</span></label>
+  <p class="srq-exp">Feature extraction uses the <strong>magnitude</strong> spectrum; the phase is discarded.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 6</legend>
+  <p class="srq-prompt">The mel filterbank applies what kind of scale to the frequency axis? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q6" value="0"> <span>A linear scale</span></label>
+  <label><input type="radio" name="q6" value="1"> <span>An approximately logarithmic scale (filters wider and farther apart at high frequency)</span></label>
+  <label><input type="radio" name="q6" value="2"> <span>An exponential scale</span></label>
+  <label><input type="radio" name="q6" value="3"> <span>A random scale</span></label>
+  <p class="srq-exp">The mel filterbank warps frequency on an <strong>approximately logarithmic</strong> scale, mimicking the auditory system.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 7</legend>
+  <p class="srq-prompt">What is the final step (&ldquo;logarithmic compression&rdquo;) of the FBANK feature pipeline? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q7" value="0"> <span>Applying a logarithm to the mel filterbank coefficients</span></label>
+  <label><input type="radio" name="q7" value="1"> <span>Applying the FFT</span></label>
+  <label><input type="radio" name="q7" value="2"> <span>Pre-emphasis of the waveform</span></label>
+  <label><input type="radio" name="q7" value="3"> <span>Windowing the frame</span></label>
+  <p class="srq-exp">The last step applies a <strong>logarithm</strong> to the mel filterbank energies, producing the log-mel (&ldquo;FBANK&rdquo;) coefficients.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 8</legend>
+  <p class="srq-prompt">Subtracting the per-utterance mean of the log-filterbank features (mean normalization) mainly serves to: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q8" value="0"> <span>Increase the sampling rate</span></label>
+  <label><input type="radio" name="q8" value="1"> <span>Remove constant channel effects</span></label>
+  <label><input type="radio" name="q8" value="2"> <span>Add pitch information</span></label>
+  <label><input type="radio" name="q8" value="3"> <span>Speed up the FFT</span></label>
+  <p class="srq-exp">Mean normalization on the log features removes a <strong>constant (convolutional) channel effect</strong>, since a fixed channel becomes an additive constant after the log.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 9</legend>
+  <p class="srq-prompt">Dithering (adding a very small amount of noise) is used to: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q9" value="0"> <span>Prevent mathematical issues such as taking the logarithm of zero</span></label>
+  <label><input type="radio" name="q9" value="1"> <span>Increase the loudness of the signal</span></label>
+  <label><input type="radio" name="q9" value="2"> <span>Remove background noise</span></label>
+  <label><input type="radio" name="q9" value="3"> <span>Downsample the signal</span></label>
+  <p class="srq-exp">Dithering adds a tiny bit of noise to <strong>avoid taking the log of zero</strong> and similar numerical problems.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 10</legend>
+  <p class="srq-prompt">In the lab, an audio file is converted into a sequence of what kind of features? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q10" value="0"> <span>MFCC cepstral coefficients</span></label>
+  <label><input type="radio" name="q10" value="1"> <span>Log mel filterbank (&ldquo;FBANK&rdquo;) coefficients</span></label>
+  <label><input type="radio" name="q10" value="2"> <span>Raw waveform samples</span></label>
+  <label><input type="radio" name="q10" value="3"> <span>Spectrogram phase values</span></label>
+  <p class="srq-exp">The pipeline produces <strong>log mel filterbank (FBANK)</strong> coefficients, written to an HTK feature file.</p>
+</fieldset>
+<div class="srq-actions">
+  <button type="button" id="srq-check">Check answers</button>
+  <button type="button" id="srq-reset">Reset</button>
+  <span id="srq-score" class="srq-score" role="status" aria-live="polite"></span>
+</div>
+</form>
+<script>
+(function(){
+  var form=document.getElementById('srq-form');
+  if(!form)return;
+  function want(fs){return (fs.getAttribute('data-correct')||'').split(',').filter(Boolean).map(Number).sort(function(a,b){return a-b;});}
+  function got(fs){return Array.prototype.slice.call(fs.querySelectorAll('input:checked')).map(function(i){return Number(i.value);}).sort(function(a,b){return a-b;});}
+  function same(a,b){return a.length===b.length&&a.every(function(v,i){return v===b[i];});}
+  document.getElementById('srq-check').addEventListener('click',function(){
+    var qs=form.querySelectorAll('.srq-q'),correct=0;
+    Array.prototype.forEach.call(qs,function(fs){
+      var w=want(fs),g=got(fs),ok=same(w,g);
+      fs.classList.remove('srq-correct','srq-incorrect');
+      fs.classList.add(ok?'srq-correct':'srq-incorrect');
+      Array.prototype.forEach.call(fs.querySelectorAll('label'),function(l){
+        var inp=l.querySelector('input'),v=Number(inp.value);
+        l.classList.remove('opt-correct','opt-wrong');
+        if(w.indexOf(v)>-1)l.classList.add('opt-correct');
+        else if(inp.checked)l.classList.add('opt-wrong');
+      });
+      if(ok)correct++;
+    });
+    var s=document.getElementById('srq-score');
+    s.textContent='Score: '+correct+' / '+qs.length;
+    s.className='srq-score '+(correct===qs.length?'pass':(correct>0?'part':''));
+    form.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  document.getElementById('srq-reset').addEventListener('click',function(){
+    form.reset();
+    Array.prototype.forEach.call(form.querySelectorAll('.srq-q'),function(fs){
+      fs.classList.remove('srq-correct','srq-incorrect');
+      Array.prototype.forEach.call(fs.querySelectorAll('label'),function(l){l.classList.remove('opt-correct','opt-wrong');});
+    });
+    document.getElementById('srq-score').textContent='';
+  });
+})();
+</script>
+</div>
 
 ## Lab
 

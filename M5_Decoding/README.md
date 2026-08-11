@@ -319,28 +319,27 @@ Test your understanding of decoding and weighted finite-state transducers. Selec
 
 <div class="srq" markdown="0">
 <style>
-.srq{max-width:780px;margin:1rem 0;}
+.srq{max-width:780px;margin:1rem 0;color:var(--fgColor-default,var(--color-fg-default,#1f2328));}
 .srq *{box-sizing:border-box;}
-.srq-q{border:1px solid #d0d7de;border-radius:8px;padding:.6rem 1rem .8rem;margin:0 0 1.1rem;transition:border-color .15s;}
-.srq-q legend{font-weight:700;padding:0 .4rem;font-size:.95em;letter-spacing:.02em;}
-.srq-prompt{margin:.2rem 0 .7rem;font-weight:600;}
-.srq-prompt .srq-hint{font-weight:400;opacity:.7;font-size:.9em;}
-.srq label{display:flex;align-items:flex-start;gap:.55rem;padding:.4rem .55rem;border-radius:6px;cursor:pointer;border:1px solid transparent;}
-.srq label:hover{background:rgba(127,127,127,.12);}
-.srq label input{margin-top:.2rem;flex:0 0 auto;}
-.srq-exp{display:none;margin:.65rem 0 .1rem;padding:.55rem .7rem;border-left:3px solid #0969da;background:rgba(9,105,218,.08);font-size:.92em;border-radius:0 4px 4px 0;}
-.srq-q.srq-correct{border-color:#1a7f37;}
-.srq-q.srq-incorrect{border-color:#cf222e;}
+.srq-q{border:1px solid var(--borderColor-default,var(--color-border-default,#d0d7de));border-radius:var(--borderRadius-medium,6px);padding:.55rem 1rem .8rem;margin:0 0 1.1rem;background:var(--bgColor-default,var(--color-canvas-default,#fff));}
+.srq-q legend{font-weight:var(--base-text-weight-semibold,600);padding:0 .4rem;}
+.srq-prompt{margin:.2rem 0 .7rem;font-weight:var(--base-text-weight-semibold,600);}
+.srq-hint{font-weight:400;color:var(--fgColor-muted,var(--color-fg-muted,#59636e));font-size:.9em;}
+.srq label{display:flex;align-items:flex-start;gap:.55rem;padding:.4rem .55rem;border-radius:var(--borderRadius-medium,6px);cursor:pointer;border:1px solid transparent;}
+.srq label:hover{background:var(--bgColor-neutral-muted,var(--color-neutral-muted,rgba(175,184,193,.2)));}
+.srq label input{margin-top:.25rem;flex:0 0 auto;}
+.srq-exp{display:none;margin:.65rem 0 .1rem;padding:.55rem .7rem;border-left:3px solid var(--fgColor-accent,var(--color-accent-fg,#0969da));background:var(--bgColor-accent-muted,var(--color-accent-subtle,#ddf4ff));border-radius:0 var(--borderRadius-medium,6px) var(--borderRadius-medium,6px) 0;font-size:.92em;}
+.srq-q.srq-correct{border-color:var(--borderColor-success-emphasis,var(--color-success-emphasis,#1a7f37));}
+.srq-q.srq-incorrect{border-color:var(--borderColor-danger-emphasis,var(--color-danger-emphasis,#cf222e));}
 .srq-q.srq-correct .srq-exp,.srq-q.srq-incorrect .srq-exp{display:block;}
-.srq label.opt-correct{background:rgba(26,127,55,.16);border-color:rgba(26,127,55,.5);font-weight:600;}
-.srq label.opt-wrong{background:rgba(207,34,46,.14);border-color:rgba(207,34,46,.45);text-decoration:line-through;}
+.srq label.opt-correct{background:var(--bgColor-success-muted,var(--color-success-subtle,#dafbe1));border-color:var(--borderColor-success-emphasis,var(--color-success-emphasis,#1a7f37));font-weight:var(--base-text-weight-semibold,600);}
+.srq label.opt-wrong{background:var(--bgColor-danger-muted,var(--color-danger-subtle,#ffebe9));border-color:var(--borderColor-danger-emphasis,var(--color-danger-emphasis,#cf222e));text-decoration:line-through;}
 .srq-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.75rem;margin:.3rem 0 .5rem;}
-.srq-actions button{cursor:pointer;padding:.5rem 1rem;border-radius:6px;border:1px solid #d0d7de;background:#f6f8fa;font-weight:600;font-size:.95em;}
-.srq-actions button:hover{filter:brightness(.97);}
-#srq-check{background:#1f883d;color:#fff;border-color:#1f883d;}
-.srq-score{font-weight:700;font-size:1.05em;}
-.srq-score.pass{color:#1a7f37;}
-.srq-score.part{color:#9a6700;}
+.srq-actions button{cursor:pointer;padding:.5rem 1rem;border-radius:var(--borderRadius-medium,6px);font-weight:var(--base-text-weight-semibold,600);border:1px solid var(--button-default-borderColor-rest,var(--color-btn-border,rgba(31,35,40,.15)));background:var(--button-default-bgColor-rest,var(--color-btn-bg,#f6f8fa));color:var(--fgColor-default,var(--color-fg-default,#1f2328));}
+#srq-check{background:var(--button-primary-bgColor-rest,var(--color-btn-primary-bg,#1f883d));color:var(--button-primary-fgColor-rest,#fff);border-color:var(--button-primary-borderColor-rest,var(--color-btn-primary-border,rgba(31,35,40,.15)));}
+.srq-score{font-weight:var(--base-text-weight-bold,700);font-size:1.05em;}
+.srq-score.pass{color:var(--fgColor-success,var(--color-success-fg,#1a7f37));}
+.srq-score.part{color:var(--fgColor-attention,var(--color-attention-fg,#9a6700));}
 </style>
 <form id="srq-form" onsubmit="return false;">
 <fieldset class="srq-q" data-type="single" data-correct="3">
@@ -378,7 +377,7 @@ Test your understanding of decoding and weighted finite-state transducers. Selec
   <label><input type="radio" name="q4" value="1"> <span>The HMM State Transducer</span></label>
   <label><input type="radio" name="q4" value="2"> <span>The Pronunciation Lexicon</span></label>
   <label><input type="radio" name="q4" value="3"> <span>None of the above</span></label>
-  <p class="srq-exp">The <strong>Pronunciation Lexicon</strong> (L) maps phone sequences to words; homophones make one input map to several words, so disambiguation symbols are added to keep it functional (and determinizable).</p>
+  <p class="srq-exp">The <strong>Pronunciation Lexicon</strong> (L) maps phone sequences to words; homophones make one input map to several words, so disambiguation symbols keep it functional (and determinizable).</p>
 </fieldset>
 <fieldset class="srq-q" data-type="single" data-correct="1">
   <legend>Question 5</legend>
@@ -410,8 +409,8 @@ Test your understanding of decoding and weighted finite-state transducers. Selec
 <fieldset class="srq-q" data-type="multi" data-correct="0,1">
   <legend>Question 8</legend>
   <p class="srq-prompt">During beam search decoding, hypotheses may be discarded if which of the following conditions exist? <span class="srq-hint">(Choose all that apply)</span></p>
-  <label><input type="checkbox" name="q8" value="0"> <span>The token&rsquo;s score falls outside the beam width.</span></label>
-  <label><input type="checkbox" name="q8" value="1"> <span>There are too many tokens, and this token isn&rsquo;t one of the N best.</span></label>
+  <label><input type="checkbox" name="q8" value="0"> <span>The token's score falls outside the beam width.</span></label>
+  <label><input type="checkbox" name="q8" value="1"> <span>There are too many tokens, and this token isn't one of the N best.</span></label>
   <label><input type="checkbox" name="q8" value="2"> <span>The token enters a determinized state.</span></label>
   <label><input type="checkbox" name="q8" value="3"> <span>The token enters a minimized state.</span></label>
   <label><input type="checkbox" name="q8" value="4"> <span>None of the above</span></label>
@@ -429,9 +428,9 @@ Test your understanding of decoding and weighted finite-state transducers. Selec
 <fieldset class="srq-q" data-type="single" data-correct="1">
   <legend>Question 10</legend>
   <p class="srq-prompt">When a path traverses an arc with an epsilon symbol, what does this indicate? <span class="srq-hint">(Choose one)</span></p>
-  <label><input type="radio" name="q10" value="0"> <span>The path&rsquo;s string is appended with an epsilon.</span></label>
-  <label><input type="radio" name="q10" value="1"> <span>The path&rsquo;s string is unaffected by this arc.</span></label>
-  <label><input type="radio" name="q10" value="2"> <span>The path&rsquo;s weight is reset to zero.</span></label>
+  <label><input type="radio" name="q10" value="0"> <span>The path's string is appended with an epsilon.</span></label>
+  <label><input type="radio" name="q10" value="1"> <span>The path's string is unaffected by this arc.</span></label>
+  <label><input type="radio" name="q10" value="2"> <span>The path's weight is reset to zero.</span></label>
   <label><input type="radio" name="q10" value="3"> <span>None of the above</span></label>
   <p class="srq-exp">Epsilon (&epsilon;) is the empty symbol: the arc contributes no symbol, so the <strong>path string is unaffected</strong> (weights still combine as usual).</p>
 </fieldset>

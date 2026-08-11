@@ -15,6 +15,7 @@
 - [Merging Models](#merging-models)
 - [Class-based Language Models](#class-based-language-models)
 - [Neural Network Language Models](#neural-network-language-models)
+- [Quiz](#quiz)
 - [Lab](#lab)
 
 
@@ -254,6 +255,169 @@ The second limitation of N-grams that was overcome with ANN methods is the trunc
 This allows the network to pass information from one-word position to the next, repeatedly, without a hard limit on how far back in time information originates that can be used to predict the current next word. There are practical issues with the trainability of such recurrent networks because the mathematical rules governing ANN activations lead to an exponential dilution of information over time. However, these problems can be solved with mechanisms to gate information flow from one time step to the next.
 
 Both feed-forward and recurrent network LMs have also benefited from general improvements in ANN technology, such as deeper stacking of network layers ('deep learning') and better training methods. Another trend in neural LMs is to base the model on characters rather than word units. It is clear that the flexibility that ANNs provide for experimenting with model architectures in terms of high-level information flow, rather than having to worry about the detailed design of encodings and probability distributions, has greatly advanced the field, with more still to come.
+
+## Quiz
+
+Test your understanding of language modeling. Select your answers and press **Check answers** &mdash; correct options are highlighted and a short explanation appears for each question.
+
+<div class="srq" markdown="0">
+<style>
+.srq{max-width:780px;margin:1rem 0;color:var(--fgColor-default,var(--color-fg-default,#1f2328));}
+.srq *{box-sizing:border-box;}
+.srq-q{border:1px solid var(--borderColor-default,var(--color-border-default,#d0d7de));border-radius:var(--borderRadius-medium,6px);padding:.55rem 1rem .8rem;margin:0 0 1.1rem;background:var(--bgColor-default,var(--color-canvas-default,#fff));}
+.srq-q legend{font-weight:var(--base-text-weight-semibold,600);padding:0 .4rem;}
+.srq-prompt{margin:.2rem 0 .7rem;font-weight:var(--base-text-weight-semibold,600);}
+.srq-hint{font-weight:400;color:var(--fgColor-muted,var(--color-fg-muted,#59636e));font-size:.9em;}
+.srq label{display:flex;align-items:flex-start;gap:.55rem;padding:.4rem .55rem;border-radius:var(--borderRadius-medium,6px);cursor:pointer;border:1px solid transparent;}
+.srq label:hover{background:var(--bgColor-neutral-muted,var(--color-neutral-muted,rgba(175,184,193,.2)));}
+.srq label input{margin-top:.25rem;flex:0 0 auto;}
+.srq-exp{display:none;margin:.65rem 0 .1rem;padding:.55rem .7rem;border-left:3px solid var(--fgColor-accent,var(--color-accent-fg,#0969da));background:var(--bgColor-accent-muted,var(--color-accent-subtle,#ddf4ff));border-radius:0 var(--borderRadius-medium,6px) var(--borderRadius-medium,6px) 0;font-size:.92em;}
+.srq-q.srq-correct{border-color:var(--borderColor-success-emphasis,var(--color-success-emphasis,#1a7f37));}
+.srq-q.srq-incorrect{border-color:var(--borderColor-danger-emphasis,var(--color-danger-emphasis,#cf222e));}
+.srq-q.srq-correct .srq-exp,.srq-q.srq-incorrect .srq-exp{display:block;}
+.srq label.opt-correct{background:var(--bgColor-success-muted,var(--color-success-subtle,#dafbe1));border-color:var(--borderColor-success-emphasis,var(--color-success-emphasis,#1a7f37));font-weight:var(--base-text-weight-semibold,600);}
+.srq label.opt-wrong{background:var(--bgColor-danger-muted,var(--color-danger-subtle,#ffebe9));border-color:var(--borderColor-danger-emphasis,var(--color-danger-emphasis,#cf222e));text-decoration:line-through;}
+.srq-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.75rem;margin:.3rem 0 .5rem;}
+.srq-actions button{cursor:pointer;padding:.5rem 1rem;border-radius:var(--borderRadius-medium,6px);font-weight:var(--base-text-weight-semibold,600);border:1px solid var(--button-default-borderColor-rest,var(--color-btn-border,rgba(31,35,40,.15)));background:var(--button-default-bgColor-rest,var(--color-btn-bg,#f6f8fa));color:var(--fgColor-default,var(--color-fg-default,#1f2328));}
+#srq-check{background:var(--button-primary-bgColor-rest,var(--color-btn-primary-bg,#1f883d));color:var(--button-primary-fgColor-rest,#fff);border-color:var(--button-primary-borderColor-rest,var(--color-btn-primary-border,rgba(31,35,40,.15)));}
+.srq-score{font-weight:var(--base-text-weight-bold,700);font-size:1.05em;}
+.srq-score.pass{color:var(--fgColor-success,var(--color-success-fg,#1a7f37));}
+.srq-score.part{color:var(--fgColor-attention,var(--color-attention-fg,#9a6700));}
+</style>
+<form id="srq-form" onsubmit="return false;">
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 1</legend>
+  <p class="srq-prompt">Which probability in the fundamental equation does the language model estimate? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q1" value="0"> <span>P(O|W), the acoustic likelihood</span></label>
+  <label><input type="radio" name="q1" value="1"> <span>P(W), the prior probability of a word sequence</span></label>
+  <label><input type="radio" name="q1" value="2"> <span>P(O), the marginal of the observations</span></label>
+  <label><input type="radio" name="q1" value="3"> <span>P(W|O), the posterior</span></label>
+  <p class="srq-exp">The LM estimates <strong>P(W)</strong>, the prior over word sequences.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 2</legend>
+  <p class="srq-prompt">A word that is not in the LM's vocabulary is called: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q2" value="0"> <span>An n-gram</span></label>
+  <label><input type="radio" name="q2" value="1"> <span>An out-of-vocabulary (OOV) word</span></label>
+  <label><input type="radio" name="q2" value="2"> <span>A backoff word</span></label>
+  <label><input type="radio" name="q2" value="3"> <span>A senone</span></label>
+  <p class="srq-exp">Words outside the vocabulary are <strong>OOVs</strong>; each OOV causes at least one recognition error, so the vocabulary is chosen to minimize them.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 3</legend>
+  <p class="srq-prompt">A model that predicts each word from the previous two words is a: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q3" value="0"> <span>Bigram (first-order Markov)</span></label>
+  <label><input type="radio" name="q3" value="1"> <span>Trigram (second-order Markov)</span></label>
+  <label><input type="radio" name="q3" value="2"> <span>Unigram</span></label>
+  <label><input type="radio" name="q3" value="3"> <span>5-gram</span></label>
+  <p class="srq-exp">Conditioning on the previous two words is a <strong>trigram</strong> (second-order Markov) model.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 4</legend>
+  <p class="srq-prompt">The relative-frequency (MLE) estimate of P(bites | dog) is: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q4" value="0"> <span>c(dog bites) / c(dog)</span></label>
+  <label><input type="radio" name="q4" value="1"> <span>c(dog) / c(dog bites)</span></label>
+  <label><input type="radio" name="q4" value="2"> <span>c(bites) / c(dog)</span></label>
+  <label><input type="radio" name="q4" value="3"> <span>c(dog bites) / c(bites)</span></label>
+  <p class="srq-exp">The MLE conditional probability is the n-gram count divided by the context count: <strong>c(dog bites) / c(dog)</strong>.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 5</legend>
+  <p class="srq-prompt">What problem with relative-frequency estimates does smoothing address? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q5" value="0"> <span>They assign zero probability to any unseen n-gram</span></label>
+  <label><input type="radio" name="q5" value="1"> <span>They are too slow to compute</span></label>
+  <label><input type="radio" name="q5" value="2"> <span>They require a neural network</span></label>
+  <label><input type="radio" name="q5" value="3"> <span>They ignore the vocabulary</span></label>
+  <p class="srq-exp">Relative frequencies give <strong>zero probability</strong> to unseen n-grams; smoothing (e.g. Witten-Bell) reserves mass for them.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 6</legend>
+  <p class="srq-prompt">Lowering the n-gram probabilities to free up mass for unseen events is called: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q6" value="0"> <span>Discounting</span></label>
+  <label><input type="radio" name="q6" value="1"> <span>Interpolation</span></label>
+  <label><input type="radio" name="q6" value="2"> <span>Pruning</span></label>
+  <label><input type="radio" name="q6" value="3"> <span>Decoding</span></label>
+  <p class="srq-exp">Reducing probabilities below their relative frequencies to reserve mass is <strong>discounting</strong>.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 7</legend>
+  <p class="srq-prompt">In a back-off model, when an n-gram was not seen in training, the model: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q7" value="0"> <span>Assigns it exactly zero probability</span></label>
+  <label><input type="radio" name="q7" value="1"> <span>Falls back to a shorter context, scaled by a backoff weight &alpha;</span></label>
+  <label><input type="radio" name="q7" value="2"> <span>Switches to the acoustic model</span></label>
+  <label><input type="radio" name="q7" value="3"> <span>Doubles the observed count</span></label>
+  <p class="srq-exp">Back-off uses the <strong>shorter-context</strong> estimate, scaled by a backoff weight &alpha; chosen so the distribution renormalizes to one.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 8</legend>
+  <p class="srq-prompt">Which relationship indicates a GOOD language model? <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q8" value="0"> <span>High likelihood &harr; low entropy &harr; low perplexity</span></label>
+  <label><input type="radio" name="q8" value="1"> <span>High likelihood &harr; high entropy &harr; high perplexity</span></label>
+  <label><input type="radio" name="q8" value="2"> <span>Low likelihood &harr; low perplexity</span></label>
+  <label><input type="radio" name="q8" value="3"> <span>Perplexity &harr; sampling rate</span></label>
+  <p class="srq-exp">A good LM gives <strong>high likelihood, low entropy, and low perplexity</strong> on the test data.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="1">
+  <legend>Question 9</legend>
+  <p class="srq-prompt">Language-model quality (perplexity) should be measured on: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q9" value="0"> <span>The training data</span></label>
+  <label><input type="radio" name="q9" value="1"> <span>An independent test / held-out set</span></label>
+  <label><input type="radio" name="q9" value="2"> <span>The vocabulary file</span></label>
+  <label><input type="radio" name="q9" value="3"> <span>The acoustic features</span></label>
+  <p class="srq-exp">Evaluate on <strong>independent</strong> (held-out) data to get an unbiased estimate.</p>
+</fieldset>
+<fieldset class="srq-q" data-type="single" data-correct="0">
+  <legend>Question 10</legend>
+  <p class="srq-prompt">Model interpolation combines two language models by: <span class="srq-hint">(Choose one)</span></p>
+  <label><input type="radio" name="q10" value="0"> <span>Taking a weighted average of their probability estimates (&lambda; and 1&minus;&lambda;)</span></label>
+  <label><input type="radio" name="q10" value="1"> <span>Concatenating their training corpora only</span></label>
+  <label><input type="radio" name="q10" value="2"> <span>Taking the maximum of the two probabilities</span></label>
+  <label><input type="radio" name="q10" value="3"> <span>Pruning both models</span></label>
+  <p class="srq-exp">Interpolation is a <strong>weighted average</strong> P&#770; = &lambda;P&#770;<sub>1</sub> + (1&minus;&lambda;)P&#770;<sub>2</sub>, with &lambda; tuned on held-out data.</p>
+</fieldset>
+<div class="srq-actions">
+  <button type="button" id="srq-check">Check answers</button>
+  <button type="button" id="srq-reset">Reset</button>
+  <span id="srq-score" class="srq-score" role="status" aria-live="polite"></span>
+</div>
+</form>
+<script>
+(function(){
+  var form=document.getElementById('srq-form');
+  if(!form)return;
+  function want(fs){return (fs.getAttribute('data-correct')||'').split(',').filter(Boolean).map(Number).sort(function(a,b){return a-b;});}
+  function got(fs){return Array.prototype.slice.call(fs.querySelectorAll('input:checked')).map(function(i){return Number(i.value);}).sort(function(a,b){return a-b;});}
+  function same(a,b){return a.length===b.length&&a.every(function(v,i){return v===b[i];});}
+  document.getElementById('srq-check').addEventListener('click',function(){
+    var qs=form.querySelectorAll('.srq-q'),correct=0;
+    Array.prototype.forEach.call(qs,function(fs){
+      var w=want(fs),g=got(fs),ok=same(w,g);
+      fs.classList.remove('srq-correct','srq-incorrect');
+      fs.classList.add(ok?'srq-correct':'srq-incorrect');
+      Array.prototype.forEach.call(fs.querySelectorAll('label'),function(l){
+        var inp=l.querySelector('input'),v=Number(inp.value);
+        l.classList.remove('opt-correct','opt-wrong');
+        if(w.indexOf(v)>-1)l.classList.add('opt-correct');
+        else if(inp.checked)l.classList.add('opt-wrong');
+      });
+      if(ok)correct++;
+    });
+    var s=document.getElementById('srq-score');
+    s.textContent='Score: '+correct+' / '+qs.length;
+    s.className='srq-score '+(correct===qs.length?'pass':(correct>0?'part':''));
+    form.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  document.getElementById('srq-reset').addEventListener('click',function(){
+    form.reset();
+    Array.prototype.forEach.call(form.querySelectorAll('.srq-q'),function(fs){
+      fs.classList.remove('srq-correct','srq-incorrect');
+      Array.prototype.forEach.call(fs.querySelectorAll('label'),function(l){l.classList.remove('opt-correct','opt-wrong');});
+    });
+    document.getElementById('srq-score').textContent='';
+  });
+})();
+</script>
+</div>
 
 ## Lab 
 
