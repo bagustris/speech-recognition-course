@@ -8,16 +8,6 @@ import argparse
 import time
 from htk_featio import read_htk_user_feat
 
-# Module 3 lab: training an acoustic model with PyTorch.
-#
-# This is the *scaffolding* for the lab. The complete, working version lives in
-# Solutions/M3_Train_AM.py -- use it to check your work after finishing.
-#
-# Your task (see M3_Acoustic_Modeling/README.md): implement the training loop in
-# train_model() below. All of the data-loading plumbing (SpeechDataset,
-# collate_fn), the network architectures (DNNModel / BLSTMModel) and main() are
-# provided for you.
-
 # Run from the Experiments/ directory (the data lives in ./lists and ./am).
 data_dir = "."
 list_path = os.path.join(data_dir, "lists")
@@ -88,7 +78,7 @@ class SpeechDataset(Dataset):
     def _resolve_rscp_path(path):
         # Drop the leading CNTK "..." relative-path marker if present.
         if path.startswith(".../"):
-            path = path[len("..."):]
+            path = path[len(".../"):]
         return path
 
     @staticmethod
@@ -218,35 +208,25 @@ def train_model(model_type, train_loader, val_loader, device, num_epochs,
         total_frames = 0
         total_errors = 0
 
-        # TODO(M3): Implement one training epoch.
-        #
-        # For each minibatch (batch_features, batch_labels, lengths) yielded by
-        # train_loader:
-        #   1. Move both tensors to `device`.
-        #   2. Zero the optimizer gradients: optimizer.zero_grad().
-        #   3. Forward pass:
-        #        outputs = _forward(model, model_type, batch_features)
-        #      where outputs has shape (B, T, num_classes).
-        #   4. Discard padding frames before computing the loss so that padded
-        #      positions (batch_labels == PAD_ID) do not contribute:
-        #        mask = batch_labels != PAD_ID
-        #        loss = criterion(outputs[mask], batch_labels[mask])
-        #   5. Back-propagate (loss.backward()) and take an optimizer step.
-        #   6. Accumulate for reporting (per micro-batch, with n = number of
-        #      valid labels):
-        #        total_loss += loss.item() * n
-        #        total_frames += n
-        #        total_errors += (outputs[mask].argmax(dim=-1) !=
-        #                         batch_labels[mask]).sum().item()
-        #
-        # IMPORTANT: leave the "Finished Epoch[..]" print format below exactly
-        # as it is, because M3_Plot_Training.py parses those lines from the log
-        # file. Compute, right before that print:
-        #        avg_loss = total_loss / max(total_frames, 1)
-        #        fer = 100.0 * total_errors / max(total_frames, 1)   # FER %
-        raise NotImplementedError(
-            "TODO(M3): implement the training loop in Experiments/M3_Train_AM.py"
-        )
+        for batch_features, batch_labels, lengths in train_loader:
+            batch_features = batch_features.to(device)
+            batch_labels = batch_labels.to(device)
+
+            optimizer.zero_grad()
+            outputs = _forward(model, model_type, batch_features)
+
+            mask = batch_labels != PAD_ID
+            valid_outputs = outputs[mask]
+            valid_labels = batch_labels[mask]
+
+            loss = criterion(valid_outputs, valid_labels)
+            loss.backward()
+            optimizer.step()
+
+            n = valid_labels.numel()
+            total_loss += loss.item() * n
+            total_frames += n
+            total_errors += (valid_outputs.argmax(dim=-1) != valid_labels).sum().item()
 
         epoch_time = time.time() - start
         avg_loss = total_loss / max(total_frames, 1)
@@ -258,17 +238,22 @@ def train_model(model_type, train_loader, val_loader, device, num_epochs,
 
         # Evaluate on the dev set every 5 epochs.
         if (epoch + 1) % 5 == 0 and val_loader is not None:
-            # TODO(M3): Evaluate the model on the development set.
-            # Set model.eval() and disable gradient tracking with
-            # torch.no_grad(). For each batch, run _forward(...), mask out the
-            # padding (batch_labels != PAD_ID), then accumulate the number of
-            # valid frames (val_frames) and frame errors (val_errors). Finally
-            # print, using the same format M3_Plot_Training.py expects:
-            #   print(f"Finished Evaluation [{epoch + 1}]: "
-            #         f"Minibatch[1-{len(val_loader)}]: "
-            #         f"metric = {val_fer:.2f}% * {val_frames};")
-            # where val_fer = 100.0 * val_errors / max(val_frames, 1).
-            pass
+            model.eval()
+            val_frames = 0
+            val_errors = 0
+            with torch.no_grad():
+                for batch_features, batch_labels, lengths in val_loader:
+                    batch_features = batch_features.to(device)
+                    batch_labels = batch_labels.to(device)
+                    outputs = _forward(model, model_type, batch_features)
+                    mask = batch_labels != PAD_ID
+                    valid_outputs = outputs[mask]
+                    valid_labels = batch_labels[mask]
+                    val_frames += valid_labels.numel()
+                    val_errors += (valid_outputs.argmax(dim=-1) != valid_labels).sum().item()
+            val_fer = 100.0 * val_errors / max(val_frames, 1)
+            print(f"Finished Evaluation [{epoch + 1}]: Minibatch[1-{len(val_loader)}]: "
+                  f"metric = {val_fer:.2f}% * {val_frames};")
 
     return model
 
@@ -336,4 +321,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

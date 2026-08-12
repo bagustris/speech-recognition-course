@@ -1,0 +1,27 @@
+[project]
+name = "speech-recognition-course"
+version = "0.1.0"
+description = "Speech recognition course adapted from Microsoft EdX DEV287x, with PyTorch-based experiments"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "soundfile",
+    "torch",
+]
+
+# Note: the legacy *_cntk.py scripts depend on Microsoft CNTK, which is no
+# longer maintained and is not installable on Python 3.12. Those scripts are
+# kept for reference only; use the PyTorch ports instead.
+
+# Use the CPU-only PyTorch build (this course runs on CPU; avoids the large
+# CUDA/nvidia wheels).
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
