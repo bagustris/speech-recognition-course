@@ -34,7 +34,14 @@ defaults:
 exclude:
   - node_modules
   - script
-  - Experiments/
+  # Publish the Experiments/ lab README, but skip its bulky/symlinked data and
+  # generated artifacts (am/, lists/, misc/ are symlinks into Solutions/; feat/
+  # and LibriSpeech/ are generated locally and are not part of the site).
+  - Experiments/am/
+  - Experiments/lists/
+  - Experiments/misc/
+  - Experiments/feat/
+  - Experiments/LibriSpeech/
   - M1_Introduction/misc/
   - M4_Language_Modeling/srilm/
   - M4_Language_Modeling/data/
