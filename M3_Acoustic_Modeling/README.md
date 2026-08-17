@@ -12,14 +12,15 @@
   - [The Decoding Problem](#the-decoding-problem)
   - [The Training Problem](#the-training-problem)
 - [Hidden Markov Models for Speech Recognition](#hidden-markov-models-for-speech-recognition)
-- [Choice of subword units](#choice-of-subword-units)
+  - [Choice of subword units](#choice-of-subword-units)
 - [Deep Neural Network Acoustic Models](#deep-neural-network-acoustic-models)
-- [Generate Frame based Sonal Levels](#generate-frame-based-sonal-levels)
-- [Training Feedforward Deep Neural Networks](#training-feedforward-deep-neural-networks)
-- [Training Recurrent Neural Networks](#training-recurrent-neural-networks)
-- [Long Short-Term Memory Networks](#long-short-term-memory-networks)
+  - [Generate Frame based Sonal Levels](#generate-frame-based-sonal-levels)
+- [Training Deep Neural Network](#training-deep-neural-network)
+  -  [Training Feedforward Deep Neural Networks](#training-feedforward-deep-neural-networks)
+  - [Training Recurrent Neural Networks](#training-recurrent-neural-networks)
+  - [Long Short-Term Memory Networks](#long-short-term-memory-networks)
 - [Using a Sequence-based Objective Function](#using-a-sequence-based-objective-function)
-- [Decoding with Neural Network Acoustic Models](#decoding-with-neural-network-acoustic-models)
+  - [Decoding with Neural Network Acoustic Models](#decoding-with-neural-network-acoustic-models)
 - [Quiz](#quiz)
 - [Lab](#lab)
 
@@ -211,7 +212,8 @@ The output of forced alignment is typically a file that lists for each utterance
 
 From this, or a similar output, we can easily generate the labels required for training a deep neural network acoustic model.  
 
-## Training Feedforward Deep Neural Networks
+## Training Deep Neural Network
+### Training Feedforward Deep Neural Networks
 
 The simplest and most common neural network used for acoustic modeling is the conventional fully connected feed-forward neural network. Information on feedforward DNNs is readily found online so we will focus here on the key aspects of DNN-based acoustic models.
 
