@@ -1,6 +1,6 @@
 # Speech Recognition Course
 
-Material for learning/teaching automatic speech recognition (ASR), based on Microsoft teaching material on EdX (changed from CNTK to PyTorch). Materials are given in each module/directory. The comprehensive learning materials focus on the **practical ASR**, from basic concept to model development.
+Materials for learning/teaching automatic speech recognition (ASR), based on Microsoft teaching material on EdX (changed from CNTK to PyTorch). Materials are given in each module/directory (M1-M6), including **quiz** and **lab**. The comprehensive learning materials focus on the **practical ASR**, from _basic concepts_ to _model development_.
 
 Github Pages:  [https://bagustris.github.io/speech-recognition-course](https://bagustris.github.io/speech-recognition-course)  
 Repository: [https://github.com/bagustris/speech-recognition-course](https://github.com/bagustris/speech-recognition-course)  

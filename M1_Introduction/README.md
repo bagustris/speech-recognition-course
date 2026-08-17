@@ -12,12 +12,19 @@
 - [Quiz](#quiz)
 - [Lab](#lab) 
 
+## Introduction  
+
 Developing and understanding Automatic Speech Recognition systems is an interdisciplinary activity, taking expertise in linguistics, computer science, and electrical engineering.
 
-This course will focus on the structure of American English speech. Other languages may differ in more or less significant ways, from the use of tone to convey meaning to the sets of meaningful distinctions in the sound inventory of the language.
+This course will focus on the structure of American English speech. Other languages may differ in more or less significant ways, from the use of tone to convey meaning to the sets of meaningful distinctions in the sound inventory of the language. 
+
+Speech production process is how do human produce speech and how this leads to the study of phonetics. Speech has a hierarchical structure. At the top level, speech is made up of utterances. Utterances can be broken down into words, which can be broken down into syllables, which can be broken down into phones. Phones are the acoustic realizations of phonemes, which are the atomic units of speech sounds. Phonemes are the smallest units of sound that can change meaning in a language. For example, the words "bat" and "pat" differ in their initial phoneme, /b/ vs /p/, which changes the meaning of the word.  
+
+There are three basic parts of an automatic speech recognition system: the acoustic model, the language model, and the decoder. The acoustic model is responsible for modeling how sequences of words are converted into acoustic realizations and then into the acoustic observations presented to the ASR system. The language model assigns a probability to every possible word sequence. It is trained on sequences of words that are expected to be like those the final system will encounter in everyday use. The decoder searches for the best word sequence given the acoustic observations and the models.
 
 ## Phonetics
 
+### Overview  
 Phonetics is the part of linguistics that focuses on the study of the sounds produced by human speech. It encompasses their production (through the human vocal apparatus), their acoustic properties, and perception. There are three basic branches of phonetics, all of which are relevant to automatic speech recognition.
 
 - Articulatory phonetics focuses on the production of speech sounds via the vocal tract and various articulators
@@ -40,9 +47,9 @@ One important aspect of phonemes is that their realization can change depending 
 
 All state-of-the-art speech recognition systems use this context-dependent nature of phonemes to create a detailed model of phonemes in their various phonetic contexts.
 
-## Words and Syntax
+### Words and Syntax
 
-### Syllables and words
+#### Syllables and words
 A syllable is a sequence of speech sounds composed of a nucleus phone and optional initial and final phones. The nucleus is typically a vowel or syllabic consonant and is the voiced sound that can be shouted or sung.
 
 For example, the English word “bottle” contains two syllables. The first syllable has three phones, which are “b aa t” in the Arpabet phonetic transcription code. The “aa” is the nucleus, the “b” is a voiced consonant initial phone, and the “t” is an unvoiced consonant final phone. The second syllable consists only of the syllabic consonant "l."
@@ -51,10 +58,12 @@ A word can also be composed of a single syllable, which itself is a single phone
 
 In speech recognition, syllable units are rarely considered, and words are commonly tokenized into constituent phonemes for modeling.
 
-### Syntax and Semantics
+#### Syntax and Semantics
 Syntax describes how sentences can be put together given words and rules that define allowable grammatical constructs. Semantics generally refers to the way that meaning is attributed to the words or phrases in a sentence. Both syntax and semantics are a major part of natural language processing, but neither plays a major role in speech recognition.  
 
-### Measuring Performance
+## Measuring Performance 
+
+### WER 
 When we build and experiment with speech recognition systems, it is obviously very important to measure performance. Because speech recognition is a sequence classification task (in contrast to image labeling, where samples are independent), we must consider the entire sequence when we measure error.
 
 The most common metric for speech recognition accuracy is the Word Error Rate (WER). There are three types of errors a system can make: a substitution, where one word is incorrectly recognized as a different word, a deletion, where no word is hypothesized when the reference transcription has one, and an insertion where the hypothesized transcription inserts extra words not present in the reference. The overall WER can be computed as
@@ -102,7 +111,7 @@ For speech recognition, the most commonly used measure to compare two experiment
 In this approach, the test set is divided into segments with the assumption that errors in one segment are statistically independent from each other. This assumption is well-matched with typical speech recognition experiments where many test utterances are run through the recognizer one by one. Given the utterance-level error count from the WER computation described above, constructing a matched pairs test is straightforward. More details of the algorithm can be found in [Pallet et al.](https://doi.org/10.1109/ICASSP.1990.115546).
 
 
-## Real-time Factor
+### Real-time Factor
 
 Besides accuracy, there may be computational requirements that impact performance, such as processing speed or latency. Decoding speed is usually measured with respect to a real-time factor (RTF). An RTF of 1.0 means that the system processes the data in real-time and takes ten seconds to process the audio.
 
@@ -307,7 +316,7 @@ Test your understanding of the fundamentals of speech recognition. Select your a
 ## Lab
 
 ### Lab for Module 1: Create a speech recognition scoring program   
-##### Required files:  
+#### Required files:  
  - [wer.py](https://github.com/bagustris/speech-recognition-course/blob/master/Experiments/wer.py)  
  - [M1_Score.py](https://github.com/bagustris/speech-recognition-course/blob/master/Experiments/M1_Score.py)  
 
