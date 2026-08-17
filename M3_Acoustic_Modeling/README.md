@@ -4,10 +4,13 @@
 
 ## Table of Contents
 - [Introduction](#introduction)
-- [Hidden Markov Models](#hidden-markov-models)
-- [The Evaluation Problem](#the-evaluation-problem)
-- [The Decoding Problem](#the-decoding-problem)
-- [The Training Problem](#the-training-problem)
+- [Markov Chains](#markov-chains)
+  - [Overview](#overview)
+  - [Hidden Markov Models](#hidden-markov-models) 
+- [Problem With Hiddden Markov Models](#problem-with-hiddden-markov-models)
+  - [The Evaluation Problem](#the-evaluation-problem)
+  - [The Decoding Problem](#the-decoding-problem)
+  - [The Training Problem](#the-training-problem)
 - [Hidden Markov Models for Speech Recognition](#hidden-markov-models-for-speech-recognition)
 - [Choice of subword units](#choice-of-subword-units)
 - [Deep Neural Network Acoustic Models](#deep-neural-network-acoustic-models)
@@ -23,6 +26,8 @@
 ## Introduction
 In this module, we’ll talk about the acoustic model used in modern speech recognizers. In most systems today, the acoustic model is a hybrid model with uses deep neural networks to create frame-level predictions and then a hidden Markov model to transform these into a sequential prediction. A hidden Markov model (HMM) is a very well-known method for characterizing a discrete-time (sampled) sequence of events. The basic ideas of HMMs are decades old and have been applied to many fields.
 
+## Markov Chains  
+### Overview  
 Before studying HMMs, it will be useful to briefly review Markov chains. Markov chains are a method for modeling random processes. In a Markov chains, discrete events are modeled with a number of states. The movement among states is governed by a random process.
 
 Let's consider an example. In a weather prediction application, the states could be "Sunny", "Partly Cloud", "Cloudy", and "Raining". If we wanted to consider the probability of a particular 5 day forecast, e.g. $P(p,p,c,r,s)$, we would employ Bayes' rule to break up this joint probability into a series of conditional probabilities.
@@ -74,7 +79,7 @@ p(p,p,c,r,s) &= p(s|r,c,p,p) p(r|c,p,p) p(c|p,p) p(p|p) p(p) \\
 \end{split}
 $$
 
-## Hidden Markov Models
+### Hidden Markov Models
 
 Hidden Markov models (HMMs) are a generalization of Markov chains. In a Markov chain, the state is directly visible to the observer, and therefore the state transition probabilities are the only parameters. In contrast, in an HMM, the state is not directly visible, but the output (in the form of data) is visible. Each state has a probability distribution over the possible output tokens. Therefore, the parameters of an HMM are the initial state distribution, the state transition probabilities, and the output token probabilities for each state.
 
@@ -92,7 +97,8 @@ This, we can summarize the parameters of an HMM compactly as $\Phi = \left \lbra
 
 There are three fundamental problems for hidden Markov models, each with well-known solutions. We will only briefly describe the problems and their solutions next. There are many good resources online and in the literature for additional details. 
 
-## The Evaluation Problem
+## Problem With Hiddden Markov Models
+### The Evaluation Problem
 
 Given a model with parameters $\Phi$ and a sequence of observations $X = \left \lbrace x_1, x_2, \ldots, x_T\right \rbrace$, how do we compute the probability of the observation sequence, $P(X \vert \Phi)$? This is known as the evaluation problem. The solution is to use the forward algorithm. 
 
@@ -100,12 +106,12 @@ This Evaluation problem can be solved summing up the probability over all possib
 
 The forward algorithm is a far more efficient dynamic-programming solution. As its name implies, it processes the sequence in a single pass. It stores up to N values at each time step, and reduces the computational complexity to $O(N^2T)$.
 
-## The Decoding Problem
+### The Decoding Problem
 Given a model $\Phi$ and a sequence of observations $X = \left\lbrace x_1, x_2, \ldots, x_T\right\rbrace$, how do we find the most likely sequence of hidden states $Q = \left\lbrace q_1, q_2, \ldots, q_T\right\rbrace$ that produced the observations? 
 
 This is known as the decoding problem. The solution is to use the Viterbi algorithm. The application of this algorithm to the special case of large vocabulary speech recognition is discussed in Module 5, and an example of how it can be integrated into the training criterion is discussed in Module 6.  
 
-## The Training Problem
+### The Training Problem
 
 Given a model and an observation sequence (or a set of observation sequences) how can we adjust the model parameters $\Phi$ to maximize the probability of the observation sequence?
 
@@ -116,8 +122,7 @@ A byproduct of the forward algorithm mentioned earlier in this lesson is that it
 Once we know the posterior probability for each state at each time, the Baum-Welch algorithm acts as if these were direct observations of the hidden state sequence, and updates the model parameters to improve the objective function. An example of how this applies to acoustic modeling is covered in more depth in Module 6.
 
 
-## Hidden Markov Models for Speech Recognition
-
+## Hidden Markov Models for Speech Recognition  
 In speech recognition, hidden Markov models are used to model the acoustic observations (feature vectors) at the subword level, such as phonemes.
 
 It is typically for each phoneme to be modeled with 3 states, to separately model the beginning, middle and end of the phoneme. Each state has a self-transition and a transition to the next state.  
@@ -140,7 +145,7 @@ All modern speech recognition systems no longer model the observations using a c
 
 Such acoustic models are called "hybrid" systems or DNN-HMM systems to reflect the fact that the observation probability estimation formerly done by GMMs is now done by a DNN, but that the rest of the HMM framework, in particular the HMM state topologies and transition probabilities, are still used.
 
-## Choice of subword units
+### Choice of subword units
 
 In the previous section, we described how word HMMs can be constructed by chaining the HMMs for the individual phones in a word according to the pronunciation dictionary. These phonemes are referred to as "context-independent" phones, or CI phones for short. It turns out that the realization of a phoneme is, in fact, heavily dependent on the phonemes that can precede and follow it. For example, the /ah/ sound in "bat" is different from the /ah/ sound in "cap."
 
@@ -185,9 +190,9 @@ $$ E = -\sum_{i=1}^M t_m \log(y_m) $$
 
 Where $t_m$ is the label (1 if the data is from class m and 0 otherwise) and $y_m$ is the output of the network, which is a softmax layer over the output activations. Thus, for each frame, we need to generate a M-dimensional 1-hot vector that consists of all zeros except for a single 1 corresponding to the true label. This means that we need to assign every frame of every utterance to a senone in order to generate these labels.
 
-## Generate Frame based Sonal Levels
+### Generate Frame based Sonal Levels
 
-### Generating frame-based senone labels
+#### Generating frame-based senone labels
 To label all frames of the training data with a corresponding senone label, a process known as forced alignment is used. In this process, we essentially perform HMM decoding but constrain search to be along all paths that will produce the correct reference transcription. Forced alignment then generates the single most-likely path, and thus, the senone label for every frame in the utterance.
 
 The forced alignment process needs a speech recognition system to start from. This can be an initial GMM-based system or if the senone set is the same, a previously trained neural network-based system.
@@ -231,7 +236,7 @@ This input is then processed through a number of fully connected hidden layers a
 
 ![](./M3i6.png) 
 
-## Training Recurrent Neural Networks
+### Training Recurrent Neural Networks
 
 Recurrent neural networks (RNNs) are a type of neural network that is particularly well-suited to sequence modeling tasks such as speech recognition. RNNs are designed to process sequences of data, such as speech signals, by maintaining an internal state that is updated at each time step. This allows RNNs to capture dependencies between elements in the sequence and to model long-term dependencies.
 
@@ -267,7 +272,7 @@ Like standard back propagation, BPTT optimizes the model parameters using gradie
 
 All standard deep learning toolkits support training the recurrent networks with these features.  
 
-## Long Short-Term Memory Networks
+### Long Short-Term Memory Networks
 
 Other Recurrent Network Architectures
 In order to combat the issues with vanishing/exploding gradients and better learn long-term relationships in the training data, a new type of recurrent architecture was proposed. These networks are called Long Short-Term Memory (LSTM). Because of their widespread success in many tasks, LSTMs are now the most commonly used type of recurrent network.
@@ -292,7 +297,7 @@ where $u$ is an index over utterances in the training set, $W_u$ is the referenc
 
 Using this objective function add significant complexity to the training of acoustic models but typically result in improved performance and is a component of most state of the art systems. There are also many variations on this such as Minimum Phone Error (MPE) training, and state-level Minimum Bayes Risk (sMBR) training.  
 
-## Decoding with Neural Network Acoustic Models
+### Decoding with Neural Network Acoustic Models
 
 The neural network acoustic models compute posterior probabilities $p\left(s \vert x_{t} \right)$ over senone labels ($s$). These state-level posterior probabilities must be converted to state likelihoods $p\left( x_{t} \vert s \right)$ for decoding using an HMM, as will be discussed in Module 5. This can be done by an application of Bayes’ rule:
 
@@ -468,7 +473,7 @@ Test your understanding of acoustic modeling with HMMs and neural networks. Sele
 
 ## Lab 
 
-Instructions:
+### Instructions:
 In this lab, we will use the features generated in the previous lab along with the phoneme state alignments provided in the course materials to train two different neural network acoustic models, a DNN and an RNN.
 
 The inputs to the training program are:

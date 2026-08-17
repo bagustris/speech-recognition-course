@@ -2,7 +2,7 @@
 
 ## Table of Contents
 - [Introduction](#introduction)
-- [Feature Extraction for Speech Recognition](#feature-extraction-for-speech-recognition)
+- [Feature Extraction](#feature-extraction-for-speech-recognition)
 - [Mel filtering](#mel-filtering)
 - [Logarithmic compression](#logarithmic-compression)
 - [Other considerations](#other-considerations)
@@ -35,7 +35,7 @@ This speech production process is most commonly modeled in signal processing usi
 
 For speech recognition, the phoneme classification is largely dependent on the vocal tract shape and, therefore, the filter portion of the source-filter model. The excitation or source signal is largely ignored or discarded. Thus, feature extraction process for speech recognition is largely designed for capturing the time-varying filter shapes over the course of an utterance.
 
-## Feature extraction for speech recognition
+## Feature extraction
 
 ### Short-time Fourier Analysis
 One thing that is apparent from observing these waveforms is that speech is a non-stationary signal. That means its statistical properties change over time. Therefore, in order to properly analyze a speech signal, we need to examine the signal in chunks (also called windows or frames) that are small enough that the speech can be assumed to be stationary within those windows. Thus, we perform the analysis on a series of short, overlapping frames of audio. In speech recognition, we typically use windows of length 0.025 sec (25 ms) with an overlap of 0.01 (10 ms). This corresponds to a frame rate of 100 frames per second.
@@ -83,7 +83,7 @@ The spectrogram-like view of the filterbank coefficients for the original wavefo
 
 ![](./m2i6.png)
 
-## Other considerations
+### Other considerations
 
 There are other pre-processing steps that can be applied prior to feature extraction. These include
 
