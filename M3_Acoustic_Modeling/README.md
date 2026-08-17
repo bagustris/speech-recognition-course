@@ -494,20 +494,26 @@ We have provided a python program called M3_Train_AM.py which will train a feed-
 The development set will be evaluated every 5 epochs.
 This can be executed by running
 
-    $ python M3_Train_AM.py
+```bash
+$ python M3_Train_AM.py
+```
 
 On a GTX 965M GPU running on a laptop, the network trained at a rate of 63,000 samples/sec or about 20 seconds per epoch. Thus, 100 epochs will run in 2000 seconds or about 30 minutes.
 
 After 100 epochs, the result of training, obtained from the end of the log file, was
 
-    Finished Epoch[100 of 100]: [CE_Training] loss = 1.036854 * 1257104, metric = 32.74% * 1257104 17.146s (73317.6 samples/s);
-    Finished Evaluation [20]: Minibatch[1-11573]: metric = 44.26% * 370331;
+```text
+Finished Epoch[100 of 100]: [CE_Training] loss = 1.036854 * 1257104, metric = 32.74% * 1257104 17.146s (73317.6 samples/s);
+Finished Evaluation [20]: Minibatch[1-11573]: metric = 44.26% * 370331;
+```
 
 Thus, the training set has a cross entropy of 1.04 per sample, and a 32.74% frame error rate, while the held-out dev set has a frame error rate of 44.3%
 
 After training is complete, you can visualize the training progress using M3_Plot_Training.py. It takes a training log file as input (the log written by M3_Train_AM.py, which prints one `Finished Epoch ...` line per epoch) and will plot epoch vs. cross-entropy of the training set on one figure and epoch vs. frame error rate of the training and development sets on another figure.
 
-    $ python M3_Plot_Training.py --log <logfile>
+```bash
+$ python M3_Plot_Training.py --log <logfile>
+```
 
 For this experiment, <logfile> would be `../am/dnn/log`
 
@@ -538,18 +544,23 @@ Change the network creation to create a BLSTM
 In `create_network()`, we've created a function called MyBLSTMLayer as specified below. This function uses the Optimized_RNN Stack functionality in CNTK. A complete description and additional examples can be found in the CNTK documentation. One thing to be aware of is that with a BLSTM, the size of the hidden layer is actually applied to both directions. Thus, setting the number of hidden units to 512 means that both the forward and backward layers consist of 512 cells. The outputs of the forward and backward layer are then concatenated forming an output of 1024 units. This is then projected back to 512 using the weight matrix W.
 
 
-    def MyBLSTMLayer(hidden_size=128, num_layers=2): 
-        W = C.Parameter((C.InferredDimension, hidden_size), 
-        init=C.he_normal(1.0), name='rnn_parameters') 
-        
-    def _func(operand): 
-        return C.optimized_rnnstack(operand, weights=W, hidden_size=hidden_size, num_layers=num_layers, bidirectional=True, recurrent_op='lstm') return _func
+```python
+def MyBLSTMLayer(hidden_size=128, num_layers=2):
+    W = C.Parameter((C.InferredDimension, hidden_size),
+        init=C.he_normal(1.0), name='rnn_parameters')
+
+    def _func(operand):
+        return C.optimized_rnnstack(operand, weights=W, hidden_size=hidden_size, num_layers=num_layers, bidirectional=True, recurrent_op='lstm')
+    return _func
+```
 
 The code calls MyBLSTMLayer when the model_type is BLSTM. We've reduced the number of hidden layers to 2, since the BLSTM layers have more total parameters than the DNN layers.
 For utterance based processing, entire utterance needs to be processed during training. Thus the minibatch size specifies the total number of frames to process but will pack multiple utterances together if possible. Setting the minibatch size to a larger number will allow for efficient processing with multiple utterances in each minibatch size. We have set the minibatch size to 4096.
 The traing the BLSTM model, you can execute the following command.
 
-    $ python M3_Train_AM.py --type BLSTM
+```bash
+$ python M3_Train_AM.py --type BLSTM
+```
 
 Because of the sequential nature of the BLSTM processing, they are inherently less parallelizable, and thus, train much slower than DNNs. On a GTX 965M GPU running on a laptop, the network trained as a rate of 440 seconds per epoch, or 20 times slower than the DNN. Thus, we will only train for 10 epochs to keep processing time reasonable.
 

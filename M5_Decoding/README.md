@@ -118,7 +118,9 @@ identical.
 
 To compile the graph, use the fstcompile command.
 
-    Fstcompile --isymbols=vocabulary.sym --osymbols=vocabulary.sym --keep_isymbols --keep_osymbols Grammar.tfst Grammar.fst
+```bash
+fstcompile --isymbols=vocabulary.sym --osymbols=vocabulary.sym --keep_isymbols --keep_osymbols Grammar.tfst Grammar.fst
+```
 
 ## The Pronunciation Lexicon, a Finite State Transducer
 

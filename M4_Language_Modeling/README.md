@@ -30,7 +30,9 @@ Thus, the language model (or LM) embodies the recognizer’s knowledge of what p
 
 A note on terminology: in language modeling we often talk about sentences as the word sequence corresponding to an entire speech utterance, without suggesting that these represent anything like a correct and complete sentence in the conventional grammatical sentences. In fact, a sentence for LM purposes can be anything a speaker would utter in the context of a speech application.  
 
-## Vocabulary  
+## N grams Models 
+
+### Vocabulary  
 
 We need to assign a probability to every possible sentence
 
@@ -41,7 +43,7 @@ where $n$ is the number of words, which is unbounded in principle. First, we sim
 
 Words outside the vocabulary are called out-of-vocabulary words, or OOVs. If we ever encounter an OOV in the input data we will incur (at least) one word recognition error, so it is important to choose the vocabulary so as to minimize the chances of OOVs. An obvious strategy is to pick the words that have the highest prior probability of occurring, as estimated from data. In other words, we choose the most frequently occurring words in a corpus of training data. For example, we can pick the N most frequent words, or all words occurring more than K times in the data, for suitable values of N or K. There is often an optimal vocabulary size that represents a good tradeoff between recognizer speed (a larger vocabulary means more computation in decoding) and accuracy (by reducing OOVs, but adding very rare words will have negligible effect on accuracy, and might even hurt accuracy, due to search errors and greater acoustic confusability within the vocabulary).
 
-## Markov factorization and N-grams  
+### Markov factorization and N-grams  
 
 Even with a finite vocabulary, we still have an infinite set of word sequences, so clearly we cannot parameterize the LM by listing the probability of every possible sentence. Even if we conceptually could do so, it would be impossible to get reliable probability estimates as the majority of possible sentences are very rare (the smaller a probability the more data is needed to estimate it reliably).
 
@@ -61,7 +63,7 @@ Note how each word is now predicted by only the immediately preceding one, i.e.,
 
 The generalization of this scheme is the N-gram model, i.e., each word is conditioned on the previous N-1 words. The parameters of such a model as associated with N-grams, i.e., strings N words. It turns out that there is good improvement when going from bigrams to trigrams, but little improvement as N is increased further. Therefore, in practice we rarely use LMs beyond 4-grams and 5-grams. In the labs we will use trigrams, and in the remainder of this module we will stick to bigrams for the most part, just to simplify notation. Just keep in mind that the concepts generalize to longer N-grams. 
 
-## Sentence start and end
+### Sentence start and end
 
 To let our N-gram model assign probabilities to all possible finite word sequences we are left with one small problem: how will the model predict where to end the sentence? We could devise a separate model component for the sentence length n, but it is far easier to introduce a special end-of-sentence tag `</s>` into the vocabulary that marks the end of a sentence. In other words, the LM generates words left to right, and stops as soon as `</s>` is drawn according to the conditional probability distribution. Importantly, this also ensures that the (infinite) sum of all sentences probabilities is equal to one, as it should be for a probability distribution.
 
@@ -76,7 +78,7 @@ $$
 
 We now turn to the problem of actually estimating these N-gram probabilities.
 
-## N-gram probability estimation  
+### N-gram probability estimation  
 
 The conditional probabilities based on N-grams can be naively estimated by their relative frequencies. Let $c(w_1 \dots w_k)$ be the number of occurrences (or count) of the k-gram $w_1 \ldots w_k$. For example, the conditional probability of “bites” following “dog” is the ratio
 
@@ -114,16 +116,16 @@ $$
 
 This is the unigram case. We generalize this to N-grams of length $k$ by treating the first $k-1$ words as the context for the last word, and counting the number of unique word types that occur in that context.
 
-$$\hat{P}(w_k|w_1 \ldots w_k-1) = \frac {c(w_1\ldots w_k)} {c(w_1 \ldots w_k-1)+V(w_1 \ldots w_{k-1}\cdot)}
+$$\hat{P}(w_k|w_1 \ldots w_k-1) = \frac {c(w_1\ldots w_k)} {c(w_1 \ldots w_k-1)+V(w_1 \ldots w_{k-1}\cdot)},
 $$
 
 where $V(w_1 \ldots w_{k-1}\cdot)$ means the size of the vocabulary observed in the context (i.e., right after) $w_1 \ldots w_{k-1}$. Also, the freed-up probability mass now goes to words that are not previously seen *in that context*. 
 
-## Back-off in N-gram models  
+### Back-off in N-gram models  
 
 How should we distribute the discounted probability mass for a given context? One possibility is evenly over the entire vocabulary. Say we are looking at the context "white dog", and in fact the only trigram with that context in the training data is "white dog barked", twice. The trigram probability under Witten-Bell becomes
 
-$$\hat{P}(barked|white\ dog) = \frac{c(white\ dog\ barked)}{c(white\ dog)+V(white\ dog \cdot)} = \frac{2}{2+1}  = \frac {2}{3}
+$$\hat{P}(barked|white\ dog) = \frac{c(white\ dog\ barked)}{c(white\ dog)+V(white\ dog \cdot)} = \frac{2}{2+1}  = \frac {2}{3}.
 $$
 
 So we now have a probability of $1/3$ to share with all the other words that might follow "white dog." Distributing it evenly would ignore the fact that some words are just overall more frequent than others. Therefore, we could distribute $1/3$ in proportion to the unigram probabilities of words. However, this would make "white dog the" much more probable than "white dog barks", since "the" much more common than "barks". A better solution is to use reduced context, in this case, just "dog" to allocate the probability mass. This means we can draw all occurrences of "dog" to guess what could come next. This method is called back-off, since we are falling back to a shorter (1-word) version of the context when the following word has not been observed in the full (2-word) context. We can write this as
@@ -142,7 +144,7 @@ Note that $\hat P_{bo}$ is the new back-off estimate for all N-grams. If an N-gr
 The $\alpha$ parameters are called backoff weights, but they are not free parameters of the model. Rather, once the N-gram probabilities $\hat{P}$ have been determined, the backoff weights are completely determined. Computing them is sometimes called (re-)normalizing the model, since they are chosen just so all the probability distributions sum to unity.
 
 
-## Likelihood, Entropy, and Perplexity
+## LM Evaluation: Likelihood, Entropy, and Perplexity
 
 Given two language models A and B, how can we tell which is better? Intuitively, if model A always gives a higher probabilities than B to the words that are found in a test (or evaluation) set, then A is better, since it "wastes" less probability on the words that did not occur in actuality. The total probability of a test set $w_{1}\ldots w_{n}$
 according to the model is
@@ -177,7 +179,8 @@ This means that perplexity is just the anti-logarithm (exponential) of the entro
 
 Remember to evaluate model quality (by likelihood, entropy, or perplexity) on a test set that is independent (not part) of the training data to get an unbiased estimate.
 
-## N-gram Pruning  
+## Operation on Language Models  
+### N-gram Pruning  
 
 An N-gram language model effectively records the N-grams in the training data, since each such N-gram yields a probability estimate that becomes a parameter in the model. This has the disadvantage that model size grows almost linearly with the amount of training data. It would be good to eliminate parameters that are redundant, i.e., where the back-off mechanism gives essentially the same result after removing a higher-order N-gram parameter. In a related task, we may want to shrink a model down to a certain size (for practical reasons) such that the least important parameters are removed to save space.
 
@@ -185,7 +188,7 @@ We can use the notion of entropy (or perplexity) to perform these tasks in a pri
 
 To make this algorithm practical, we don't need or want to use a separate test set to estimate entropy. Instead, we can use the entropy of the distribution embodied by the model itself. This leads to a succinct and [efficient pruning criterion](https://arxiv.org/pdf/cs/0006025v1.pdf) that uses only the information contained in the model.
 
-## Interpolating Probabilities
+### Interpolating Probabilities
 
 Assume you have two existing language models already trained, producing probability estimates $\hat{P}_1$ and $\hat{P}_2$, respectively. How can we combine these models for a better estimate of N-gram probabilities? If available, we could retrieve the training data for these models, pool it, and train a new model from the combined data. However, this is inconvenient and raises new problems. What can be done if one model has vastly more training data than the other? For example, the large model might be trained on newswire text, and the small model might be trained on small data collected for a new application. The large, mismatched corpus would completely swamp the N-gram statistics, and the resulting model would be mismatched to the intended application.
 
@@ -204,7 +207,7 @@ The parameter $\lambda$ controls the relative influence of the component models.
 Model interpolation is easily generalized to more than two models: a weighted combination of $M$ models using weights $\lambda_{1},\ \lambda_{2},\ldots,\ \lambda_{M}$, such that $\lambda_{1} + \ \lambda_{2}, + \ \ldots + \ \lambda_{M} = 1$. The condition that weights sum to 1 is needed to make sure that the interpolated model is again a properly normalized probability distribution over all word strings.
 
 
-## Merging Models
+### Merging Models
 
 Even though model interpolation is often highly effective in lowering overall perplexity without requiring retraining from the original training data, there is one practical problem: we need to keep multiple models around (on disk, in memory), evaluate each, and combine their probabilities on the fly when evaluating the interpolated model on test data.
 
@@ -226,6 +229,7 @@ Fortunately, in the case of backoff N-gram based LMs we can construct a single c
 
 Note that when we compute the $\hat{P}$ interpolated estimates, one of $\hat{P}_1$ and $\hat{P}_2$ (but not both) could be obtained by the back-off mechanism.
 
+## Advanced Topics  
 ## Class-based Language Models
  
 In this section, we provide a high-level understanding of a couple of the more advanced techniques in language modeling that are now widely used in practice. The methods in language modeling are constantly evolving, and research in this area is very active. By [some estimates](https://www.isca-archive.org/interspeech_2017/shen17_interspeech.html), the perplexity of state-of-the-art LMs is still two to three times worse than the predictive powers of humans, so we have a long way to go!
@@ -238,7 +242,7 @@ There are two basic approaches to come up with good word classes. One involves p
 
 The other way to define word classes is in a purely data-driven way, without human or domain knowledge. We can search the space of all possible word/class mappings and pick one that minimizes the perplexity of the resulting class-based model on the training data (or equivalently, maximizes the likelihood). The details of this search are nontrivial if is to be carried out in reasonable time, but several practical algorithms [have been proposed](http://anthology.aclweb.org/J/J92/J92-4003.pdf).  
 
-## Neural Network Language Models
+### Neural Network Language Models
 
 Neural network-based machine learning methods have taken over in many areas, including in acoustic modeling for speech recognition, as we saw earlier in this course. Similarly, artificial neural networks (ANNs) have also been devised for language modeling, and, given sufficient training data, have been shown to give superior performance compared to N-gram methods.
 
@@ -441,27 +445,39 @@ This lab is carried out in a Linux command shell environment. The get started, m
 
 Inside bash, change into the `M4_Language_Modeling` directory:
 
-    cd M4_Language_Modeling
+```bash
+cd M4_Language_Modeling
+```
 
 We will be using pre-built executables from the SRI Language Modeling toolkit (SRILM). Start by adding the SRILM binary directories to your search path. If you are in a Cygwin,
 
-    PATH=$PWD/srilm/bin/cygwin64:$PWD/srilm/bin:$PATH
+```text
+PATH=$PWD/srilm/bin/cygwin64:$PWD/srilm/bin:$PATH
+```
 
 In Linux or Windows Subsystem for Linux, use
 
-    PATH=$PWD/srilm/bin/i686-m64:$PWD/srilm/bin:$PATH
+```text
+PATH=$PWD/srilm/bin/i686-m64:$PWD/srilm/bin:$PATH
+```
 
 You can put this command in the .bashrc file in your home directory, so it is run automatically next time you invoke the shell. Also, make sure you have the gawk utility installed on your system. As a check that all is set up, run
 
-    ngram-count -write-vocab –
+```bash
+ngram-count -write-vocab –
+```
 
-    compute-oov-rate < /dev/null
+```bash
+compute-oov-rate < /dev/null
+```
 
 which should each output a few lines of text without error messages. It will be helpful to also install the optional wget command.
 
 Since language modeling involves a fair amount of text processing it will be useful to have some familiarity with Linux text utilities such as sort, head, wc, sed, gawk or perl, and others, as well as Linux mechanisms for redirecting command standard input/output, and pipelining several commands. We will show you commands that you can copy into the shell to follow along, using this symbol
 
-    command argument1 argument2 ...
+```bash
+command argument1 argument2 ...
+```
 
 but we encourage you try your own solutions to achieve the stated goals of each exercise, and to explore variants.
 Preparing the data
@@ -472,21 +488,29 @@ TASK: Locate files in the ‘data’ subdirectory and count the number of lines 
 
 SOLUTION:
 
-    ls data
+```bash
+ls data
+```
 
-    wc -wl data/dev.txt data/test.txt
+```bash
+wc -wl data/dev.txt data/test.txt
+```
 
 TASK: View the contents of these files, using your favorite pager, editor, or other tool. What do you notice about the format of these files? How do they differ from text you are used to?
 
 SOLUTION
 
-    head data/*.txt
+```bash
+head data/*.txt
+```
 
 You will notice that the data is in all-lowercase, without any punctuation. This is because we will model sequences of words only, devoid of textual layout, similar to how one your read or speak them. The spelling has to match the way words are represented in the acoustic model. The process of mapping text to the standard form adopted for modeling purposes is called text normalization (or TN for short), and typically involves stripping punctuation, mapping case, fixing typos, and standardizing spellings of words (like MR. versus MISTER). This step can consume considerable time and often relies on powerful text processing tools like sed or perl.
 
 Because it is so dependent on the source of the data, domain conventions, and tool knowledge, we will not elaborate on it here. Instead, we will download an LM training corpus that has already been normalized,
 
-    wget http://www.openslr.org/resources/11/librispeech-lm-norm.txt.gz
+```bash
+wget http://www.openslr.org/resources/11/librispeech-lm-norm.txt.gz
+```
 
 If your system doesn’t have the wget command you can download this file in a browser and move it into the LM lab directory.
 
@@ -494,9 +518,13 @@ TASK: Inspect the file and count lines and word tokens. How does the text normal
 
 SOLUTION: The file is compressed in the gzip (.gz) so we must use the gunzip tool
 
-    gunzip -c librispeech-lm-norm.txt.gz | head
+```bash
+gunzip -c librispeech-lm-norm.txt.gz | head
+```
 
-    gunzip -c librispeech-lm-norm.txt.gz | wc -wl
+```bash
+gunzip -c librispeech-lm-norm.txt.gz | wc -wl
+```
 
 The second command can take a while as the file is large. You will notice that this file is text normalized but uses all-uppercase instead of all-lowercase.
 
@@ -512,7 +540,9 @@ The first step in building a LM is to define the set of words that it should mod
 
 One of the functions of the ngram-count tool is to count word and ngram occurrences in a text file.
 
-    ngram-count -text TEXT -order 1 -write COUNTS -tolower
+```bash
+ngram-count -text TEXT -order 1 -write COUNTS -tolower
+```
 
 Will count 1-grams (i.e., words) and write the counts to a file. The final option above maps all text to lowercase, thus dealing with the mismatch we have between our training and test data.
 
@@ -522,11 +552,17 @@ HINT: Check out the Linux sort, head, and cut commands.
 
 SOLUTION:
 
-    ngram-count -text librispeech-lm-norm.txt.gz -order 1 -write librispeech.1grams -tolower
+```bash
+ngram-count -text librispeech-lm-norm.txt.gz -order 1 -write librispeech.1grams -tolower
+```
 
-    sort -k 2,2 -n -r librispeech.1grams | head -10000 > librispeech.top10k.1grams
+```bash
+sort -k 2,2 -n -r librispeech.1grams | head -10000 > librispeech.top10k.1grams
+```
 
-    cut -f 1 librispeech.top10k.1grams | sort > librispeech.top10k.vocab
+```bash
+cut -f 1 librispeech.top10k.1grams | sort > librispeech.top10k.vocab
+```
 
 The intermediate file librispeech.top10k.1grams contains the words and their counts sorted most frequent first. As you might expect, common function words liked “the”, “and”, “of” appear at the top of the list. Near the top we also find two special tags, `<s>` and `</s>`. These are added by ngram-count to mark the start and end, respectively, of each sentence. Their count equals the number of non-empty lines in the training data, since it is assumed that each line contains one sentence (empty lines are ignored).
 
@@ -538,15 +574,25 @@ HINT: Use the same method as before to generate the unigrams for dev and test da
 
 SOLUTION:
 
-    compute-oov-rate librispeech.top10k.vocab
+```bash
+compute-oov-rate librispeech.top10k.vocab
+```
 
-    ngram-count -text data/dev.txt -order 1 -write dev.1grams
+```bash
+ngram-count -text data/dev.txt -order 1 -write dev.1grams
+```
 
-    compute-oov-rate librispeech.top10k.vocab dev.1grams
+```bash
+compute-oov-rate librispeech.top10k.vocab dev.1grams
+```
 
-    ngram-count -text data/test.txt -order 1 -write test.1grams
+```bash
+ngram-count -text data/test.txt -order 1 -write test.1grams
+```
 
-    compute-oov-rate librispeech.top10k.vocab test.1grams
+```bash
+compute-oov-rate librispeech.top10k.vocab test.1grams
+```
 
 Usually we expect the OOV rate to be lowest on the training set because we used it to select the words (the vocabulary is biased toward the training set), but in this case the test sets have been chosen to be “cleaner” and have lower OOV rates. (The training data actually contains some languages other than English, though most of those will not make it into the vocabulary.)
 
@@ -567,9 +613,13 @@ HINT: Consult the ngram-count man page and look up the options -order, -text, an
 
 SOLUTION: The first command uses about 10GB of memory and takes 15 minutes on a 2.4GHz Intel Xeon E5 CPU, so be sure to procure a sufficiently equipped machine and some patience.
 
-    ngram-count -text librispeech-lm-norm.txt.gz -tolower -order 3 -write librispeech.3grams.gz
+```bash
+ngram-count -text librispeech-lm-norm.txt.gz -tolower -order 3 -write librispeech.3grams.gz
+```
 
-    gunzip -c librispeech.3grams.gz | less
+```bash
+gunzip -c librispeech.3grams.gz | less
+```
 
 Note that we want to compress the output file since it is large. The -order option in this case is strictly speaking optional since order 3 is the default setting. Note that the output is grouped by common prefixes of N-grams, but that the words themselves are not alphabetically sorted. You can use the -sort option to achieve the latter.
 
@@ -581,17 +631,23 @@ HINT: Consult the ngram-count man page for options -read, -lm, -vocab, and -wbdi
 
 SOLUTION:
 
-    ngram-count -debug 1 -order 3 -vocab librispeech.top10k.vocab -read librispeech.3grams.gz -wbdiscount -lm librispeech.3bo.gz
+```bash
+ngram-count -debug 1 -order 3 -vocab librispeech.top10k.vocab -read librispeech.3grams.gz -wbdiscount -lm librispeech.3bo.gz
+```
 
 We added the -debug 1 option to output a bit of information about the estimation and resulting LM, in particular the number of N-grams output.
 
 We will now try to understand the way LM parameters are stored in the model file. Peruse the file using
 
-    gunzip -c librispeech.3bo.gz | less
+```bash
+gunzip -c librispeech.3bo.gz | less
+```
 
 or, if you prefer, gunzip the entire file using
 
-    gunzip librispeech.3bo.gz
+```bash
+gunzip librispeech.3bo.gz
+```
 
 and open librispeech.3bo in an editor. Note: the editor better be able to handle very large files – the LM file has a size of 1.3 GB.
 Model evaluation
@@ -602,60 +658,90 @@ TASK: Given the sentence “a model was born”, what is the conditional probabi
 
 SOLUTION: The model is a trigram, so the longest N-gram that would yield a probability to predict “born” would be “model was born”. So let’s check the model for that trigram. (One way to locate information in the model file is the zgrep command, which searches a compressed file for text strings. Each search string below starts with a TAB character to avoid spurious matches against other words that contain the string as a suffix. You can use your favorite tools to perform these searches.)
 
-    zgrep " model was born" librispeech.3bo.gz
+```bash
+zgrep " model was born" librispeech.3bo.gz
+```
 
 This outputs nothing, meaning that trigram is not found in the model, and we have to use the back-off mechanism. We look for the line that contains the context bigram “model was” following a whitespace character:
 
-    zgrep -E “\smodel was” librispeech.3bo.gz | head -1
+```bash
+zgrep -E “\smodel was” librispeech.3bo.gz | head -1
+```
 
-    -2.001953 model was 0.02913048
+```text
+-2.001953 model was 0.02913048
+```
 
 The first number is the log probability $P(was \vert model)$, which is of no use to use here. The number at the end is the backoff weight associated with the context “model was”. It, too, is encoded as a base-10 logarithm. Next, we need to find the bigram probability we’re backing off to, i.e., $P(born \vert was)$:
 
-    zgrep -E “\swas born” librispeech.3bo.gz | head -1
+```bash
+zgrep -E “\swas born” librispeech.3bo.gz | head -1
+```
 
-    -2.597636 was born -0.4911189
+```text
+-2.597636 was born -0.4911189
+```
 
 The first number is the bigram probability $P(born \vert was)$. We can now compute the log probability for $P(born \vert model was)$ as the sum of the backoff weight and the bigram probability:
 
-    0.02913048 + -2.597636 = -2.568506, or as a linear probability 10-2.568506 = 0.002700813.
+```text
+0.02913048 + -2.597636 = -2.568506, or as a linear probability 10-2.568506 = 0.002700813.
+```
 
 TASK: Compute the total sentence probability of “a model was born” using the ngram -ppl function. Verify that the conditional probability for “born” is as computed above.
 
 SOLUTION: We feed the input sentence to the ngram command in a line of standard input, i.e., using “-“ as the filename argument to -ppl. Use the option -debug 2 to get a detailed breakdown of the sentence-level probability:
 
-    echo “a model was born” | ngram -debug 2 -lm librispeech.3bo.gz -ppl –
+```bash
+echo “a model was born” | ngram -debug 2 -lm librispeech.3bo.gz -ppl –
+```
 
-    a model was born
+```text
+a model was born
+```
 
-    p( a | <s> ) =
-    2gram
-    0.01653415
-    -1.781618
+```text
+p( a | <s> ) =
+2gram
+0.01653415
+-1.781618
+```
 
-    p( model | a ...) =
-    3gram
-    0.0001548981
-    -3.809954
+```text
+p( model | a ...) =
+3gram
+0.0001548981
+-3.809954
+```
 
-    p( was | model ...) =
-    3gram
-    0.002774693
-    -2.556785
+```text
+p( was | model ...) =
+3gram
+0.002774693
+-2.556785
+```
 
-    p( born | was ...) =
-    2gram
-    0.002700813
-    -2.568506
+```text
+p( born | was ...) =
+2gram
+0.002700813
+-2.568506
+```
 
-    p( </s> | born ...) =
-    3gram
-    0.1352684
-    -0.8688038
+```text
+p( </s> | born ...) =
+3gram
+0.1352684
+-0.8688038
+```
 
-    1 sentences, 4 words, 0 OOVs
+```text
+1 sentences, 4 words, 0 OOVs
+```
 
-    0 zeroprobs, logprob= -11.58567 ppl= 207.555 ppl1= 787.8011
+```text
+0 zeroprobs, logprob= -11.58567 ppl= 207.555 ppl1= 787.8011
+```
 
 Notice how ngram adds the sentence start and end tags, `<s>` and `</s>`. The final line gives both the log probability and the perplexity of the entire sentence. The line starting $p(born \vert was~ \dots)$ has the conditional word probability that we computed previously. The label ``2gram" indicates that a backoff to bigram was used. The final "logprob" value -11.58567 is just the sum of the log probabilities printed for each word token. Let's verify the perplexity value based on it's definition: we divide the logprob by the number of word tokens (including the end-of-sentence), convert to a probability and take the reciprocal (by negating the exponent): 10-\ (-11.58567\ /\ 5) = 207.555. Of course this is not a good estimate of perplexity as it is based on only 5 data points.
 
@@ -663,11 +749,17 @@ TASK: Compute the perplexity of the model over the entire dev set.
 
 SOLUTION: The exact same invocation of ngram can be used, except we use the file containing the dev set as ppl input. We also omit the -debug option to avoid voluminous output. Note: these commands take a few seconds to run, only because loading the large LM file into memory takes some time - the model evaluation itself is virtually instantaneous.
 
-    ngram -lm librispeech.3bo.gz -ppl data/dev.txt
+```bash
+ngram -lm librispeech.3bo.gz -ppl data/dev.txt
+```
 
-    file dev.txt: 466 sentences, 10841 words, 625 OOVs
+```text
+file dev.txt: 466 sentences, 10841 words, 625 OOVs
+```
 
-    0 zeroprobs, logprob= -21939 ppl= 113.1955 ppl1= 140.4475
+```text
+0 zeroprobs, logprob= -21939 ppl= 113.1955 ppl1= 140.4475
+```
 
 We thus have a perplexity of about 113. The first line of summary statistics also gives the number of out-of-vocabulary words (which don't count toward the perplexity, since they get probability zero). In this case the OOV rate is 625/10841 = 5.8%.
 
@@ -685,43 +777,71 @@ We will now work through the steps involved in adapting an existing LM to a new 
 
 We will use the “librispeech” corpus as our out-of-domain data, and adapt the model we just created from that corpus to the AMI domain, using a small amount of target-domain data corpus. Corpus subsets for training and test are in the data directory:
 
-    wc -wl data/ami-*.txt
+```bash
+wc -wl data/ami-*.txt
+```
 
-    6473 data/ami-dev.txt
+```text
+6473 data/ami-dev.txt
+```
 
-    2096 20613 data/ami-test.txt
+```text
+2096 20613 data/ami-test.txt
+```
 
-    86685 924896 data/ami-train.txt
+```text
+86685 924896 data/ami-train.txt
+```
 
 Also provided is a target domain vocabulary consisting of all words occurring at least 3 times in the training data, consisting of 6171 words:
 
-    wc -l data/ami-train.min3.vocab
+```bash
+wc -l data/ami-train.min3.vocab
+```
 
-    6271 data/ami-train.min3.vocab
+```text
+6271 data/ami-train.min3.vocab
+```
 
 TASK: Build the same kind of Witten-Bell-smoothed trigram model as before, using the provide AMI training data and vocabulary. Evaluate its perplexity on the AMI dev data.
 
 SOLUTION:
 
-    ngram-count -text data/ami-train.txt -tolower -order 3 -write ami.3grams.gz
+```bash
+ngram-count -text data/ami-train.txt -tolower -order 3 -write ami.3grams.gz
+```
 
-    ngram-count -debug 1 -order 3 -vocab data/ami-train.min3.vocab -read ami.3grams.gz -wbdiscount -lm ami.3bo.gz
+```bash
+ngram-count -debug 1 -order 3 -vocab data/ami-train.min3.vocab -read ami.3grams.gz -wbdiscount -lm ami.3bo.gz
+```
 
-    ngram -lm ami.3bo.gz -ppl data/ami-dev.txt
+```bash
+ngram -lm ami.3bo.gz -ppl data/ami-dev.txt
+```
 
-    file data/ami-dev.txt: 2314 sentences, 26473 words, 1264 OOVs
+```text
+file data/ami-dev.txt: 2314 sentences, 26473 words, 1264 OOVs
+```
 
-    0 zeroprobs, logprob= -55254.39 ppl= 101.7587 ppl1= 155.5435
+```text
+0 zeroprobs, logprob= -55254.39 ppl= 101.7587 ppl1= 155.5435
+```
 
 TASK: Evaluate the previously built librispeech model on the AMI dev set.
 
 SOLUTION: Again, this takes a few seconds due to the loading time of the large model.
 
-    ngram -lm librispeech.3bo.gz -ppl data/ami-dev.txt
+```bash
+ngram -lm librispeech.3bo.gz -ppl data/ami-dev.txt
+```
 
-    file data/ami-dev.txt: 2314 sentences, 26473 words, 3790 OOVs
+```text
+file data/ami-dev.txt: 2314 sentences, 26473 words, 3790 OOVs
+```
 
-    0 zeroprobs, logprob= -56364.05 ppl= 179.8177 ppl1= 305.3926
+```text
+0 zeroprobs, logprob= -56364.05 ppl= 179.8177 ppl1= 305.3926
+```
 
 Note how both the perplexity and the OOV count are substantially higher for this large model than for the much small, but well-matched AMI language model. If we modified the vocabulary of the old model to match the new domain its perplexity would increase further. (Can you explain why?)
 
@@ -731,25 +851,39 @@ TASK: Construct an interpolated model based on the existing librispeech and AMI 
 
 HINT: Make use of the ngram options -mix-lm, -lambda, and -write-lm.
 
-    ngram -debug 1 -order 3 -lm ami.3bo.gz -lambda 0.8 -mix-lm librispeech.3bo.gz -write-lm ami+librispeech.bo.gz
+```bash
+ngram -debug 1 -order 3 -lm ami.3bo.gz -lambda 0.8 -mix-lm librispeech.3bo.gz -write-lm ami+librispeech.bo.gz
+```
 
-    ngram -lm ami+librispeech.3bo.gz -ppl data/ami-dev.txt
+```bash
+ngram -lm ami+librispeech.3bo.gz -ppl data/ami-dev.txt
+```
 
-    file ami-dev.txt: 2314 sentences, 26473 words, 783 OOVs
+```text
+file ami-dev.txt: 2314 sentences, 26473 words, 783 OOVs
+```
 
-    0 zeroprobs, logprob= -56313.77 ppl= 102.546 ppl1= 155.6145
+```text
+0 zeroprobs, logprob= -56313.77 ppl= 102.546 ppl1= 155.6145
+```
 
 At first sight, this result is disappointing. Note how the perplexity is now 102, slightly up from the value that the AMI-only model produced. But also note how the number of OOVs was almost halved (from 1264 to 783), due to the addition of words covered by the out-of-domain model that were not in the AMI model. The model now has more words to choose from when making its predictions. An important lesson from this exercise is that we can only compare perplexity values when the underlying vocabularies are the same. Otherwise, the enlarged vocabulary is a good thing, as it reduces OOVs. The interpolation step has effectively adapted not only the model probabilities, but the vocabulary as well.
 
 Still, it would be nice to do an apples-to-apples comparison to see the effect of just the probability interpolation on model perplexity. We can do this by telling the ngram tool to only use words from the AMI vocabulary in the interpolated model:
 
-    ngram -debug 1 -order 3 -lm ami.3bo.gz -lambda 0.8 -mix-lm librispeech.3bo.gz -write-lm ami+librispeech.bo.gz -vocab data/ami-train.min3.vocab -limit-vocab
+```bash
+ngram -debug 1 -order 3 -lm ami.3bo.gz -lambda 0.8 -mix-lm librispeech.3bo.gz -write-lm ami+librispeech.bo.gz -vocab data/ami-train.min3.vocab -limit-vocab
+```
 
 This is the same command as before, but with the -limit-vocab option added, telling ngram to only use the vocabulary specified by the -vocab option argument. We can now evaluate perplexity again:
 
-    file ami-dev.txt: 2314 sentences, 26473 words, 1264 OOVs
+```text
+file ami-dev.txt: 2314 sentences, 26473 words, 1264 OOVs
+```
 
-    0 zeroprobs, logprob= -53856.04 ppl= 90.52426 ppl1= 136.8931
+```text
+0 zeroprobs, logprob= -53856.04 ppl= 90.52426 ppl1= 136.8931
+```
 
 The number of OOVs is now back to the same as with ami.3bo.gz, but perplexity is reduced from 102 to 90.
 
@@ -763,7 +897,7 @@ TASK (optional): Use compute-best-mix to find the best -lambda value for interpo
 
 HINT: As input to the command, generate detailed perplexity output for both models, using `ngram -debug 2 -ppl data/ami-dev.txt`.
 
-Model pruning
+### Model pruning
 
 We saw earlier that model size (and perplexity) varies with the amount of training data. However, if a model gets too big for deployment as the data size increases it would be a shame to have to not use it just for that reason. A better approach is to train a model on all available data, and then eliminate parameters that are redundant or have little effect on model performance. This is what model pruning does.
 
@@ -773,7 +907,9 @@ TASK: Shrink the large librispeech model trained earlier, using pruning values b
 
 SOLUTION: Starting with 1e-5 (= 10-5 in floating point notation), create the pruned model:
 
-    ngram -debug 1 -lm librispeech.3bo.gz -prune 1e-5 -write-lm librispeech-pruned.3bo.gz
+```bash
+ngram -debug 1 -lm librispeech.3bo.gz -prune 1e-5 -write-lm librispeech-pruned.3bo.gz
+```
 
 Then evaluate the librispeech-pruned.3bo.gz model on the entire dev set, as before. The -debug option lets the tool output the number of ngrams pruned and written out. Add the resulting number of bigrams and trigrams to characterize the pruned model size (roughly, the number of model parameters, since the number of unigrams is fixed to the vocabulary, and the backoff weights are determined by the probability parameters).  
 

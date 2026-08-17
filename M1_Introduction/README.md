@@ -228,7 +228,7 @@ Test your understanding of the fundamentals of speech recognition. Select your a
   <legend>Question 7</legend>
   <p class="srq-prompt">A Real-Time Factor (RTF) below 1.0 indicates that the system&hellip; <span class="srq-hint">(Choose one)</span></p>
   <label><input type="radio" name="q7" value="0"> <span>Processes audio slower than real time</span></label>
-  <label><input type="radio" name="q7" value="1"> <span>Processes the audio faster than it arrives</span></label>
+  <label><input type="radio" name="q7" value="1"> <span>Processes the audio faster than its length</span></label>
   <label><input type="radio" name="q7" value="2"> <span>Cannot process streaming audio</span></label>
   <label><input type="radio" name="q7" value="3"> <span>Requires the audio to be under one second</span></label>
   <p class="srq-exp">RTF = processing time / audio time. Below 1.0 means the recognizer runs <strong>faster than real time</strong>, so it can catch up to streaming input.</p>

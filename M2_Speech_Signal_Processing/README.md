@@ -344,7 +344,9 @@ In the first part of this lab, you are to complete the missing code in the Front
 
 You can compare the figures to the figures below. Once the code is verified to be working, the feature extraction program should be used to create feature vector files for the training, development, and test sets. This will be done using M2_Wav2Feat_Batch.py. This program takes a command line argument `--set` (or `-s`) which takes as an argument either `train` , `dev` , or `test`. For example  
 
-    $ python M2_Wav2Feat_Batch.py --set train
+```bash
+$ python M2_Wav2Feat_Batch.py --set train
+```
 
 This program will use the code you write in the FrontEnd class to compute feature extraction for all the files in the LibriSpeech corpus. You need to call this program 3 times, once each for train, dev, and test sets.
 

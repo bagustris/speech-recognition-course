@@ -1,6 +1,6 @@
 # Speech Recognition Course
 
-Material for learning speech recognition, based on Microsoft teaching material on EdX (changed from CNTK to PyTorch). Learning/teaching materials are given in each module/directory. The comprehensive learning materials covers signal processing, acoustic modeling, language modeling, and modern end-to-end approaches
+Material for learning/teaching automatic speech recognition (ASR), based on Microsoft teaching material on EdX (changed from CNTK to PyTorch). Materials are given in each module/directory. The comprehensive learning materials focus on the **practical ASR**, from basic concept to model development.
 
 Github Pages:  [https://bagustris.github.io/speech-recognition-course](https://bagustris.github.io/speech-recognition-course)  
 Repository: [https://github.com/bagustris/speech-recognition-course](https://github.com/bagustris/speech-recognition-course)  
@@ -13,13 +13,6 @@ Repository: [https://github.com/bagustris/speech-recognition-course](https://git
 - [Module 5: Decoding](./M5_Decoding/)
 - [Module 6: End-to-End Models](./M6_End_to_End_Models/)
 
-Convert from markdown to pdf with pandoc in each module:
-
-```bash
-pandoc readme.md -o readme.pdf
-``` 
-
-Then, you can inspect the generated PDFs.
 
 ### References:  
 1. https://learning.edx.org/course/course-v1:Microsoft+DEV287x+1T2019a/home   
