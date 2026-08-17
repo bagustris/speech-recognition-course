@@ -2,10 +2,11 @@
 
 ## Table of Contents
 - [Introduction](#introduction)
-- [Feature Extraction](#feature-extraction-for-speech-recognition)
+- [Feature Extraction](#feature-extraction)
+  - [Short-time Fourier Analysis](#short-time-fourier-analysis)
 - [Mel filtering](#mel-filtering)
 - [Logarithmic compression](#logarithmic-compression)
-- [Other considerations](#other-considerations)
+  - [Other considerations](#other-considerations)
 - [Feature Normalization](#feature-normalization)
 - [Summary](#summary)
 - [Quiz](#quiz)
