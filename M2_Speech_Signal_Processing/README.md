@@ -43,7 +43,7 @@ One thing that is apparent from observing these waveforms is that speech is a no
 
 Because we are extracting a chunk from a longer continuous signal, it is important to take care of edge effects by applying a window to the frame of data. Typically, a Hamming window is used, although other windows may also be used.
 
-If we let m be in the frame index, n is the sample index, and L is the frame size in samples and N is the frameshift in samples, each frame of audio is exacted from the original signal as
+If we let $m$ be in the frame index, $n$ is the sample index, and $L$ is the frame size in samples and $N$ is the frameshift in samples, each frame of audio is exacted from the original signal as
 
 $$x_m[n] = w[n] x[m N+n], n=0, 1, \ldots, L-1$$
 

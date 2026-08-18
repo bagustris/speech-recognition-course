@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 import htk_featio as htk
 import speech_sigproc as sp
 
-data_dir = "../Experiments"
-wav_file = "../Experiments/LibriSpeech/dev-clean/1272/128104/1272-128104-0000.flac"
+data_dir = "../data"
+wav_file = "../data/LibriSpeech/dev-clean/1272/128104/1272-128104-0000.flac"
 feat_file = os.path.join(data_dir, "feat/1272-128104-0000.feat")
 plot_output = True
 

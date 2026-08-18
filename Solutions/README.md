@@ -64,8 +64,9 @@ The output should match `misc/expected_result.txt` (WER 44.44% on the sample).
 ### Module 2 — Feature extraction
 
 Single file — note this script's paths (`wav_file`, output `feat/`) are
-hard-coded relative to `../Experiments/`, so edit the `wav_file`/`data_dir`
-variables at the top to point at a wav you actually have:
+hard-coded relative to `../data/`, so edit the `wav_file`/`data_dir`
+variables at the top to point at a wav you actually have. 
+You can also softlink your LibriSpeech corpus into `../data/LibriSpeech` to match the expected path.  
 
 ```bash
 ../.venv/bin/python M2_Wav2Feat_Single.py
