@@ -20,7 +20,7 @@ Developing and understanding Automatic Speech Recognition systems is an interdis
 
 This course will focus on the structure of American English speech. Other languages may differ in more or less significant ways, from the use of tone to convey meaning to the sets of meaningful distinctions in the sound inventory of the language. 
 
-Speech production process is how do human produce speech and how this leads to the study of phonetics. Speech has a hierarchical structure. At the top level, speech is made up of utterances. Utterances can be broken down into words, which can be broken down into syllables, which can be broken down into phones. Phones are the acoustic realizations of phonemes, which are the atomic units of speech sounds. Phonemes are the smallest units of sound that can change meaning in a language. For example, the words "bat" and "pat" differ in their initial phoneme, /b/ vs /p/, which changes the meaning of the word.  
+Speech production process is how do human produce speech and this leads to the study of phonetics. Speech has a hierarchical structure. At the top level, speech is made up of utterances. Utterances can be broken down into words, which can be broken down into syllables, which can be broken down into phones. Phones are the acoustic realizations of phonemes, which are the atomic units of speech sounds. Phonemes are the smallest units of sound that can change meaning in a language. For example, the words "bat" and "pat" differ in their initial phoneme, /b/ vs /p/, which changes the meaning of the word.  
 
 There are three basic parts of an automatic speech recognition system: the acoustic model, the language model, and the decoder. The acoustic model is responsible for modeling how sequences of words are converted into acoustic realizations and then into the acoustic observations presented to the ASR system. The language model assigns a probability to every possible word sequence. It is trained on sequences of words that are expected to be like those the final system will encounter in everyday use. The decoder searches for the best word sequence given the acoustic observations and the models.
 
@@ -54,7 +54,7 @@ All state-of-the-art speech recognition systems use this context-dependent natur
 #### Syllables and words
 A syllable is a sequence of speech sounds composed of a nucleus phone and optional initial and final phones. The nucleus is typically a vowel or syllabic consonant and is the voiced sound that can be shouted or sung.
 
-For example, the English word “bottle” contains two syllables. The first syllable has three phones, which are “b aa t” in the Arpabet phonetic transcription code. The “aa” is the nucleus, the “b” is a voiced consonant initial phone, and the “t” is an unvoiced consonant final phone. The second syllable consists only of the syllabic consonant "l."
+For example, the English word “bottle” contains two syllables. The first syllable has three phones, which are “b aa t” in the Arpabet phonetic transcription code. The “aa” is the nucleus, the “b” is a voiced consonant initial phone, and the “t” is an unvoiced consonant final phone. The second syllable is consists  of the syllabic consonant "l."
 
 A word can also be composed of a single syllable, which itself is a single phoneme, e.g., "Eye," "uh," or "eau."
 

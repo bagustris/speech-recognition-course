@@ -39,11 +39,11 @@ For speech recognition, the phoneme classification is largely dependent on the v
 ## Feature extraction
 
 ### Short-time Fourier Analysis
-One thing that is apparent from observing these waveforms is that speech is a non-stationary signal. That means its statistical properties change over time. Therefore, in order to properly analyze a speech signal, we need to examine the signal in chunks (also called windows or frames) that are small enough that the speech can be assumed to be stationary within those windows. Thus, we perform the analysis on a series of short, overlapping frames of audio. In speech recognition, we typically use windows of length 0.025 sec (25 ms) with an overlap of 0.01 (10 ms). This corresponds to a frame rate of 100 frames per second.
+One thing that is apparent from observing these waveforms is that speech is a non-stationary signal. That means its statistical properties change over time. Therefore, in order to properly analyze a speech signal, we need to examine the signal in chunks (also called windows or frames) that are small enough that the speech can be assumed to be stationary within those windows. Thus, we perform the analysis on a series of short, overlapping frames of audio. In speech recognition, we typically use windows of length 0.025 sec (25 ms) with an frameshift of 0.01 (10 ms). This corresponds to a frame rate of 100 frames per second.
 
 Because we are extracting a chunk from a longer continuous signal, it is important to take care of edge effects by applying a window to the frame of data. Typically, a Hamming window is used, although other windows may also be used.
 
-If we let $m$ be in the frame index, $n$ is the sample index, and $L$ is the frame size in samples and $N$ is the frameshift in samples, each frame of audio is exacted from the original signal as
+If we let $m$ be in the frame index, $n$ is the sample index in discrete time (sampled from $x(t)$ continues signal), and $L$ is the frame size in samples and $N$ is the frameshift in samples, each frame of audio is exacted from the original signal as
 
 $$x_m[n] = w[n] x[m N+n], n=0, 1, \ldots, L-1$$
 
