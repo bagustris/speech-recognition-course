@@ -14,7 +14,7 @@
 
 ## Improved Objective Functions  
 
-Recall from Module 3 that he most common objective function used for training neural networks for classification tasks is frame-based cross entropy. With this objective function, a single one-hot label $z\left\lbrack t \right\rbrack$ is specified for every input frame of data t, and compared with the softmax output of the acoustic model.
+Recall from Module 3 that the most common objective function used for training neural networks for classification tasks is frame-based cross entropy. With this objective function, a single one-hot label $z\left\lbrack t \right\rbrack$ is specified for every input frame of data t, and compared with the softmax output of the acoustic model.
 
 
 If we define
