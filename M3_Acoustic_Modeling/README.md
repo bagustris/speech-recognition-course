@@ -7,14 +7,14 @@
 - [Markov Chains](#markov-chains)
   - [Overview](#overview)
   - [Hidden Markov Models](#hidden-markov-models) 
-- [Problem With Hiddden Markov Models](#problem-with-hiddden-markov-models)
+- [Problem With Hidden Markov Models](#problem-with-hidden-markov-models)
   - [The Evaluation Problem](#the-evaluation-problem)
   - [The Decoding Problem](#the-decoding-problem)
   - [The Training Problem](#the-training-problem)
 - [Hidden Markov Models for Speech Recognition](#hidden-markov-models-for-speech-recognition)
   - [Choice of subword units](#choice-of-subword-units)
 - [Deep Neural Network Acoustic Models](#deep-neural-network-acoustic-models)
-  - [Generate Frame based Sonal Levels](#generate-frame-based-sonal-levels)
+  - [Generating Frame-based Senone Labels](#generating-frame-based-senone-labels)
 - [Training Deep Neural Network](#training-deep-neural-network)
   -  [Training Feedforward Deep Neural Networks](#training-feedforward-deep-neural-networks)
   - [Training Recurrent Neural Networks](#training-recurrent-neural-networks)
@@ -31,9 +31,9 @@ In this module, we’ll talk about the acoustic model used in modern speech reco
 ### Overview  
 Before studying HMMs, it will be useful to briefly review Markov chains. Markov chains are a method for modeling random processes. In a Markov chains, discrete events are modeled with a number of states. The movement among states is governed by a random process.
 
-Let's consider an example. In a weather prediction application, the states could be "Sunny", "Partly Cloud", "Cloudy", and "Raining". If we wanted to consider the probability of a particular 5 day forecast, e.g. $P(p,p,c,r,s)$, we would employ Bayes' rule to break up this joint probability into a series of conditional probabilities.
+Let's consider an example. In a weather prediction application, the states could be "Sunny", "Partly Cloudy", "Cloudy", and "Raining". If we wanted to consider the probability of a particular 5 day forecast, e.g. $P(p,p,c,r,s)$, we would employ the chain rule of probability to break up this joint probability into a series of conditional probabilities.
 
-$$p(X1,X2,X3,X4,X5)=p(X5|X4,X3,X2,X1)p(X4|X3,X2,X1)p(X3|X2,X1)p(X2|X1)p(X1) 
+$$p(X_1,X_2,X_3,X_4,X_5)=p(X_5|X_4,X_3,X_2,X_1)p(X_4|X_3,X_2,X_1)p(X_3|X_2,X_1)p(X_2|X_1)p(X_1) 
 $$
 
 This expression can be greatly simplified if we consider the first-order Markov assumption, which states that
@@ -45,7 +45,7 @@ Under this assumption, the joint probability of a 5-day forecast can be written 
 
 $$ 
 \begin{split}
-p(X1,X2,X3,X4,X5) &= p(X5|X4)p(X4|X3)p(X3|X2)p(X2|X1)p(X1) \\
+p(X_1,X_2,X_3,X_4,X_5) &= p(X_5|X_4)p(X_4|X_3)p(X_3|X_2)p(X_2|X_1)p(X_1) \\
 
 &=p(X_1)\prod_{i=2}^5p(X_i|X_{i-1})
 \end{split}
@@ -94,16 +94,16 @@ Thus, a HMM is characterized by a set of N states along with
 - A probability distribution for each state $B= \\{ b_i(x) \\} , \\{ i= 1,2,\ldots, N \\}$
 - A prior probability distribution over states $\pi= \lbrace \pi_1, \pi_2, \ldots, \pi_N \rbrace $
 
-This, we can summarize the parameters of an HMM compactly as $\Phi = \left \lbrace A, B, \pi\right \rbrace $
+Thus, we can summarize the parameters of an HMM compactly as $\Phi = \left \lbrace A, B, \pi\right \rbrace $
 
 There are three fundamental problems for hidden Markov models, each with well-known solutions. We will only briefly describe the problems and their solutions next. There are many good resources online and in the literature for additional details. 
 
-## Problem With Hiddden Markov Models
+## Problem With Hidden Markov Models
 ### The Evaluation Problem
 
 Given a model with parameters $\Phi$ and a sequence of observations $X = \left \lbrace x_1, x_2, \ldots, x_T\right \rbrace$, how do we compute the probability of the observation sequence, $P(X \vert \Phi)$? This is known as the evaluation problem. The solution is to use the forward algorithm. 
 
-This Evaluation problem can be solved summing up the probability over all possible values of the hidden state sequence. Implemented naively this can be quite expensive as there are an exponential number of states sequences ($O(N^T)$, where $N$ is the number of states and $T$ the number of time steps).
+This evaluation problem can be solved by summing up the probability over all possible values of the hidden state sequence. Implemented naively this can be quite expensive as there are an exponential number of states sequences ($O(N^T)$, where $N$ is the number of states and $T$ the number of time steps).
 
 The forward algorithm is a far more efficient dynamic-programming solution. As its name implies, it processes the sequence in a single pass. It stores up to N values at each time step, and reduces the computational complexity to $O(N^2T)$.
 
@@ -126,11 +126,11 @@ Once we know the posterior probability for each state at each time, the Baum-Wel
 ## Hidden Markov Models for Speech Recognition  
 In speech recognition, hidden Markov models are used to model the acoustic observations (feature vectors) at the subword level, such as phonemes.
 
-It is typically for each phoneme to be modeled with 3 states, to separately model the beginning, middle and end of the phoneme. Each state has a self-transition and a transition to the next state.  
+It is typical for each phoneme to be modeled with 3 states, to separately model the beginning, middle and end of the phoneme. Each state has a self-transition and a transition to the next state.  
 
 ![](./m3i3.png)
 
-Word HMMs can be formed by concatenating its constituent phoneme HMMs. For example, the HMM word "cup" can be formed by concatenating the HMMs for its three phonemes.
+Word HMMs can be formed by concatenating their constituent phoneme HMMs. For example, the HMM word "cup" can be formed by concatenating the HMMs for its three phonemes.
 
 ![](./m3i4.png)
 
@@ -163,7 +163,7 @@ This explosion of the label space leads to two major problems:
 1. Far less data is available to train each triphone
 2. Some triphones will not be observed in training but may occur in testing
 
-A solution to these problems is in widespread use, which involves pooling data associated with multiple context-dependent states that have similar properties and combining them into a single “tied” or “shared” HMM state. This tied state, known as a one, is then used to compute the acoustic model scores for all of the original HMM states whose data was pooled to create it.
+A solution to these problems is in widespread use, which involves pooling data associated with multiple context-dependent states that have similar properties and combining them into a single “tied” or “shared” HMM state. This tied state, known as a senone, is then used to compute the acoustic model scores for all of the original HMM states whose data was pooled to create it.
 
 Grouping a set of context-dependent triphone states into a collection of senones is performed using a *decision-tree clustering* process. A decision tree is constructed for every state of every context-independent phone.
 
@@ -171,13 +171,13 @@ The clustering process is performed as follows:
 
 1. Merge all triphones with a common center phone from a particular state together to form the root node. For example, state 2 of all triphones of the form /*-p+*/
 
-2. Grow the decision tree by asking a series of linguistic binary questions about the left or right context of the triphones. For example, "Is the left context phone a back vowel?" or "Is the right context phone voiced?" At each node, choose the question with results in the largest increase in likelihood of the training data.
+2. Grow the decision tree by asking a series of linguistic binary questions about the left or right context of the triphones. For example, "Is the left context phone a back vowel?" or "Is the right context phone voiced?" At each node, choose the question that results in the largest increase in likelihood of the training data.
 
 3. Continue to grow the tree until the desired number of nodes are obtained or the likelihood increase of a further split is below a threshold.
 
 4. The leaves of this tree define the senones for this context-dependent phone state.
 
-This process solves both problems listed above. First, the data can now be shared among several triphone states, so the parameter estimates are robust. Second, if a triphone is needed at test time that was unseen in training, it's corresponding senone can be found by walking the decision tree and answering the splitting questions appropriately.
+This process solves both problems listed above. First, the data can now be shared among several triphone states, so the parameter estimates are robust. Second, if a triphone is needed at test time that was unseen in training, its corresponding senone can be found by walking the decision tree and answering the splitting questions appropriately.
 
 Almost all modern speech recognition systems that use phone-based units utilize senones as the context-dependent unit. A production-grade large vocabulary recognizer can typically have about 10,000 senones in the model. Note that this is far more than the 120 context-independent states but far less than the 192,000 states in an untied context-dependent system.
 
@@ -185,15 +185,14 @@ Almost all modern speech recognition systems that use phone-based units utilize 
 
 One of the most significant advances in speech recognition in recent years is the use of deep neural network acoustic models. As mentioned earlier, the hybrid DNN systems replace a collection of GMMs (one for every senone) with a single deep neural network with output labels corresponding to senones.
 
-The most common objective function used for training neural networks for classification tasks is *cross entropy*. For a $M$-way multi-class classification task such as senone classification, the objective function for a single sample can be written as
+The most common objective function used for training neural networks for classification tasks is *cross entropy*. For an $M$-way multi-class classification task such as senone classification, the objective function for a single sample can be written as
 
-$$ E = -\sum_{i=1}^M t_m \log(y_m) $$
+$$ E = -\sum_{m=1}^M t_m \log(y_m) $$
 
-Where $t_m$ is the label (1 if the data is from class m and 0 otherwise) and $y_m$ is the output of the network, which is a softmax layer over the output activations. Thus, for each frame, we need to generate a M-dimensional 1-hot vector that consists of all zeros except for a single 1 corresponding to the true label. This means that we need to assign every frame of every utterance to a senone in order to generate these labels.
+Where $t_m$ is the label (1 if the data is from class m and 0 otherwise) and $y_m$ is the output of the network, which is a softmax layer over the output activations. Thus, for each frame, we need to generate an M-dimensional 1-hot vector that consists of all zeros except for a single 1 corresponding to the true label. This means that we need to assign every frame of every utterance to a senone in order to generate these labels.
 
-### Generate Frame based Sonal Levels
+### Generating Frame-based Senone Labels
 
-#### Generating frame-based senone labels
 To label all frames of the training data with a corresponding senone label, a process known as forced alignment is used. In this process, we essentially perform HMM decoding but constrain search to be along all paths that will produce the correct reference transcription. Forced alignment then generates the single most-likely path, and thus, the senone label for every frame in the utterance.
 
 The forced alignment process needs a speech recognition system to start from. This can be an initial GMM-based system or if the senone set is the same, a previously trained neural network-based system.
@@ -219,7 +218,7 @@ The simplest and most common neural network used for acoustic modeling is the co
 
 Although we are training a DNN to predict the label for each frame of input, it is very beneficial for classification to provide a context window of frames to the network as input. Specifically, for the frame at time t, the input to the network is a symmetric window of the N frames before and N frames after. Thus, if x_t is the feature vector at time t, the input to the network is
 
-$$X_t = [ x_{t-N},  x_{t-N-1},  \ldots,  x_t,  \ldots,  x_{t+N-1},  x_{t+N} ]
+$$X_t = [ x_{t-N},  x_{t-N+1},  \ldots,  x_t,  \ldots,  x_{t+N-1},  x_{t+N} ]
 $$
 
 Typical values of N are between 5 and 11, depending on the amount of training data. Larger context windows provide more information but require a larger matrix of parameters in the input layer of the model which can be hard to train without ample data.
@@ -264,7 +263,7 @@ $$
 
 where the subscripts $f$ and $b$ indicate parameters for the forward and backward directions, respectively.
 
-RNNs are appealing for acoustic modeling because they can learn the temporal patterns in the feature vector sequences, which is very important for speech signals. In order to train RNNs, therefore, the sequential nature of the training sequences must be preserved. Thus, rather than frame-based randomization which is typically performed in feedforward networks, we perform utterance-based randomization, where the ordering the utterances is randomized but the sequential nature of the utterances themselves is preserved.
+RNNs are appealing for acoustic modeling because they can learn the temporal patterns in the feature vector sequences, which is very important for speech signals. In order to train RNNs, therefore, the sequential nature of the training sequences must be preserved. Thus, rather than frame-based randomization which is typically performed in feedforward networks, we perform utterance-based randomization, where the ordering of the utterances is randomized but the sequential nature of the utterances themselves is preserved.
 
 Because the network itself is learning correlations in time of the data, the use of a wide context window of frames on the input is no longer required. It can be helpful for unidirectional RNNs to provide several frames of future context, but this is typically much smaller than in the feed-forward case. In bidirectional RNNs, there is typically no benefit to provide any context window because when processing any particular frame, the network has already seen the entire utterance either via the forward processing or the backward processing.
 
@@ -276,7 +275,6 @@ All standard deep learning toolkits support training the recurrent networks with
 
 ### Long Short-Term Memory Networks
 
-Other Recurrent Network Architectures
 In order to combat the issues with vanishing/exploding gradients and better learn long-term relationships in the training data, a new type of recurrent architecture was proposed. These networks are called Long Short-Term Memory (LSTM). Because of their widespread success in many tasks, LSTMs are now the most commonly used type of recurrent network.
 
 An LSTM uses the concept of a cell, which is like a memory that stores state information. This information can be preserved over time or overwritten by the current information using multiplicative interactions called gates. Gate values close to 0 blocked information while gate values close to 1 pass through information. The input gate decides whether to pass information from the current time step into the cell. The forget gate decides whether to persist or erase the current contents of the cell, and the output gate decides whether to pass the cell information onward in the network. A diagram of the LSTM is shown below.
@@ -297,7 +295,7 @@ $$ F_{MMI}= \sum_u \log \frac {p(X_u|S_u)p(W_u)} {\sum_{W'}p(X_u|S_{W'})p(W')} $
 
 where $u$ is an index over utterances in the training set, $W_u$ is the reference word sequence for utterance $u$, and $S_u$ is the corresponding state sequence. The denominator is a sum over all possible word sequences. $S_{W'}$ would represent the state sequence corresponding to the alternative word sequence  $W'$. This summation penalizes the model by considering competing hypotheses $W'$ that could explain the observed features $X_u$. This is typically approximated by a word lattice, which is a graph over possible hypothesis encountered in decoding.
 
-Using this objective function add significant complexity to the training of acoustic models but typically result in improved performance and is a component of most state of the art systems. There are also many variations on this such as Minimum Phone Error (MPE) training, and state-level Minimum Bayes Risk (sMBR) training.  
+Using this objective function adds significant complexity to the training of acoustic models but typically results in improved performance and is a component of most state of the art systems. There are also many variations on this such as Minimum Phone Error (MPE) training, and state-level Minimum Bayes Risk (sMBR) training.  
 
 ### Decoding with Neural Network Acoustic Models
 
@@ -480,11 +478,11 @@ In this lab, we will use the features generated in the previous lab along with t
 
 The inputs to the training program are:
 
-- **lists/feat_train.rscp, lists/feat_dev.rscp** - List of training and dev feature files, stored in a format called RSCP. This standard for relative SCP file, where SCP is HTK-shorthand for script file. It is simply a list of files in the two sets. The dev set is used in training to monitor overfitting and perform early stopping. These files should have been generated as part of completing lab 2.
+- **lists/feat_train.rscp, lists/feat_dev.rscp** - List of training and dev feature files, stored in a format called RSCP. This stands for relative SCP file, where SCP is HTK-shorthand for script file. It is simply a list of files in the two sets. The dev set is used in training to monitor overfitting and perform early stopping. These files should have been generated as part of completing lab 2.
 - **am/feat_mean.ascii, am/feat_invstddev.ascii** - The global mean and precision (inverse standard deviation) of the training features, also computed in lab 2
 - **am/labels_all.cimlf** - The phoneme-state alignments that have been generated as a result of forced alignment of the data to an initial acoustic model. Generating this file requires the construction of a GMM-HMM acoustic model which is outside the scope of this course, so we are providing it to you. The labels for both the training and dev data are in this file.
 - **am/labels.ciphones** - The list of phoneme state symbols which correspond to the output labels of the neural network acoustic model
-- **am/labels_ciprior.ascii** - The prior probabilities of the phoneme state symbols, obtained by counting the occurences of these labels in the training data.
+- **am/labels_ciprior.ascii** - The prior probabilities of the phoneme state symbols, obtained by counting the occurrences of these labels in the training data.
 
 The training, dev, and test RSCP files and the training set global mean and precision files were generated by the lab in Module 2. The remaining files have been provided for you and are in the am directory.
 
@@ -563,13 +561,13 @@ def MyBLSTMLayer(hidden_size=128, num_layers=2):
 
 The code calls MyBLSTMLayer when the model_type is BLSTM. We've reduced the number of hidden layers to 2, since the BLSTM layers have more total parameters than the DNN layers.
 For utterance based processing, entire utterance needs to be processed during training. Thus the minibatch size specifies the total number of frames to process but will pack multiple utterances together if possible. Setting the minibatch size to a larger number will allow for efficient processing with multiple utterances in each minibatch size. We have set the minibatch size to 4096.
-The traing the BLSTM model, you can execute the following command.
+To train the BLSTM model, you can execute the following command.
 
 ```bash
 $ python M3_Train_AM.py --type BLSTM
 ```
 
-Because of the sequential nature of the BLSTM processing, they are inherently less parallelizable, and thus, train much slower than DNNs. On a GTX 965M GPU running on a laptop, the network trained as a rate of 440 seconds per epoch, or 20 times slower than the DNN. Thus, we will only train for 10 epochs to keep processing time reasonable.
+Because of the sequential nature of the BLSTM processing, they are inherently less parallelizable, and thus, train much slower than DNNs. On a GTX 965M GPU running on a laptop, the network trained at a rate of 440 seconds per epoch, or 20 times slower than the DNN. Thus, we will only train for 10 epochs to keep processing time reasonable.
 
 Here too, you can use M3_Plot_Training.py to inspect the learning schedule in training. And again, if you are interested, you can vary the hyperparameters to try to find a better solution.
 

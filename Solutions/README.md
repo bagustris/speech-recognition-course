@@ -65,7 +65,7 @@ The output should match `misc/expected_result.txt` (WER 44.44% on the sample).
 
 Single file — note this script's paths (`wav_file`, output `feat/`) are
 hard-coded relative to `../data/`, so edit the `wav_file`/`data_dir`
-variables at the top to point at a wav you actually have. 
+variables at the top to point at a wav you actually have.
 You can also softlink your LibriSpeech corpus into `../data/LibriSpeech` to match the expected path.  
 
 ```bash
@@ -86,7 +86,7 @@ global feature mean/variance used for acoustic-model training:
 Train a DNN (default) or a BLSTM, capturing the log so it can be plotted:
 
 ```bash
-../.venv/bin/python M3_Train_AM.py --type DNN  | tee train_dnn.log
+../.venv/bin/python M3_Train_AM.py --type DNN   | tee train_dnn.log
 ../.venv/bin/python M3_Train_AM.py --type BLSTM | tee train_blstm.log
 ```
 

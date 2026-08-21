@@ -3,7 +3,7 @@
 [Previous](../M5_Decoding/)
 
 ## Table of Contents
-- [End-to-End Models](#6-end-to-end-models)
+- [End-to-End Models](#module-6-end-to-end-models)
 - [Improved Objective Functions](#improved-objective-functions)
 - [Sequential Objective Function](#sequential-objective-function)
 - [Connectionist Temporal Classification](#connectionist-temporal-classification)
@@ -30,16 +30,17 @@ $$
 Using a frame-based cross entropy objective function implies three
 things that are untrue for the acoustic modeling task.
 
-That every frame of acoustic data has exactly one correct label.
-The correct label must be predicted independently of the other frames.
-All frames of data are equally important.
+- Every frame of acoustic data has exactly one correct label.
+- The correct label must be predicted independently of the other frames.
+- All frames of data are equally important.
+
 This module explores some alternative strategies that address these modeling deficiencies.
 
 ## Sequential Objective Function
 
-Acoustic modeling is essentially a sequential task. Given a sequence of acoustic feature vectors, the task is to output a sequence of words. If a model can do that well, the exact alignment from the feature vectors to acoustic labels is irrelevant. Sequential objective functions train models that produce the correct sequence of labels, without regard their relative alignment with the acoustic signal. Note that this is a separate feature from the sequential discriminative objective functions, such as maximum mutual information (MMI), discussed in Module 3.
+Acoustic modeling is essentially a sequential task. Given a sequence of acoustic feature vectors, the task is to output a sequence of words. If a model can do that well, the exact alignment from the feature vectors to acoustic labels is irrelevant. Sequential objective functions train models that produce the correct sequence of labels, without regard to their relative alignment with the acoustic signal. Note that this is a separate feature from the sequence discriminative objective functions, such as maximum mutual information (MMI), discussed in Module 3.
 
-Sequential objective functions allow the training labels to drift in time. As the model converges, it finds a segmentation that explains the labels and obeys the constraint that the ground-truth sequence label sequence is unchanged.
+Sequential objective functions allow the training labels to drift in time. As the model converges, it finds a segmentation that explains the labels and obeys the constraint that the ground-truth sequence of labels is unchanged.
 
 Whereas the frame-based cross entropy objective function requires a sequence of labels $z\lbrack t\rbrack$ that is the same length as the acoustic feature vector sequence, sequential objective functions specify a sequence of symbols $S=\lbrace s_{0},s_{1},\ldots,\ s_{K - 1} \rbrace$ for each utterance. An alignment from the T acoustic features to the K symbols is denoted by $\pi\left\lbrack t \right\rbrack$. The label for time $t$ is found in the entry of $S$ indexed by $\pi[t]$.
 
@@ -88,7 +89,7 @@ $$
 
 The recursion applies the appropriate acoustic score from the model, and then projects the state backward in time using the transpose of the transition matrix $T$.
 
-$$\beta_{k}\left\lbrack t \right\rbrack = \sum_{j}^{}{t_{jk}\beta\left\lbrack j,t + 1 \right\rbrack}y\lbrack\overset{\overline{}}{z}\lbrack j\rbrack,t + 1\rbrack\backslash n 
+$$\beta_{k}\left\lbrack t \right\rbrack = \sum_{j}^{}{t_{jk}\beta\left\lbrack j,t + 1 \right\rbrack}y\lbrack\overset{\overline{}}{z}\lbrack j\rbrack,t + 1\rbrack
 $$
 
 When the forward and backward variables are combined into the gamma variable, each time slice contains information from the entire utterance, and the branching structures disappear. What is left is a smooth alignment between the label index and time index.
@@ -101,14 +102,14 @@ When the forward and backward variables are combined into the $\gamma$ variable,
 
 ## Connectionist Temporal Classification
 
-Connectionist Temporal Classification (CTC) is a special case of sequential objective functions that alleviates some of the modeling burden that exists cross-entropy. One perceived weakness of the family of cross-entropy objective functions is that it forces the model to explain every frame of input data with a label. CTC modifies the label set to include a “don't care” or “blank” symbol in the alphabet. The correct path through the labels is scored only by the non-blank symbols. If a frame of data doesn't provide any information about the overall labeling of the utterance, a cross-entropy based objective function still forces it to make a choice. The CTC system can output “blank” to indicate that there isn't enough information to discriminate among the meaningful labels.
+Connectionist Temporal Classification (CTC) is a special case of sequential objective functions that alleviates some of the modeling burden that exists in cross-entropy. One perceived weakness of the family of cross-entropy objective functions is that it forces the model to explain every frame of input data with a label. CTC modifies the label set to include a “don't care” or “blank” symbol in the alphabet. The correct path through the labels is scored only by the non-blank symbols. If a frame of data doesn't provide any information about the overall labeling of the utterance, a cross-entropy based objective function still forces it to make a choice. The CTC system can output “blank” to indicate that there isn't enough information to discriminate among the meaningful labels.
 
 $$L = \ \sum_{\pi}^{}{P\left( S \middle| \pi \right)P\left( \pi \right) = \sum_{\pi}^{}{P\left( \pi \right)\prod_{t}^{}{y\left\lbrack \pi\left( t \right),t \right\rbrack}}}
 $$
 
 ## Sequence Discriminative Objective Functions
 
-Module 3 introduced an entirely different set of objective functions, which are also sometimes referred to as sequential objective functions. But, there are sequential in a different respect than the one considered so far in this module.
+Module 3 introduced an entirely different set of objective functions, which are also sometimes referred to as sequential objective functions. But, they are sequential in a different respect than the one considered so far in this module.
 
 In this module, “sequential objective function” means that the objective function only observes the sequence of labels along a path, ignoring the alignment of the labels to the acoustic data. In module 3, “sequence based objective function” meant that the posterior probability of a path isn't normalized against all sequences of labels, but only those sequences that are likely given the current model parameters and the decoding constraints.
 
@@ -141,7 +142,7 @@ Graphemes are a simpler alternative that can be used in place of senones. Wherea
 The grapheme set chosen for this example are the 26 letters of the English alphabet. The advantage of this representation is that it doesn't require any knowledge about how English letters are expressed as English sounds. The disadvantage is that these rules must now be learned by the acoustic model, from data. As a result, graphemic systems tend to produce worse recognition accuracy than their senone equivalents, when trained on the same amount of labeled data.
 
 
-It is possible to improve graphemic system performance somewhat by choosing a more parsimonious set of symbols. We can take advantages of light linguistic knowledge to take advantage of this effect. In English,
+It is possible to improve graphemic system performance somewhat by choosing a more parsimonious set of symbols. We can take advantage of some light linguistic knowledge to achieve this. In English,
 
 - Letter pairs such as “T H” and “N G” are often associated with a single sound. We can replace them with “TH” and “NG” symbols.
 
@@ -166,7 +167,7 @@ Encoder-decoder networks are common in machine translation systems, where the me
 
 When this concept is applied to speech recognition, the source language is the acoustic realization of the speech, and the target language is its textual representation.
 
-Unlike the translation application, the speech recognition task is both a monotonic and one to one mapping from each spoken word to its written form. As a result, the encoder-decoder networks are often modified when used in a speech recognition system.
+Unlike the translation application, the speech recognition task is both a monotonic and one-to-one mapping from each spoken word to its written form. As a result, the encoder-decoder networks are often modified when used in a speech recognition system.
 
 In its basic form, the encoder part of the network summarizes an entire segment as one vector, passing a single vector to the decoder part of the network, which should stimulate it to recursively produce the correct output. Because this sort of long-term memory and summarization is at the limit of what we can achieve with recurrent networks today, the structure is often supplemented with a feature known as an attention mechanism. The attention mechanism is an auxiliary input to each recurrent step of the decoder, where the decoder can essentially query, based on its internal state, some states of the encoder network.
 

@@ -30,7 +30,7 @@ Thus, the language model (or LM) embodies the recognizer’s knowledge of what p
 
 A note on terminology: in language modeling we often talk about sentences as the word sequence corresponding to an entire speech utterance, without suggesting that these represent anything like a correct and complete sentence in the conventional grammatical sentences. In fact, a sentence for LM purposes can be anything a speaker would utter in the context of a speech application.  
 
-## N grams Models 
+## N-gram Models 
 
 ### Vocabulary  
 
@@ -39,7 +39,7 @@ We need to assign a probability to every possible sentence
 $$W = w_1 w_2 \ldots w_n
 $$
 
-where $n$ is the number of words, which is unbounded in principle. First, we simplify the problem by limiting the choice of words to a finite set, the vocabulary of the LM. Note the vocabulary of the LM is also the vocabulary of the speech recognizer – we cannot recognize a word that is not considered possible by the LM (i.e., it’s probability would be effectively zero).
+where $n$ is the number of words, which is unbounded in principle. First, we simplify the problem by limiting the choice of words to a finite set, the vocabulary of the LM. Note that the vocabulary of the LM is also the vocabulary of the speech recognizer – we cannot recognize a word that is not considered possible by the LM (i.e., its probability would be effectively zero).
 
 Words outside the vocabulary are called out-of-vocabulary words, or OOVs. If we ever encounter an OOV in the input data we will incur (at least) one word recognition error, so it is important to choose the vocabulary so as to minimize the chances of OOVs. An obvious strategy is to pick the words that have the highest prior probability of occurring, as estimated from data. In other words, we choose the most frequently occurring words in a corpus of training data. For example, we can pick the N most frequent words, or all words occurring more than K times in the data, for suitable values of N or K. There is often an optimal vocabulary size that represents a good tradeoff between recognizer speed (a larger vocabulary means more computation in decoding) and accuracy (by reducing OOVs, but adding very rare words will have negligible effect on accuracy, and might even hurt accuracy, due to search errors and greater acoustic confusability within the vocabulary).
 
@@ -61,7 +61,7 @@ $$
 
 Note how each word is now predicted by only the immediately preceding one, i.e., we’re using a first-order Markov model. However, in language modeling this terminology is not usually used, and instead we call such a model a bigram model, because it uses only statistics of two adjacent words at a time. Correspondingly, a second-order Markov model would be called a trigram model, and predict each word based on the preceding two, and so forth.
 
-The generalization of this scheme is the N-gram model, i.e., each word is conditioned on the previous N-1 words. The parameters of such a model as associated with N-grams, i.e., strings N words. It turns out that there is good improvement when going from bigrams to trigrams, but little improvement as N is increased further. Therefore, in practice we rarely use LMs beyond 4-grams and 5-grams. In the labs we will use trigrams, and in the remainder of this module we will stick to bigrams for the most part, just to simplify notation. Just keep in mind that the concepts generalize to longer N-grams. 
+The generalization of this scheme is the N-gram model, i.e., each word is conditioned on the previous N-1 words. The parameters of such a model are associated with N-grams, i.e., strings of N words. It turns out that there is good improvement when going from bigrams to trigrams, but little improvement as N is increased further. Therefore, in practice we rarely use LMs beyond 4-grams and 5-grams. In the labs we will use trigrams, and in the remainder of this module we will stick to bigrams for the most part, just to simplify notation. Just keep in mind that the concepts generalize to longer N-grams. 
 
 ### Sentence start and end
 
@@ -116,7 +116,7 @@ $$
 
 This is the unigram case. We generalize this to N-grams of length $k$ by treating the first $k-1$ words as the context for the last word, and counting the number of unique word types that occur in that context.
 
-$$\hat{P}(w_k|w_1 \ldots w_k-1) = \frac {c(w_1\ldots w_k)} {c(w_1 \ldots w_k-1)+V(w_1 \ldots w_{k-1}\cdot)},
+$$\hat{P}(w_k|w_1 \ldots w_{k-1}) = \frac {c(w_1\ldots w_k)} {c(w_1 \ldots w_{k-1})+V(w_1 \ldots w_{k-1}\cdot)},
 $$
 
 where $V(w_1 \ldots w_{k-1}\cdot)$ means the size of the vocabulary observed in the context (i.e., right after) $w_1 \ldots w_{k-1}$. Also, the freed-up probability mass now goes to words that are not previously seen *in that context*. 
@@ -128,7 +128,7 @@ How should we distribute the discounted probability mass for a given context? On
 $$\hat{P}(barked|white\ dog) = \frac{c(white\ dog\ barked)}{c(white\ dog)+V(white\ dog \cdot)} = \frac{2}{2+1}  = \frac {2}{3}.
 $$
 
-So we now have a probability of $1/3$ to share with all the other words that might follow "white dog." Distributing it evenly would ignore the fact that some words are just overall more frequent than others. Therefore, we could distribute $1/3$ in proportion to the unigram probabilities of words. However, this would make "white dog the" much more probable than "white dog barks", since "the" much more common than "barks". A better solution is to use reduced context, in this case, just "dog" to allocate the probability mass. This means we can draw all occurrences of "dog" to guess what could come next. This method is called back-off, since we are falling back to a shorter (1-word) version of the context when the following word has not been observed in the full (2-word) context. We can write this as
+So we now have a probability of $1/3$ to share with all the other words that might follow "white dog." Distributing it evenly would ignore the fact that some words are just overall more frequent than others. Therefore, we could distribute $1/3$ in proportion to the unigram probabilities of words. However, this would make "white dog the" much more probable than "white dog barks", since "the" is much more common than "barks". A better solution is to use reduced context, in this case, just "dog" to allocate the probability mass. This means we can draw all occurrences of "dog" to guess what could come next. This method is called back-off, since we are falling back to a shorter (1-word) version of the context when the following word has not been observed in the full (2-word) context. We can write this as
 
 $$
 \hat P_{\text{bo}}\left(w_k \mid w_1 \ldots w_{k-1}\right) = 
@@ -149,12 +149,12 @@ The $\alpha$ parameters are called backoff weights, but they are not free parame
 Given two language models A and B, how can we tell which is better? Intuitively, if model A always gives a higher probabilities than B to the words that are found in a test (or evaluation) set, then A is better, since it "wastes" less probability on the words that did not occur in actuality. The total probability of a test set $w_{1}\ldots w_{n}$
 according to the model is
 
-$$P\left( w_{1}\ldots w_{n} \right) = P\left( w_{1}| < s > \right) \times P\left( w_{2} \right|\ w_{1}) \times P\left( w_{3} \right|\ w_{2}) \times \ldots \times P( < /s > \ |\ w_{n})
+$$P\left( w_{1}\ldots w_{n} \right) = P\left( w_{1} \middle| \lt s \gt \right) \times P\left( w_{2} \middle| w_{1} \right) \times P\left( w_{3} \middle| w_{2} \right) \times \ldots \times P\left( \lt /s \gt \middle| w_{n} \right)
 $$
 
 (where we revert to the case of a bigram model just to keep the notation simple). We are now talking about a test set containing multiple sentences, so at sentence boundaries we reset the context to the `<s>` tag. The probabilities get very small very quickly, so it is more practical to carry out this computation with log probabilities:
 
-$$\log{\ P(w_{1}\ldots w_{n})} = \log{P(w_{1}| < s > )} + \log{P\left( w_{2} \right|\ w_{1})} + \ldots + \log{P( < /s > \ |\ w_{n})}
+$$\log{\ P(w_{1}\ldots w_{n})} = \log{P\left(w_{1} \middle| \lt s \gt\right)} + \log{P\left( w_{2} \middle| w_{1}\right)} + \ldots + \log{P\left( \lt /s \gt \middle| w_{n}\right)}
 $$
 
 Viewed as a function of the model, this is sometimes called the log likelihood of the model on the test data. Log likelihoods are always negative because the probabilities are less than one. If we flip the sign, and take the average over all the words in the test data
@@ -236,7 +236,7 @@ In this section, we provide a high-level understanding of a couple of the more a
 
 One of the drawbacks of N-gram models is that all words are treated as completely distinct. Consequently, the model needs to see a word sufficiently many times in the training data to learn N-grams it typically appears in. This is not how humans use language. We know that the words 'Tuesday' and 'Wednesday' share many properties, both syntactically and meaning-wise, and seeing N-grams with one word primes us to expect similar ones using the other (seeing 'store open Tuesday' makes us expect 'store open Wednesday' as a likely N-gram). Word similarity should be exploited to improve generalization in the LM.
 
-Class-based language models therefore group (some) words into word classes, and then collect N-gram statistics involving the class labels instead of the words. So if we had defined a class 'WEEKDAY' with members 'Monday', 'Tuesday', ..., 'Friday', the N-gram 'store open Tuesday' would be treated as an instance of 'store open WEEKDAY'. The probability of the pure word string according to the LM is now a product of two components: the probability of the string containing the class labels (computed in the usual way, the class labels being part of the N-gram vocabulary), multiplied by the class membership probabilities, such as $P(Tuesday \vee WEEKDAY)$. The membership probabilities can be estimated from data (how many times 'Tuesday' occurs in the training corpus relative to all the weekdays), or set to a uniform distribution (e.g., all equal to 15).
+Class-based language models therefore group (some) words into word classes, and then collect N-gram statistics involving the class labels instead of the words. So if we had defined a class 'WEEKDAY' with members 'Monday', 'Tuesday', ..., 'Friday', the N-gram 'store open Tuesday' would be treated as an instance of 'store open WEEKDAY'. The probability of the pure word string according to the LM is now a product of two components: the probability of the string containing the class labels (computed in the usual way, the class labels being part of the N-gram vocabulary), multiplied by the class membership probabilities, such as $P(Tuesday \mid WEEKDAY)$. The membership probabilities can be estimated from data (how many times 'Tuesday' occurs in the training corpus relative to all the weekdays), or set to a uniform distribution (e.g., all equal to 1/5).
 
 There are two basic approaches to come up with good word classes. One involves prior knowledge, typically from an application domain. For example, for building a language model for a travel app, we know that entities such as the names of destinations ('Tahiti', 'Oslo'), airlines and days of the week will need to be covered regardless of training data coverage, even though the training data is unlikely to have usage samples of all the possible instantiations. We can ensure coverage by defining an N-gram model in terms of classes such as 'AIRPORT', 'AIRLINE', 'WEEKDAY', etc. This also means we can set class membership probabilities from domain statistics, such as the popularity of certain travel destinations. It also suggests generalizing the concept of word-class membership to word phrases, such as 'Los Angeles' for AIRPORT. The class N-gram modeling framework can accommodate word phrases, with [some modifications](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/Levit_WPELM_Interspeech2014.v3.pdf).
 
@@ -250,7 +250,7 @@ Much of the success of ANNs in language modeling stems from overcoming two speci
 
 ![Feedforward LM](./m4i1.jpg)
 
-As depicted in the figure (taken from the Bengio et al. paper), the input to the network are unary (one-hot) encodings of the N - 1 words forming the N-gram context. The output is a vector of probabilities of predicted following words. (In both input and outputs, we use vectors of the length of the vocabulary size.) The model is thus a drop-in replacement for the old N-gram-based LM. The key is that the input words are reencoded via a shared matrix into new vectors, which are no longer one-hot, i.e., they live into a dense high-dimensional space. This mapping is shared for all context word positions and, crucially, is trained concurrently with the next-word predictor. The beauty of this approach is that the learned word embeddings can be tuned to represent word similarity for the purposes of word prediction. In other words, context words that affect the next word similarly will be encoded as nearby points in space, and the network can then exploit this similarity when encountering the words in novel combinations. This is because all network layers perform smooth mappings, i.e., nearby inputs will generate similar outputs. (It has been shown that words like 'Tuesday' and 'Wednesday' do indeed end up with similar embeddings.)
+As depicted in the figure (taken from the Bengio et al. paper), the inputs to the network are unary (one-hot) encodings of the N - 1 words forming the N-gram context. The output is a vector of probabilities of predicted following words. (In both input and outputs, we use vectors of the length of the vocabulary size.) The model is thus a drop-in replacement for the old N-gram-based LM. The key is that the input words are reencoded via a shared matrix into new vectors, which are no longer one-hot, i.e., they live in a dense high-dimensional space. This mapping is shared for all context word positions and, crucially, is trained concurrently with the next-word predictor. The beauty of this approach is that the learned word embeddings can be tuned to represent word similarity for the purposes of word prediction. In other words, context words that affect the next word similarly will be encoded as nearby points in space, and the network can then exploit this similarity when encountering the words in novel combinations. This is because all network layers perform smooth mappings, i.e., nearby inputs will generate similar outputs. (It has been shown that words like 'Tuesday' and 'Wednesday' do indeed end up with similar embeddings.)
 
 The second limitation of N-grams that was overcome with ANN methods is the truncation of the context, which so far always was limited to the previous $N - 1$ words. This is a problem because the language allows embedded clauses, arbitrarily long lists of adjectives, and other constructs that can put arbitrary distance between related words that would be useful in next-word prediction. Any reasonable value of $N$ would be insufficient to capture all predictive words in a context. The limitation is overcome in recurrent networks, which feed the activations of a hidden layer at time $t - 1$ as extra inputs to the next processing step at time $t$, as shown in this figure:
 
@@ -425,8 +425,6 @@ Test your understanding of language modeling. Select your answers and press **Ch
 
 ## Lab 
 
-## Language Modeling
-
 This lab covers the following topics:
 - Defining a top-N vocabulary from training data
 - Computing N-gram counts
@@ -441,7 +439,7 @@ This lab covers the following topics:
 
 In this lab, we will practice the main techniques for building N-gram based language models for our speech recognizer. In subsequent modules, the resulting LM will be used in the speech recognition decoder, together with the acoustic model from the preceding lab.
 
-This lab is carried out in a Linux command shell environment. The get started, make sure you know how to invoke the Linux bash shell, either on a native Linux system, using Cygwin on a Windows system, or in the Windows subsystem for Linux. Bash is the default shell on most systems.
+This lab is carried out in a Linux command shell environment. To get started, make sure you know how to invoke the Linux bash shell, either on a native Linux system, using Cygwin on a Windows system, or in the Windows subsystem for Linux. Bash is the default shell on most systems.
 
 Inside bash, change into the `M4_Language_Modeling` directory:
 
@@ -464,7 +462,7 @@ PATH=$PWD/srilm/bin/i686-m64:$PWD/srilm/bin:$PATH
 You can put this command in the .bashrc file in your home directory, so it is run automatically next time you invoke the shell. Also, make sure you have the gawk utility installed on your system. As a check that all is set up, run
 
 ```bash
-ngram-count -write-vocab –
+ngram-count -write-vocab -
 ```
 
 ```bash
@@ -665,7 +663,7 @@ zgrep " model was born" librispeech.3bo.gz
 This outputs nothing, meaning that trigram is not found in the model, and we have to use the back-off mechanism. We look for the line that contains the context bigram “model was” following a whitespace character:
 
 ```bash
-zgrep -E “\smodel was” librispeech.3bo.gz | head -1
+zgrep -E "\smodel was" librispeech.3bo.gz | head -1
 ```
 
 ```text
@@ -675,7 +673,7 @@ zgrep -E “\smodel was” librispeech.3bo.gz | head -1
 The first number is the log probability $P(was \vert model)$, which is of no use to use here. The number at the end is the backoff weight associated with the context “model was”. It, too, is encoded as a base-10 logarithm. Next, we need to find the bigram probability we’re backing off to, i.e., $P(born \vert was)$:
 
 ```bash
-zgrep -E “\swas born” librispeech.3bo.gz | head -1
+zgrep -E "\swas born" librispeech.3bo.gz | head -1
 ```
 
 ```text
@@ -685,15 +683,15 @@ zgrep -E “\swas born” librispeech.3bo.gz | head -1
 The first number is the bigram probability $P(born \vert was)$. We can now compute the log probability for $P(born \vert model was)$ as the sum of the backoff weight and the bigram probability:
 
 ```text
-0.02913048 + -2.597636 = -2.568506, or as a linear probability 10-2.568506 = 0.002700813.
+0.02913048 + -2.597636 = -2.568506, or as a linear probability 10^-2.568506 = 0.002700813.
 ```
 
 TASK: Compute the total sentence probability of “a model was born” using the ngram -ppl function. Verify that the conditional probability for “born” is as computed above.
 
-SOLUTION: We feed the input sentence to the ngram command in a line of standard input, i.e., using “-“ as the filename argument to -ppl. Use the option -debug 2 to get a detailed breakdown of the sentence-level probability:
+SOLUTION: We feed the input sentence to the ngram command in a line of standard input, i.e., using "-" as the filename argument to -ppl. Use the option -debug 2 to get a detailed breakdown of the sentence-level probability:
 
 ```bash
-echo “a model was born” | ngram -debug 2 -lm librispeech.3bo.gz -ppl –
+echo "a model was born" | ngram -debug 2 -lm librispeech.3bo.gz -ppl -
 ```
 
 ```text
@@ -743,7 +741,7 @@ p( </s> | born ...) =
 0 zeroprobs, logprob= -11.58567 ppl= 207.555 ppl1= 787.8011
 ```
 
-Notice how ngram adds the sentence start and end tags, `<s>` and `</s>`. The final line gives both the log probability and the perplexity of the entire sentence. The line starting $p(born \vert was~ \dots)$ has the conditional word probability that we computed previously. The label ``2gram" indicates that a backoff to bigram was used. The final "logprob" value -11.58567 is just the sum of the log probabilities printed for each word token. Let's verify the perplexity value based on it's definition: we divide the logprob by the number of word tokens (including the end-of-sentence), convert to a probability and take the reciprocal (by negating the exponent): 10-\ (-11.58567\ /\ 5) = 207.555. Of course this is not a good estimate of perplexity as it is based on only 5 data points.
+Notice how ngram adds the sentence start and end tags, `<s>` and `</s>`. The final line gives both the log probability and the perplexity of the entire sentence. The line starting $p(born \vert was~ \dots)$ has the conditional word probability that we computed previously. The label `2gram` indicates that a backoff to bigram was used. The final "logprob" value -11.58567 is just the sum of the log probabilities printed for each word token. Let's verify the perplexity value based on its definition: we divide the logprob by the number of word tokens (including the end-of-sentence), convert to a probability and take the reciprocal (by negating the exponent): 10^(-(-11.58567) / 5) = 207.555. Of course this is not a good estimate of perplexity as it is based on only 5 data points.
 
 TASK: Compute the perplexity of the model over the entire dev set.
 
@@ -773,7 +771,7 @@ SOLUTION: Rebuild the model (using the original vocabulary), and evaluate perple
 
 ### Model adaptation
 
-We will now work through the steps involved in adapting an existing LM to a new application domain. In this scenario we typically have a small amount of training data for the new, target domain, but a large amount, albeit mismatched data from other sources. For this exercise we target the AMI domain of multi-person meetings as our target domain. The language in this are spontaneous utterances from face-to-face interactions, whereas the “librispeech” data we used so far consisted of read books, a dramatic mismatch in speaking styles and topics.
+We will now work through the steps involved in adapting an existing LM to a new application domain. In this scenario we typically have a small amount of training data for the new, target domain, but a large amount, albeit mismatched data from other sources. For this exercise we target the AMI domain of multi-person meetings as our target domain. The language in this domain consists of spontaneous utterances from face-to-face interactions, whereas the “librispeech” data we used so far consisted of read books, a dramatic mismatch in speaking styles and topics.
 
 We will use the “librispeech” corpus as our out-of-domain data, and adapt the model we just created from that corpus to the AMI domain, using a small amount of target-domain data corpus. Corpus subsets for training and test are in the data directory:
 
@@ -782,7 +780,7 @@ wc -wl data/ami-*.txt
 ```
 
 ```text
-6473 data/ami-dev.txt
+2500 26473 data/ami-dev.txt
 ```
 
 ```text
@@ -793,7 +791,7 @@ wc -wl data/ami-*.txt
 86685 924896 data/ami-train.txt
 ```
 
-Also provided is a target domain vocabulary consisting of all words occurring at least 3 times in the training data, consisting of 6171 words:
+Also provided is a target domain vocabulary consisting of all words occurring at least 3 times in the training data, consisting of 6271 words:
 
 ```bash
 wc -l data/ami-train.min3.vocab
@@ -852,7 +850,7 @@ TASK: Construct an interpolated model based on the existing librispeech and AMI 
 HINT: Make use of the ngram options -mix-lm, -lambda, and -write-lm.
 
 ```bash
-ngram -debug 1 -order 3 -lm ami.3bo.gz -lambda 0.8 -mix-lm librispeech.3bo.gz -write-lm ami+librispeech.bo.gz
+ngram -debug 1 -order 3 -lm ami.3bo.gz -lambda 0.8 -mix-lm librispeech.3bo.gz -write-lm ami+librispeech.3bo.gz
 ```
 
 ```bash
@@ -860,7 +858,7 @@ ngram -lm ami+librispeech.3bo.gz -ppl data/ami-dev.txt
 ```
 
 ```text
-file ami-dev.txt: 2314 sentences, 26473 words, 783 OOVs
+file data/ami-dev.txt: 2314 sentences, 26473 words, 783 OOVs
 ```
 
 ```text
@@ -872,7 +870,7 @@ At first sight, this result is disappointing. Note how the perplexity is now 102
 Still, it would be nice to do an apples-to-apples comparison to see the effect of just the probability interpolation on model perplexity. We can do this by telling the ngram tool to only use words from the AMI vocabulary in the interpolated model:
 
 ```bash
-ngram -debug 1 -order 3 -lm ami.3bo.gz -lambda 0.8 -mix-lm librispeech.3bo.gz -write-lm ami+librispeech.bo.gz -vocab data/ami-train.min3.vocab -limit-vocab
+ngram -debug 1 -order 3 -lm ami.3bo.gz -lambda 0.8 -mix-lm librispeech.3bo.gz -write-lm ami+librispeech.3bo.gz -vocab data/ami-train.min3.vocab -limit-vocab
 ```
 
 This is the same command as before, but with the -limit-vocab option added, telling ngram to only use the vocabulary specified by the -vocab option argument. We can now evaluate perplexity again:
@@ -891,7 +889,7 @@ TASK (optional): Repeat this process for different interpolation weights, and se
 
 This step is best carried out using the enlarged vocabulary, since that is what we want to use in our final model. But notice how we are now effectively using the dev set to train another model parameter, the interpolation weight. The result will thus be tuned to the dev set. This is why we better have another test set held out (data/ami-test.txt in this case) to verify that the result of this tuning also improves the model (lowers the perplexity) on independent data.
 
-The tuning of interpolation weights would be rather tedious if carried out by trial and error. Fortunately, there is an efficient algorithm that finds optimal weights based on expectation maximation, implemented in the command compute-best-mix, described under ppl-scripts.
+The tuning of interpolation weights would be rather tedious if carried out by trial and error. Fortunately, there is an efficient algorithm that finds optimal weights based on expectation maximization, implemented in the command compute-best-mix, described under ppl-scripts.
 
 TASK (optional): Use compute-best-mix to find the best -lambda value for interpolation for the two models we built.
 
@@ -901,11 +899,11 @@ HINT: As input to the command, generate detailed perplexity output for both mode
 
 We saw earlier that model size (and perplexity) varies with the amount of training data. However, if a model gets too big for deployment as the data size increases it would be a shame to have to not use it just for that reason. A better approach is to train a model on all available data, and then eliminate parameters that are redundant or have little effect on model performance. This is what model pruning does.
 
-A widely used algorithm for model pruning based on entropy is implemented in the ngram tool. The option -prune takes a small value, such as 10-8 or 10-9, and remove all ngrams from the model that (by themselves) raise the perplexity of the model less than that value in relative terms.
+A widely used algorithm for model pruning based on entropy is implemented in the ngram tool. The option -prune takes a small value, such as 10^-8 or 10^-9, and remove all ngrams from the model that (by themselves) raise the perplexity of the model less than that value in relative terms.
 
-TASK: Shrink the large librispeech model trained earlier, using pruning values between 10-5 and 10-10 (stepping by powers of ten). Observe/plot the resulting model sizes and perplexities, and compare to the original model.
+TASK: Shrink the large librispeech model trained earlier, using pruning values between 10^-5 and 10^-10 (stepping by powers of ten). Observe/plot the resulting model sizes and perplexities, and compare to the original model.
 
-SOLUTION: Starting with 1e-5 (= 10-5 in floating point notation), create the pruned model:
+SOLUTION: Starting with 1e-5 (= 10^-5 in mathematical notation), create the pruned model:
 
 ```bash
 ngram -debug 1 -lm librispeech.3bo.gz -prune 1e-5 -write-lm librispeech-pruned.3bo.gz

@@ -20,7 +20,7 @@ Developing and understanding Automatic Speech Recognition systems is an interdis
 
 This course will focus on the structure of American English speech. Other languages may differ in more or less significant ways, from the use of tone to convey meaning to the sets of meaningful distinctions in the sound inventory of the language. 
 
-Speech production process is how do human produce speech and this leads to the study of phonetics. Speech has a hierarchical structure. At the top level, speech is made up of utterances. Utterances can be broken down into words, which can be broken down into syllables, which can be broken down into phones. Phones are the acoustic realizations of phonemes, which are the atomic units of speech sounds. Phonemes are the smallest units of sound that can change meaning in a language. For example, the words "bat" and "pat" differ in their initial phoneme, /b/ vs /p/, which changes the meaning of the word.  
+The speech production process describes how humans produce speech, and studying it leads to the field of phonetics. Speech has a hierarchical structure. At the top level, speech is made up of utterances. Utterances can be broken down into words, which can be broken down into syllables, which can be broken down into phones. Phones are the acoustic realizations of phonemes, which are the atomic units of speech sounds. Phonemes are the smallest units of sound that can change meaning in a language. For example, the words "bat" and "pat" differ in their initial phoneme, /b/ vs /p/, which changes the meaning of the word.  
 
 There are three basic parts of an automatic speech recognition system: the acoustic model, the language model, and the decoder. The acoustic model is responsible for modeling how sequences of words are converted into acoustic realizations and then into the acoustic observations presented to the ASR system. The language model assigns a probability to every possible word sequence. It is trained on sequences of words that are expected to be like those the final system will encounter in everyday use. The decoder searches for the best word sequence given the acoustic observations and the models.
 
@@ -54,7 +54,7 @@ All state-of-the-art speech recognition systems use this context-dependent natur
 #### Syllables and words
 A syllable is a sequence of speech sounds composed of a nucleus phone and optional initial and final phones. The nucleus is typically a vowel or syllabic consonant and is the voiced sound that can be shouted or sung.
 
-For example, the English word “bottle” contains two syllables. The first syllable has three phones, which are “b aa t” in the Arpabet phonetic transcription code. The “aa” is the nucleus, the “b” is a voiced consonant initial phone, and the “t” is an unvoiced consonant final phone. The second syllable is consists  of the syllabic consonant "l."
+For example, the English word “bottle” contains two syllables. The first syllable has three phones, which are “b aa t” in the Arpabet phonetic transcription code. The “aa” is the nucleus, the “b” is a voiced consonant initial phone, and the “t” is an unvoiced consonant final phone. The second syllable consists of the syllabic consonant "l."
 
 A word can also be composed of a single syllable, which itself is a single phoneme, e.g., "Eye," "uh," or "eau."
 
@@ -68,7 +68,7 @@ Syntax describes how sentences can be put together given words and rules that de
 ### WER 
 When we build and experiment with speech recognition systems, it is obviously very important to measure performance. Because speech recognition is a sequence classification task (in contrast to image labeling, where samples are independent), we must consider the entire sequence when we measure error.
 
-The most common metric for speech recognition accuracy is the Word Error Rate (WER). There are three types of errors a system can make: a substitution, where one word is incorrectly recognized as a different word, a deletion, where no word is hypothesized when the reference transcription has one, and an insertion where the hypothesized transcription inserts extra words not present in the reference. The overall WER can be computed as
+The most common metric for speech recognition accuracy is the Word Error Rate (WER). There are three types of errors a system can make: a substitution, where one word is incorrectly recognized as a different word, a deletion, where no word is hypothesized when the reference transcription has one, and an insertion, where the hypothesized transcription inserts extra words not present in the reference. The overall WER can be computed as
 
 $$
 WER = \frac{N_{\text{sub}} + N_{\text{ins}} + N_{\text{del}}}{N_{\text{ref}}}
@@ -76,7 +76,7 @@ $$
 
 where $N_{\text{sub}}$, $N_{\text{ins}}$, and $N_{\text{del}}$ are the number of substitutions, insertions, and deletions, respectively, and $N_{\text{ref}}$ is the number of words in the reference transcription.
 
-The WER is computed using a [string edit distance](https://en.wikipedia.org/wiki/Edit_distance) between the reference transcription and the hypothesized transcription. String edit distance can be efficiently computed using dynamic programming. Because string edit distance can be unreliable over a long body of text, we typically accumulate the error counts on a sentence-by-sentence basis and these counts are aggregated overall sentences in the test set to compute the overall WER.
+The WER is computed using a [string edit distance](https://en.wikipedia.org/wiki/Edit_distance) between the reference transcription and the hypothesized transcription. String edit distance can be efficiently computed using dynamic programming. Because string edit distance can be unreliable over a long body of text, we typically accumulate the error counts on a sentence-by-sentence basis and these counts are aggregated over all sentences in the test set to compute the overall WER.
 
 In the example below, the hypothesis “how never a little later he had a comfortable chat” is measured against the reference “however a little later we had a comfortable chat” to reveal two substitution errors, one insertion error, and one deletion error.
 
@@ -94,7 +94,7 @@ a	|	| Deletion
 comfortable	| comfortable	||
 chat	| chat	||
 
-The WER for this example is 4/7 = 0.4444 or 44.44%. It can be calculated as follows:
+The WER for this example is 4/9 = 0.4444 or 44.44%. It can be calculated as follows:
 
 $$
 WER = \frac{2 + 1 + 1}{9} = 0.4444 
@@ -110,12 +110,12 @@ Statistical significance testing involves measuring to what degree the differenc
 
 For speech recognition, the most commonly used measure to compare two experiments is called the Matched Pairs Sentence-Segment Word Error (MAPSSWE) Test, commonly shortened to just the Matched Pairs Test. It was suggested for speech recognition evaluations by [Gillick et al.](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.296.4438).
 
-In this approach, the test set is divided into segments with the assumption that errors in one segment are statistically independent from each other. This assumption is well-matched with typical speech recognition experiments where many test utterances are run through the recognizer one by one. Given the utterance-level error count from the WER computation described above, constructing a matched pairs test is straightforward. More details of the algorithm can be found in [Pallet et al.](https://doi.org/10.1109/ICASSP.1990.115546).
+In this approach, the test set is divided into segments with the assumption that errors in one segment are statistically independent from each other. This assumption is well-matched with typical speech recognition experiments where many test utterances are run through the recognizer one by one. Given the utterance-level error count from the WER computation described above, constructing a matched pairs test is straightforward. More details of the algorithm can be found in [Pallett et al.](https://doi.org/10.1109/ICASSP.1990.115546).
 
 
 ### Real-time Factor
 
-Besides accuracy, there may be computational requirements that impact performance, such as processing speed or latency. Decoding speed is usually measured with respect to a real-time factor (RTF). An RTF of 1.0 means that the system processes the data in real-time and takes ten seconds to process the audio.
+Besides accuracy, there may be computational requirements that impact performance, such as processing speed or latency. Decoding speed is usually measured with respect to a real-time factor (RTF). An RTF of 1.0 means that the system processes the data in real time&mdash;for example, taking ten seconds to process ten seconds of audio.
 
 $$
 RTF = \frac{\text{Total processing time}}{\text{Total audio time}} 

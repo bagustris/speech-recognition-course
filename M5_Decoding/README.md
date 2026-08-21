@@ -29,9 +29,9 @@ The glue that ties the two together is the decoding graph. It is a function that
 
 In this course, we will be using some constructs from the field of weighted finite state transducers (WFST).
 
-Finite state automata (FSA) are a compact graph structures that encode sets of strings and are efficient to search.
+Finite state automata (FSA) are compact graph structures that encode sets of strings and are efficient to search.
 
-Finite state transducers (FST) are similar, but encode an mapping from one set of strings to another.
+Finite state transducers (FST) are similar, but encode a mapping from one set of strings to another.
 
 Either FSA or FST can be weighted, in which case each element of the set (FSA), or each mapping pair (FST) is associated with a numeric weight.
 
@@ -81,7 +81,7 @@ table. The `<eps>` symbol is special, and will be described later.
 
 ```text
 Vocabulary.sym
-< eps> 0
+<eps> 0
 any 1
 anything 2
 king 3
@@ -142,7 +142,7 @@ One possible way of building such a transducer would be to make a path for every
 ```
 0 1 EH any
 1 2 N <eps>
-2 0 IY<eps>
+2 0 IY <eps>
 0 3 EH anything
 3 4 N <eps>
 4 5 IY <eps>
@@ -162,7 +162,7 @@ A close inspection of the lexical FST structure above reveals some redundancy in
 ```
 0 1 EH any<eps>
 1 2 N ~~<eps>~~any
-2 0 IY<eps>
+2 0 IY <eps>
 0 3 EH anything
 31 4 N ~~<eps>~~anything
 4 5 IY <eps>
@@ -177,7 +177,7 @@ A close inspection of the lexical FST structure above reveals some redundancy in
 
 The entry for “any” is encoded in the state path 0, 1, 2, 0, and the entry for “anything” is through the path 0, 1, 4, 5, 6, 7, 0. The state 3 is eliminated, as well as one of the redundant arcs. Furthermore, state 1 now has two arcs that share an N input symbol, and the procedure can be repeated. This process, where the graph is compressed by merging arcs that start in the same state and share an input label, is called determinization. It ensures every unique input string prefix maps to a unique state of the graph. Its complementary algorithm, FSTminimization, works analogously with the suffixes of the string. Both determinization and minimization can compact the graph structure without affecting the set of strings described by the FSA, and it would be difficult to construct a reasonable decoding graph without them.
 
-A compact pronunciation lexicon FST that represents our pronunciation lexicon is shown here. It is a bit more complex than the grammar FST from the previous lesson. One possible path through this FST is through the state sequence 0, 4, 8, 11, 3, 7, 0. This corresponds with an input string of “EH N IY TH IH NG” and an output string of “`<eps>` `<eps>` `<eps>` anything`< eps>` `<eps>`”. Because the `<eps>` symbols can be ignored, it is clear that this path represents one of the entries from the pronunciation lexicon above.
+A compact pronunciation lexicon FST that represents our pronunciation lexicon is shown here. It is a bit more complex than the grammar FST from the previous lesson. One possible path through this FST is through the state sequence 0, 4, 8, 11, 3, 7, 0. This corresponds with an input string of “EH N IY TH IH NG” and an output string of “`<eps>` `<eps>` `<eps>` anything `<eps>` `<eps>`”. Because the `<eps>` symbols can be ignored, it is clear that this path represents one of the entries from the pronunciation lexicon above.
 
 ![](./m5i2.png)
 
@@ -259,7 +259,7 @@ The portion of the WFST that these ngrams encode is shown here:
 
 ![](./m5i4.png)
 
-In this graph, it is given that the first three tokens are the start token, followed by “half” and “an,” and the graph computes the weight for the next word. Because “half an hour” is quit a common phrase in English, it has it’s own path from state 3 to state 4, which encodes the probability of “hour” following the “half an” bigram. If any words followed “hour” here, they would have an “an hour” context.
+In this graph, it is given that the first three tokens are the start token, followed by “half” and “an,” and the graph computes the weight for the next word. Because “half an hour” is quite a common phrase in English, it has its own path from state 3 to state 4, which encodes the probability of “hour” following the “half an” bigram. If any words followed “hour” here, they would have an “an hour” context.
 
 Other words are allowed to follow “half an,” even though there is no trigram for them in the language model definition. Whereas state 3 represents the “half an” context, the state 5 represents only a context of “an”. The weight associated with contracting the context in this way is given by the backoff weight for the “half an” grammar in the definition. After taking this penalty, the model allows for four words in the context of “an”. You can see that one of these words is hour, because “an hour” is also quite common in English.  
 
@@ -285,7 +285,7 @@ When fully composed, the HCLG of our toy example looks like this:
 
 ![](./m5i5.png)  
 
-The general practice is to compose from right to left, and determinize and minimize the graph after each individual composition. In the upcoming lab assignment, we have pre-compose H, C, and L, and all that is left is to create the G graph, and compose it with the given HCL WFST.
+The general practice is to compose from right to left, and determinize and minimize the graph after each individual composition. In the upcoming lab assignment, we have pre-composed H, C, and L, and all that is left is to create the G graph, and compose it with the given HCL WFST.
 
 Recall that the graph G has the language model backoff symbols on its input side. The HCL passes these symbols through as they occur. As a result, the composed HCLG will have these symbols as input.
 
@@ -295,15 +295,15 @@ Because the decoder doesn't need this information, these symbols are usually rep
 
 ## The Search  
 
-Speech recognition decoding is the process of finding the word sequence that jointly maximizes the language model score and acoustic model score. A sequence of acoustic states is assigned an acoustic model score by the acoustic model, and a language model score by path it describes through the decoding graph.
+Speech recognition decoding is the process of finding the word sequence that jointly maximizes the language model score and acoustic model score. A sequence of acoustic states is assigned an acoustic model score by the acoustic model, and a language model score by the path it describes through the decoding graph.
 
 It is a path search algorithm through the decoding graph, where the score of the path is the sum of the score given to it by the decoding graph, and the score given to it by the acoustic model. Due to the nature of our models, we can use a simple dynamic programming approach to find the shortest path. If the best path passes through state $S$ at time $T$, then it includes the best prefix path ending at time $T$ and state $S$.
 
 A typical frame synchronous beam search proceeds in three stages. For each time $t$,
 
 1. Advance each partial hypothesis forward in the graph across arcs that have a non-epsilon input symbol.
-   1.  As a result, all the new partial hypotheses that are generated have exactly t input symbols in their path.
-    2. If two partial hypotheses collide onto the same state, only keep the higher scoring hypothesis.
+   1. As a result, all the new partial hypotheses that are generated have exactly t input symbols in their path.
+   2. If two partial hypotheses collide onto the same state, only keep the higher scoring hypothesis.
 
 2. Eliminate any hypotheses that are “out of beam.” This could mean either keeping the top K hypotheses (where K is the maximum token count), or eliminating any partial hypothesis that has a score more than B worse than the best (where B is the beam width).
 
@@ -312,7 +312,7 @@ A typical frame synchronous beam search proceeds in three stages. For each time 
 
 The important parameters for a pruned search are beam width B and maximum token count K. The beam width insures that partial hypotheses that are far from the current best are abandoned. The maximum token count limits the total amount of work done on every frame.
 
-It is possible that the best overall path has a very low score for some time t, and is discarded by the pruning process. In this case, the beam search algorithm will result in a sub-optimal path. When this happens, we say that the algorithm has produced a search error. It is possible to reduce these errors arbitrarially close to zero by increasing the beam width and maximum token count.
+It is possible that the best overall path has a very low score for some time t, and is discarded by the pruning process. In this case, the beam search algorithm will result in a sub-optimal path. When this happens, we say that the algorithm has produced a search error. It is possible to reduce these errors arbitrarily close to zero by increasing the beam width and maximum token count.
 
 
 ## Quiz
@@ -494,13 +494,13 @@ Required files:
    
    This FST has disambiguation symbols on its input side. They ensure that every unique input sequence has a unique output sequences, regardless of homonyms. This preserves the functional nature of the transducer, which makes determinization possible.
    
-   It is expected that the language model contains "<gamma>" symbols on its input side, which represent the backoff transitions of the language model. This HCL.fst contains arcs with "<gamma>" labels on the input and output so these transitions will also be present on the input side of the fully composed graph. If it did not, then the composed graph would not be functional, and determinization would be impossible.
+   It is expected that the language model contains `<gamma>` symbols on its input side, which represent the backoff transitions of the language model. This HCL.fst contains arcs with `<gamma>` labels on the input and output so these transitions will also be present on the input side of the fully composed graph. If it did not, then the composed graph would not be functional, and determinization would be impossible.
  
 2. `DecodingGraph.fst`
 
    This is the result of compiling HCL.fst with a trigram language model, and applying a series of transformations to remove both disambiguation and language model backoff symbols, as well as to compact the structure into fewer arcs.
 
-3. `H.FST.isym` and `L.fst.osym`
+3. `H.fst.isym` and `L.fst.osym`
 
    These are the input and output symbol tables that should cover the input and output of HCL.fst, DecodingGraph.fst, and any other decoding graph you build in this lab.
 
@@ -518,7 +518,7 @@ Required files:
 2. Create a new decoding graph using a language model you have trained in Module 4 of this class.
     - Convert the ARPA format language model to its FST approximation. The `arpa2fst.py` tool is provided for this purpose.
     - Compose your new `G.fst` with the given HCL.fst.
-    - Process the graph using a mixture of label pushing, encoding, decoding, minimization, and determinization. As part of this process, all disambiguation symbols and language model backoff symbols should be manually converted into "<eps>".
+    - Process the graph using a mixture of label pushing, encoding, decoding, minimization, and determinization. As part of this process, all disambiguation symbols and language model backoff symbols should be manually converted into `<eps>`.
     - Use the resulting `HCLG.fst` in place of `DecodingGraph.fst` to repeat Assignment 2 above.
 
 3. Measure the time-accuracy tradeoff of the decoder.
